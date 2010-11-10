@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GeoChat Local Gateway</string>
+    <string name="local_gateway_name_colon">Local Gateway name:</string>
+    <string name="password_colon">Password:</string>
+    <string name="telephone_number_colon">Telephone number:</string>
+    <string name="start">Start</string>
+</resources>
