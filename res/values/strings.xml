@@ -5,4 +5,8 @@
     <string name="password_colon">Password:</string>
     <string name="telephone_number_colon">Telephone number:</string>
     <string name="start">Start</string>
+    <string name="invalid_credentials">Invalid name/password</string>
+    <string name="cannot_start">Cannot start</string>
+    <string name="cannot_start_maybe_no_connection">Cannot start, maybe no connection?</string>
+    <string name="starting">Starting...</string>
 </resources>

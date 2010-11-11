@@ -24,9 +24,13 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f040000;
+        public static final int cannot_start=0x7f040006;
+        public static final int cannot_start_maybe_no_connection=0x7f040007;
+        public static final int invalid_credentials=0x7f040005;
         public static final int local_gateway_name_colon=0x7f040001;
         public static final int password_colon=0x7f040002;
         public static final int start=0x7f040004;
+        public static final int starting=0x7f040008;
         public static final int telephone_number_colon=0x7f040003;
     }
 }
