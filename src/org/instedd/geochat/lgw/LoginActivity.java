@@ -1,8 +1,7 @@
 package org.instedd.geochat.lgw;
 
-import java.io.IOException;
-
 import org.instedd.geochat.lgw.msg.QstClient;
+import org.instedd.geochat.lgw.msg.QstClientException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -77,7 +76,7 @@ public final static String EXTRA_WRONG_CREDENTIALS = "WrongCredentials";
 							settings.setCredentials(name, password, number);
 							
 							Actions.home(LoginActivity.this);
-						} catch (IOException e) {
+						} catch (QstClientException e) {
 							handler.post(new Runnable() {
 								public void run() {
 									uiStart.setEnabled(true);
