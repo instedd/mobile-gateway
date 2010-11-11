@@ -1,6 +1,7 @@
 package org.instedd.geochat.lgw.trans;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.instedd.geochat.lgw.Connectivity;
 import org.instedd.geochat.lgw.GeoChatLgwSettings;
@@ -20,8 +21,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.SmsManager;
+import android.telephony.SmsMessage;
 
 public class Transceiver {
 	
@@ -39,6 +42,30 @@ public class Transceiver {
 					context.getContentResolver().delete(uri, null, null);
 				}
 			}
+		}
+	};
+	
+	private BroadcastReceiver smsReceivedReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Bundle extras = intent.getExtras();
+	        if (extras == null)
+	            return;
+	        
+	        Object[] pdus = (Object[]) extras.get("pdus");
+	        for (int i = 0; i < pdus.length; i++) {
+	            SmsMessage message = SmsMessage.createFromPdu((byte[]) pdus[i]);
+	            
+	            String guid = UUID.randomUUID().toString();
+	            String from = message.getOriginatingAddress();
+	            String to = settings.getNumber();
+	            String text = message.getMessageBody();
+	            long when = message.getTimestampMillis();
+	            
+	            Transceiver.this.context.getContentResolver().insert(IncomingMessages.CONTENT_URI, 
+	            		Message.toContentValues(guid, from, to, text, when));
+	        }
+
 		}
 	};
 
@@ -67,6 +94,7 @@ public class Transceiver {
 		running = true;
 		
 		context.registerReceiver(smsSentReceiver, new IntentFilter(SMS_SENT_ACTION));
+		context.registerReceiver(smsReceivedReceiver, new IntentFilter("android.provider.Telephony.SMS_RECEIVED"));
 		
 		syncThread = new SyncThread();
 		syncThread.start();
@@ -74,6 +102,7 @@ public class Transceiver {
 
 	public void stop() {
 		context.unregisterReceiver(smsSentReceiver);
+		context.unregisterReceiver(smsReceivedReceiver);
 		
 		running = false;
 		this.resync();
