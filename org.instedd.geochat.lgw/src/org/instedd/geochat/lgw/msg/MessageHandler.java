@@ -16,6 +16,7 @@ public class MessageHandler extends DefaultHandler {
 	private Message[] messages;
 	private int messagesCount;
 	private Message message;
+	private StringBuilder text;
 	
 	public Message[] getMessages() {
 		if (messages == null)
@@ -56,7 +57,10 @@ public class MessageHandler extends DefaultHandler {
 	public void characters(char[] ch, int start, int length)
 			throws SAXException {
 		if (inMessage && tagName == TEXT) {
-			message.text = new String(ch, start, length);
+			if (text == null) {
+				text = new StringBuilder();
+			}
+			text.append(ch, start, length);
 		}
 	}
 	
@@ -64,6 +68,10 @@ public class MessageHandler extends DefaultHandler {
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
 		if (inMessage && "message".equals(localName)) {
+			if (text != null) {
+				message.text = text.toString();
+				text = null;
+			}
 			messages[messagesCount] = message;
 			messagesCount++;
 			inMessage = false;
