@@ -1,6 +1,7 @@
 package org.instedd.geochat.lgw.test;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.http.Header;
@@ -14,9 +15,14 @@ import org.apache.http.params.HttpParams;
 public class MockHttpResponse implements HttpResponse {
 	
 	private final InputStream stream;
+	private List<Header> headers;
 
 	public MockHttpResponse(InputStream stream) {
 		this.stream = stream;
+	}
+	
+	public void setHeaders(List<Header> headers) {
+		this.headers = headers;
 	}
 
 	public HttpEntity getEntity() {
@@ -44,123 +50,103 @@ public class MockHttpResponse implements HttpResponse {
 	}
 
 	public void setEntity(HttpEntity entity) {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();		
 	}
 
 	public void setLocale(Locale loc) {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	public void setReasonPhrase(String reason) throws IllegalStateException {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	public void setStatusCode(int code) throws IllegalStateException {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	public void setStatusLine(StatusLine statusline) {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	public void setStatusLine(ProtocolVersion ver, int code) {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	public void setStatusLine(ProtocolVersion ver, int code, String reason) {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	public void addHeader(Header header) {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	public void addHeader(String name, String value) {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	public boolean containsHeader(String name) {
-		// TODO Auto-generated method stub
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	public Header[] getAllHeaders() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public Header getFirstHeader(String name) {
-		// TODO Auto-generated method stub
+		for(Header header : headers) {
+			if (header.getName().equals(name))
+				return header;
+		}
 		return null;
 	}
 
 	public Header[] getHeaders(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public Header getLastHeader(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public HttpParams getParams() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public ProtocolVersion getProtocolVersion() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public HeaderIterator headerIterator() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public HeaderIterator headerIterator(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public void removeHeader(Header header) {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	public void removeHeaders(String name) {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	public void setHeader(Header header) {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	public void setHeader(String name, String value) {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	public void setHeaders(Header[] headers) {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	public void setParams(HttpParams params) {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 }
