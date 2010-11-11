@@ -51,9 +51,17 @@ public class RestClient implements IRestClient {
 		ClientConnectionManager cm = new ThreadSafeClientConnManager(params, schemeRegistry);
 		return new DefaultHttpClient(cm, params);
 	}
-
+	
+	@Override
 	public HttpResponse get(String url) throws IOException {
+		return get(url, null);
+	}
+
+	public HttpResponse get(String url, List<NameValuePair> headers) throws IOException {
 		HttpGet get = new HttpGet(url);
+		if (headers != null)
+			for(NameValuePair header : headers)
+				get.addHeader(header.getName(), header.getValue());
 		auth(get);
 		HttpResponse response = this.client.execute(get, new BasicHttpContext());
 		if (response.getStatusLine().getStatusCode() != 200) {

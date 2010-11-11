@@ -2,15 +2,10 @@ package org.instedd.geochat.lgw.test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.Header;
-import org.apache.http.HeaderElement;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
-import org.apache.http.message.BasicHeader;
 import org.instedd.geochat.lgw.msg.IRestClient;
 
 public class MockRestClient implements IRestClient {
@@ -19,21 +14,20 @@ public class MockRestClient implements IRestClient {
 	private String password;
 	private String response;
 	private String getUrl;
-	private List<Header> headers = new ArrayList<Header>();
+	private List<NameValuePair> headers;
 	
 	public MockRestClient(String response) {
 		this.response = response;
 	}
 	
-	public void addHeader(String name, String value) {
-		this.headers.add(new BasicHeader(name, value));
+	public HttpResponse get(String url) {
+		return get(url, null);
 	}
 
-	public HttpResponse get(String url) {
+	public HttpResponse get(String url, List<NameValuePair> headers) {
 		this.getUrl = url;
-		MockHttpResponse response = new MockHttpResponse(new ByteArrayInputStream(this.response.getBytes()));
-		response.setHeaders(headers);
-		return response;
+		this.headers = headers;
+		return new MockHttpResponse(new ByteArrayInputStream(this.response.getBytes()));
 	}
 	
 	public void post(String url, List<NameValuePair> params) throws IOException {
@@ -55,6 +49,14 @@ public class MockRestClient implements IRestClient {
 	
 	public String getGetUrl() {
 		return getUrl;
+	}
+
+	public String getHeader(String name) {
+		for(NameValuePair header : this.headers) {
+			if (header.getName().equals(name))
+				return header.getValue();
+		}
+		return null;
 	}
 
 }
