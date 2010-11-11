@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.xml.sax.SAXException;
 
 import android.util.Xml;
@@ -40,23 +43,21 @@ public class QstClient {
 		
 	}
 	
-	public Messages getMessages() throws QstClientException {
+	public Message[] getMessages(String lastReceivedMessageId) throws QstClientException {
 		try {
-			HttpResponse response = this.client.get("https://nuntium.instedd.org/instedd/qst/outgoing");
+			List<NameValuePair> headers = new ArrayList<NameValuePair>(1);
+			if (lastReceivedMessageId != null) {
+				headers.add(new BasicNameValuePair("If-None-Match", lastReceivedMessageId));
+			}
+			
+			HttpResponse response = this.client.get("https://nuntium.instedd.org/instedd/qst/outgoing", headers);
 			if (response == null) throw new QstClientException("Status not HTTP_OK (200) on getMessages");
 			
 			InputStream content = response.getEntity().getContent();
 			try {
 				MessageHandler handler = new MessageHandler();
 				Xml.parse(content, Encoding.UTF_8, handler);
-				
-				String etag = null;
-				Header header = response.getFirstHeader("ETag");
-				if (header != null) {
-					etag = header.getValue();
-				}
-				
-				return new Messages(handler.getMessages(), etag);
+				return handler.getMessages();
 			} finally {
 				content.close();
 			}
