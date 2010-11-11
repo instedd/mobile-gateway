@@ -60,6 +60,10 @@ public class GeoChatTransceiverService extends CompatibilityService {
 	@Override
 	public void onDestroy() {
 		stopTransceiving();
+		
+		// Unregister the network changes receiver
+		this.unregisterReceiver(receiver);
+		
 		super.onDestroy();
 	}
 	

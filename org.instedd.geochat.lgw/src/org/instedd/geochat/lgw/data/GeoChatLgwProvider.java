@@ -37,8 +37,9 @@ public class GeoChatLgwProvider extends ContentProvider {
     
     public final static int INCOMING = 1;
     public final static int OUTGOING = 2;
-    public final static int INCOMING_ID = 3;
+    public final static int INCOMING_GUID = 3;
     public final static int OUTGOING_ID = 4;
+    public final static int OUTGOING_GUID = 5;
     
     public static final UriMatcher URI_MATCHER;
     
@@ -94,15 +95,23 @@ public class GeoChatLgwProvider extends ContentProvider {
         case OUTGOING:
         	count = db.delete(OUTGOING_TABLE_NAME, where, whereArgs);
             break;
-        case INCOMING_ID: {
+        case INCOMING_GUID: {
             String msgId = uri.getPathSegments().get(1);
-            count = db.delete(INCOMING_TABLE_NAME, BaseColumns._ID + "=" + msgId
+            msgId = msgId.replace("'", "''");
+            count = db.delete(INCOMING_TABLE_NAME, BaseColumns._ID + " <= (SELECT " + BaseColumns._ID + " FROM " + INCOMING_TABLE_NAME + " WHERE " + Messages.GUID + " = '" + msgId +  "')"
                     + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
             break;
         }
         case OUTGOING_ID: {
             String msgId = uri.getPathSegments().get(1);
             count = db.delete(OUTGOING_TABLE_NAME, BaseColumns._ID + "=" + msgId
+                    + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
+            break;
+        }
+        case OUTGOING_GUID: {
+            String msgId = uri.getPathSegments().get(1);
+            msgId = msgId.replace("'", "''");
+            count = db.delete(OUTGOING_TABLE_NAME, Messages.GUID + "='" + msgId + "'"
                     + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
             break;
         }
@@ -120,10 +129,11 @@ public class GeoChatLgwProvider extends ContentProvider {
 	public String getType(Uri uri) {
 		switch (URI_MATCHER.match(uri)) {
         case INCOMING:
-        case INCOMING_ID:
+        case INCOMING_GUID:
             return IncomingMessages.CONTENT_TYPE;
         case OUTGOING:
         case OUTGOING_ID:
+        case OUTGOING_GUID:
             return IncomingMessages.CONTENT_TYPE;
         default:
             throw new IllegalArgumentException("Unknown URI " + uri);
@@ -191,13 +201,6 @@ public class GeoChatLgwProvider extends ContentProvider {
                 orderBy = Messages.DEFAULT_SORT_ORDER;
             }
         	break;
-        case INCOMING_ID:
-        	qb.setTables(INCOMING_TABLE_NAME);
-        	qb.appendWhere(Messages._ID + " = " + uri.getPathSegments().get(1));
-        	if (TextUtils.isEmpty(sortOrder)) {
-                orderBy = Messages.DEFAULT_SORT_ORDER;
-            }
-        	break;
         case OUTGOING_ID:
         	qb.setTables(OUTGOING_TABLE_NAME);
         	qb.appendWhere(Messages._ID + " = " + uri.getPathSegments().get(1));
@@ -227,9 +230,10 @@ public class GeoChatLgwProvider extends ContentProvider {
     static {
 		URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "incoming", INCOMING);
-        URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "incoming/#", INCOMING_ID);
+        URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "incoming/*", INCOMING_GUID);
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "outgoing", OUTGOING);
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "outgoing/#", OUTGOING_ID);
+        URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "outgoing/guid/*", OUTGOING_GUID);
 
         for (int i = 0; i < 2; i++) {
         	Map<String, String> map;
