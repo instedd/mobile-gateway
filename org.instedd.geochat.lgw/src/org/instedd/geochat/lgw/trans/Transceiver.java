@@ -31,15 +31,32 @@ public class Transceiver {
 	private final static String SMS_SENT_ACTION = "org.instedd.geochat.lgw.SMS_SENT_ACTION";
 	private final static String INTENT_EXTRA_GUID = "org.instedd.geochat.lgw.Guid";
 	
+	private final static Uri NOT_SENDING_URI = Uri.withAppendedPath(OutgoingMessages.CONTENT_URI, "not_sending");
+	private final static ContentValues SENDING_CONTENT_VALUES = new ContentValues();
+	static {
+		SENDING_CONTENT_VALUES.put(OutgoingMessages.SENDING, 1);
+	}
+	private final static ContentValues NOT_SENDING_CONTENT_VALUES = new ContentValues();
+	static {
+		NOT_SENDING_CONTENT_VALUES.put(OutgoingMessages.SENDING, 0);
+	}
+	
 	private BroadcastReceiver smsSentReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (SMS_SENT_ACTION.equals(intent.getAction())) {
+				String guid = intent.getExtras().getString(INTENT_EXTRA_GUID);
+				Uri uri = Uri.withAppendedPath(Uri.withAppendedPath(OutgoingMessages.CONTENT_URI, "guid"), guid);
+				
 				switch(getResultCode()) {
 				case Activity.RESULT_OK:
-					String guid = intent.getExtras().getString(INTENT_EXTRA_GUID);
-					Uri uri = Uri.withAppendedPath(Uri.withAppendedPath(OutgoingMessages.CONTENT_URI, "guid"), guid);
-					context.getContentResolver().delete(uri, null, null);
+					Transceiver.this.context.getContentResolver().delete(uri, null, null);
+					break;
+				default:
+					synchronized(notSendingLock) {
+						Transceiver.this.context.getContentResolver().update(uri, NOT_SENDING_CONTENT_VALUES, null, null);
+					}
+					break;
 				}
 			}
 		}
@@ -65,7 +82,8 @@ public class Transceiver {
 	            Transceiver.this.context.getContentResolver().insert(IncomingMessages.CONTENT_URI, 
 	            		Message.toContentValues(guid, from, to, text, when));
 	        }
-
+	        
+	        resync();
 		}
 	};
 
@@ -78,7 +96,8 @@ public class Transceiver {
 	boolean connectivityChanged;
 	boolean running;
 	boolean resync;
-	Object lock;
+	Object sleepLock;
+	Object notSendingLock = new Object();
 
 	public Transceiver(Context context, Handler handler) {
 		this.context = context;
@@ -113,9 +132,9 @@ public class Transceiver {
 	}
 
 	public void resync() {
-		if (lock != null) {
-			synchronized(lock) {
-				lock.notify();
+		if (sleepLock != null) {
+			synchronized(sleepLock) {
+				sleepLock.notify();
 			}
 		}
 		this.resync = true;
@@ -147,23 +166,10 @@ public class Transceiver {
 					
 					if (hasConnectivity) {
 						try {
-							// Get outgoing messages (to be sent to users)
-							Message[] outgoing = client.getMessages(settings.getLastReceivedMessageId());
-							if (outgoing.length != 0) {
-								// Persist
-								ContentValues[] values = Message.toContentValues(outgoing);
-								context.getContentResolver().bulkInsert(OutgoingMessages.CONTENT_URI, values);
-								
-								// Send messages
-								for (int i = 0; i < outgoing.length; i++)
-									sendMessage(outgoing[i]);
-								
-								// Remember last id
-								settings.setLastReceivedMessageId(outgoing[outgoing.length - 1].guid);
-							}
+							Cursor c;
 							
 							// Send incoming messages (to be sent to the app)
-							Cursor c = context.getContentResolver().query(IncomingMessages.CONTENT_URI, Message.PROJECTION, null, null, null);
+							c = context.getContentResolver().query(IncomingMessages.CONTENT_URI, Message.PROJECTION, null, null, null);
 							try {
 								if (c.getCount() > 0) {
 									Message[] incoming = new Message[c.getCount()];
@@ -175,6 +181,41 @@ public class Transceiver {
 								}
 							} finally {
 								c.close();
+							}
+							
+							// Get pending messages
+							synchronized(notSendingLock) {
+								c = context.getContentResolver().query(NOT_SENDING_URI, Message.PROJECTION, null, null, null);
+								
+								// Mark them as sending
+								if (c.getCount() > 0)
+									context.getContentResolver().update(NOT_SENDING_URI, SENDING_CONTENT_VALUES, null, null);
+							}
+							
+							// Send them via phone
+							try {
+								for (int i = 0; c.moveToNext(); i++)
+									sendMessage(Message.readFrom(c));
+							} finally {
+								c.close();
+							}
+							
+							
+							// Get outgoing messages (to be sent to users)
+							Message[] outgoing = client.getMessages(settings.getLastReceivedMessageId());
+							if (outgoing.length != 0) {
+								// Persist as "sending"
+								ContentValues[] values = Message.toContentValues(outgoing);
+								for(ContentValues v : values)
+									v.put(OutgoingMessages.SENDING, 1);
+								context.getContentResolver().bulkInsert(OutgoingMessages.CONTENT_URI, values);
+								
+								// Send them via phone
+								for (int i = 0; i < outgoing.length; i++)
+									sendMessage(outgoing[i]);
+								
+								// Remember last id
+								settings.setLastReceivedMessageId(outgoing[outgoing.length - 1].guid);
 							}
 						} catch (QstClientException e) {
 							// TODO handle this exception
@@ -192,14 +233,16 @@ public class Transceiver {
 				}
 				
 				// Wait 1 minutes
-				lock = new Object();
-				synchronized (lock) {
-					try {
-						lock.wait(1000 * 60 * 1);
-					} catch (InterruptedException e) {
+				if (!resync) {
+					sleepLock = new Object();
+					synchronized (sleepLock) {
+						try {
+							sleepLock.wait(1000 * 60 * 1);
+						} catch (InterruptedException e) {
+						}
 					}
+					sleepLock = null;
 				}
-				lock = null;
 			}
 		}
 		
