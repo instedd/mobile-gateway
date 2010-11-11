@@ -16,4 +16,6 @@ public interface IRestClient {
 	
 	HttpResponse post(String url, String data, String contentType) throws IOException;
 
+	HttpResponse head(String url) throws IOException;
+
 }

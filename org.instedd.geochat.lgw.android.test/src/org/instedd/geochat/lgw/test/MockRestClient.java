@@ -21,6 +21,7 @@ public class MockRestClient implements IRestClient {
 	private String postData;
 	private String postContentType;;
 	private List<Header> responseHeaders = new ArrayList<Header>();
+	private String method;
 	
 	public MockRestClient(String response) {
 		this.response = response;
@@ -31,6 +32,7 @@ public class MockRestClient implements IRestClient {
 	}
 
 	public HttpResponse get(String url, List<NameValuePair> headers) {
+		this.method = "get";
 		this.url = url;
 		this.getHeaders = headers;
 		MockHttpResponse resp = new MockHttpResponse(new ByteArrayInputStream(this.response.getBytes()));
@@ -38,7 +40,16 @@ public class MockRestClient implements IRestClient {
 		return resp;
 	}
 	
+	public HttpResponse head(String url) {
+		this.method = "head";
+		this.url = url;
+		MockHttpResponse resp = new MockHttpResponse(new ByteArrayInputStream(this.response.getBytes()));
+		resp.setHeaders(responseHeaders);
+		return resp;
+	}
+	
 	public HttpResponse post(String url, String data, String contentType) throws IOException {
+		this.method = "post";
 		this.url = url;
 		this.postData = data;
 		this.postContentType = contentType;
@@ -83,6 +94,10 @@ public class MockRestClient implements IRestClient {
 
 	public void addResponseHeader(String name, String value) {
 		this.responseHeaders.add(new BasicHeader(name, value));
+	}
+
+	public String getMethod() {
+		return method;
 	}
 
 }
