@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.xml.sax.SAXException;
 
@@ -39,7 +40,7 @@ public class QstClient {
 		
 	}
 	
-	public Message[] getMessages() throws QstClientException {
+	public Messages getMessages() throws QstClientException {
 		try {
 			HttpResponse response = this.client.get("https://nuntium.instedd.org/instedd/qst/outgoing");
 			if (response == null) throw new QstClientException("Status not HTTP_OK (200) on getMessages");
@@ -48,7 +49,14 @@ public class QstClient {
 			try {
 				MessageHandler handler = new MessageHandler();
 				Xml.parse(content, Encoding.UTF_8, handler);
-				return handler.getMessages();
+				
+				String etag = null;
+				Header header = response.getFirstHeader("ETag");
+				if (header != null) {
+					etag = header.getValue();
+				}
+				
+				return new Messages(handler.getMessages(), etag);
 			} finally {
 				content.close();
 			}
