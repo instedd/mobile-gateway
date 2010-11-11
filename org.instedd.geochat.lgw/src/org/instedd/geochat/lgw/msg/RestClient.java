@@ -7,7 +7,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -17,6 +16,7 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
@@ -71,14 +71,22 @@ public class RestClient implements IRestClient {
 		return response;
 	}
 	
-	public void post(String url, List<NameValuePair> params) throws IOException {
+	public HttpResponse post(String url, String data, String contentType) throws IOException {
 		HttpPost post = new HttpPost(url);
 		auth(post);
-		post.setEntity(new UrlEncodedFormEntity(params));
+		
+		StringEntity entity = new StringEntity(data, "UTF-8");
+		entity.setContentType(contentType);
+
+		post.setEntity(entity);
 		post.getParams().setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
 		
 		HttpResponse response = this.client.execute(post, new BasicHttpContext());
-		response.getEntity().getContent().close();
+		if (response.getStatusLine().getStatusCode() != 200) {
+			response.getEntity().getContent().close();
+			return null;
+		}
+		return response;
 	}
 
 	public void setAuth(String user, String password) {
