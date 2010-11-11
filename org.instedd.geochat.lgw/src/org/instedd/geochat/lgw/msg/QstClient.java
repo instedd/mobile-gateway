@@ -1,10 +1,15 @@
 package org.instedd.geochat.lgw.msg;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.apache.http.HttpResponse;
+import org.xml.sax.SAXException;
+
+import android.util.Xml;
+import android.util.Xml.Encoding;
 
 public class QstClient {
 	
@@ -30,12 +35,28 @@ public class QstClient {
 		}	
 	}
 	
-	public void sendMessages(Message[] messages) throws IOException {
+	public void sendMessages(Message[] messages) throws QstClientException {
 		
 	}
 	
-	public Message[] getMessages() throws IOException {
-		return null;
+	public Message[] getMessages() throws QstClientException {
+		try {
+			HttpResponse response = this.client.get("https://nuntium.instedd.org/instedd/qst/outgoing");
+			if (response == null) throw new QstClientException("Status not HTTP_OK (200) on getMessages");
+			
+			InputStream content = response.getEntity().getContent();
+			try {
+				MessageHandler handler = new MessageHandler();
+				Xml.parse(content, Encoding.UTF_8, handler);
+				return handler.getMessages();
+			} finally {
+				content.close();
+			}
+		} catch (IOException e) {
+			throw new QstClientException(e);
+		} catch (SAXException e) {
+			throw new QstClientException(e);
+		}
 	}
 	
 	private String encode(String str) {
