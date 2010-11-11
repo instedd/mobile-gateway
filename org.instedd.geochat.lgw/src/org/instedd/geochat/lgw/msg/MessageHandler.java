@@ -1,14 +1,10 @@
 package org.instedd.geochat.lgw.msg;
 
-import java.text.SimpleDateFormat;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class MessageHandler extends DefaultHandler {
-	
-	private final static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 	
 	private Message[] NO_MESSAGES = {};
 	
