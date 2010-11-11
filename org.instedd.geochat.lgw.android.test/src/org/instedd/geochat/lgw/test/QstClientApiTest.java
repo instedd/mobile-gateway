@@ -45,12 +45,12 @@ public class QstClientApiTest extends TestCase {
 		
 		assertEquals(2, messages.length);
 		
-		assertEquals("2b483424-2c2a-4702-b391-651f2a21da9d", messages[0].id);
+		assertEquals("2b483424-2c2a-4702-b391-651f2a21da9d", messages[0].guid);
 		assertEquals("twitter://edjez", messages[0].from);
 		assertEquals("twitter://kzu", messages[0].to);
 		assertEquals("You're fired!", messages[0].text);
 		
-		assertEquals("2b483424-2c2a-4702-b391-651f2a21da9e", messages[1].id);
+		assertEquals("2b483424-2c2a-4702-b391-651f2a21da9e", messages[1].guid);
 		assertEquals("twitter://edjez2", messages[1].from);
 		assertEquals("twitter://kzu2", messages[1].to);
 		assertEquals("You're fired!!", messages[1].text);
@@ -65,7 +65,7 @@ public class QstClientApiTest extends TestCase {
 		Message[] messages = new Message[2];
 		for (int i = 0; i < messages.length; i++) {
 			messages[i] = new Message();
-			messages[i].id = String.valueOf(i);
+			messages[i].guid = String.valueOf(i);
 			messages[i].from = "from" + i;
 			messages[i].to = "to" + i;
 			messages[i].text = "text" + i;
@@ -90,7 +90,7 @@ public class QstClientApiTest extends TestCase {
 		
 		assertEquals(messages.length, actualMessages.length);
 		for (int i = 0; i < messages.length; i++) {
-			assertEquals(messages[i].id, actualMessages[i].id);
+			assertEquals(messages[i].guid, actualMessages[i].guid);
 			assertEquals(messages[i].from, actualMessages[i].from);
 			assertEquals(messages[i].to, actualMessages[i].to);
 			assertEquals(messages[i].text, actualMessages[i].text);
