@@ -90,6 +90,12 @@ public class GeoChatLgw {
          * The MIME type of a {@link #CONTENT_URI} sub-directory of a single message.
          */
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.geochat.lgw.outgoing";
+        
+        /**
+         * Is this message being sent?
+         * <P>Type: INTEGER</P>
+         */
+        public static final String SENDING = "_sending";
     }
 
 }
