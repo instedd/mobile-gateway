@@ -36,7 +36,7 @@ public class MessageHandler extends DefaultHandler {
 					messages = new Message[10];
 				}
 				message = new Message();
-				message.id = attributes.getValue("id");
+				message.guid = attributes.getValue("id");
 				message.from = attributes.getValue("from");
 				message.to = attributes.getValue("to");
 				inMessage = true;

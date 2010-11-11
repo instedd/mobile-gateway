@@ -23,6 +23,9 @@ import android.util.Xml.Encoding;
 
 public class QstClient {
 	
+	//private final static String base = "https://nuntium.instedd.org/instedd";
+	private final static String base = "http://nuntium.manas.com.ar/geochat";
+	
 	private final static SimpleDateFormat DATE_FORMAT;
 	static {
 		DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -42,7 +45,7 @@ public class QstClient {
 
 	public void sendAddress(String address) throws QstClientException {
 		try {
-			HttpResponse response = this.client.get("https://nuntium.instedd.org/instedd/qst/setaddress?address=" + encode(address));
+			HttpResponse response = this.client.get(base + "/qst/setaddress?address=" + encode(address));
 			if (response == null) throw new QstClientException("Status not HTTP_OK (200) on sendAddress");
 			
 			response.getEntity().getContent().close();
@@ -63,7 +66,7 @@ public class QstClient {
 				Message msg = messages[i];
 				
 				serializer.startTag("", "message");				
-				serializer.attribute("", "id", msg.id);
+				serializer.attribute("", "id", msg.guid);
 				serializer.attribute("", "from", msg.from);
 				serializer.attribute("", "to", msg.to);
 				serializer.attribute("", "when", DATE_FORMAT.format(new Date(msg.when)));
@@ -75,7 +78,7 @@ public class QstClient {
 			serializer.endTag("", "messages");
 			serializer.flush();
 			
-			HttpResponse response = this.client.post("https://nuntium.instedd.org/instedd/qst/incoming", writer.toString(), "application/xml");
+			HttpResponse response = this.client.post(base + "/qst/incoming", writer.toString(), "application/xml");
 			if (response == null) throw new QstClientException("Status not HTTP_OK (200) on sendMessages");
 			
 			try {
@@ -98,7 +101,7 @@ public class QstClient {
 				headers.add(new BasicNameValuePair("If-None-Match", lastReceivedMessageId));
 			}
 			
-			HttpResponse response = this.client.get("https://nuntium.instedd.org/instedd/qst/outgoing", headers);
+			HttpResponse response = this.client.get(base + "/qst/outgoing", headers);
 			if (response == null) throw new QstClientException("Status not HTTP_OK (200) on getMessages");
 			
 			InputStream content = response.getEntity().getContent();
@@ -118,7 +121,7 @@ public class QstClient {
 	
 	public String getLastSentMessageId() throws QstClientException {
 		try {
-			HttpResponse response = this.client.head("https://nuntium.instedd.org/instedd/qst/incoming");
+			HttpResponse response = this.client.head(base + "/qst/incoming");
 			if (response == null) throw new QstClientException("Status not HTTP_OK (200) on getLastSentMessageId");
 			
 			try {

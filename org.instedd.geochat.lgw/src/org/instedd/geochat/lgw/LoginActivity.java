@@ -2,12 +2,14 @@ package org.instedd.geochat.lgw;
 
 import org.instedd.geochat.lgw.msg.QstClient;
 import org.instedd.geochat.lgw.msg.QstClientException;
+import org.instedd.geochat.lgw.trans.GeoChatTransceiverService;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.TelephonyManager;
@@ -24,15 +26,16 @@ public final static String EXTRA_WRONG_CREDENTIALS = "WrongCredentials";
 	private final static int DIALOG_WRONG_CREDENTIALS = 2;
 	private final static int DIALOG_UNKNOWN_ERROR = 3;
 	
-	private final Handler handler = new Handler();
-	private ProgressDialog progressDialog;
+	final Handler handler = new Handler();
+	ProgressDialog progressDialog;
+	boolean started;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 	    
-	    final GeoChatSettings settings = new GeoChatSettings(this);
+	    final GeoChatLgwSettings settings = new GeoChatLgwSettings(this);
 	    String existingName = settings.getName();
 	    String existingPassword = settings.getPassword();
 	    String existingNumber = settings.getNumber();
@@ -58,40 +61,68 @@ public final static String EXTRA_WRONG_CREDENTIALS = "WrongCredentials";
 			public void onClick(View v) {
 				new Thread() {
 					public void run() {
-						handler.post(new Runnable() {
-							public void run() {
-								showDialog(DIALOG_LOGGING_IN);
-								uiStart.setEnabled(false);
-							}
-						});
-						
-						String name = uiName.getText().toString();
-						String password = uiPassword.getText().toString();
-						String number = uiNumber.getText().toString();
-						
-						try {
-							QstClient client = new QstClient(name, password);
-							client.sendAddress(number);
-							
-							settings.setCredentials(name, password, number);
-							
-							Actions.home(LoginActivity.this);
-						} catch (QstClientException e) {
+						if (started) {
 							handler.post(new Runnable() {
 								public void run() {
-									uiStart.setEnabled(true);
-									dismissDialog(DIALOG_LOGGING_IN);
-									showDialog(DIALOG_WRONG_CREDENTIALS);
-								}									
-							});
-						} catch (Exception e) {
-							handler.post(new Runnable() {
-								public void run() {
-									uiStart.setEnabled(true);
-									dismissDialog(DIALOG_LOGGING_IN);
-									showDialog(DIALOG_UNKNOWN_ERROR);
+									stopService(new Intent().setClass(LoginActivity.this, GeoChatTransceiverService.class));
+
+									started = false;
+									uiName.setEnabled(true);
+									uiPassword.setEnabled(true);
+									uiNumber.setEnabled(true);
+									uiStart.setText(R.string.start);
 								}
 							});
+						} else {
+							handler.post(new Runnable() {
+								public void run() {
+									showDialog(DIALOG_LOGGING_IN);
+									uiStart.setEnabled(false);
+								}
+							});
+							
+							String name = uiName.getText().toString();
+							String password = uiPassword.getText().toString();
+							String number = uiNumber.getText().toString();
+							
+							try {
+								QstClient client = new QstClient(name, password);
+								client.sendAddress(number);
+								
+								settings.setCredentials(name, password, number);
+								
+								handler.post(new Runnable() {
+									public void run() {
+										uiStart.setEnabled(true);
+										dismissDialog(DIALOG_LOGGING_IN);
+										
+										startService(new Intent().setClass(LoginActivity.this, GeoChatTransceiverService.class));
+										
+										started = true;
+										uiStart.requestFocus();
+										uiName.setEnabled(false);
+										uiPassword.setEnabled(false);
+										uiNumber.setEnabled(false);
+										uiStart.setText(R.string.stop);
+									}
+								});
+							} catch (QstClientException e) {
+								handler.post(new Runnable() {
+									public void run() {
+										uiStart.setEnabled(true);
+										dismissDialog(DIALOG_LOGGING_IN);
+										showDialog(DIALOG_WRONG_CREDENTIALS);
+									}									
+								});
+							} catch (Exception e) {
+								handler.post(new Runnable() {
+									public void run() {
+										uiStart.setEnabled(true);
+										dismissDialog(DIALOG_LOGGING_IN);
+										showDialog(DIALOG_UNKNOWN_ERROR);
+									}
+								});
+							}
 						}
 					};
 				}.start();
