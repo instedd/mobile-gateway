@@ -41,7 +41,7 @@ public class Message {
 		return values;
 	}
 	
-	public ContentValues toContentValues() {
+	public static ContentValues toContentValues(String guid, String from, String to, String text, long when) {
 		ContentValues values = new ContentValues();
 		values.put(Messages.GUID, guid);
 		values.put(Messages.FROM, from);
@@ -51,6 +51,10 @@ public class Message {
 			values.put(Messages.WHEN, when);
 		}
 		return values;
+	}
+	
+	public ContentValues toContentValues() {
+		return toContentValues(guid, from, to, text, when);
 	}
 
 }

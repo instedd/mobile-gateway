@@ -156,17 +156,17 @@ public class GeoChatLgwProvider extends ContentProvider {
 		case INCOMING:
 			rowId = db.insert(INCOMING_TABLE_NAME, Messages.GUID, values);
 			if (rowId > 0) {
-				Uri userUri = ContentUris.withAppendedId(IncomingMessages.CONTENT_URI, rowId);
-	            getContext().getContentResolver().notifyChange(userUri, null);
-	            return userUri;
+				Uri msgUri = ContentUris.withAppendedId(IncomingMessages.CONTENT_URI, rowId);
+	            getContext().getContentResolver().notifyChange(msgUri, null);
+	            return msgUri;
 			}
 			break;
 		case OUTGOING:
 			rowId = db.insert(OUTGOING_TABLE_NAME, Messages.GUID, values);
 			if (rowId > 0) {
-				Uri userUri = ContentUris.withAppendedId(OutgoingMessages.CONTENT_URI, rowId);
-	            getContext().getContentResolver().notifyChange(userUri, null);
-	            return userUri;
+				Uri msgUri = ContentUris.withAppendedId(OutgoingMessages.CONTENT_URI, rowId);
+	            getContext().getContentResolver().notifyChange(msgUri, null);
+	            return msgUri;
 			}
 			break;
 		default:
