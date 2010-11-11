@@ -1,9 +1,15 @@
 package org.instedd.geochat.lgw.test;
 
+import java.io.ByteArrayInputStream;
+
 import junit.framework.TestCase;
 
 import org.instedd.geochat.lgw.msg.Message;
+import org.instedd.geochat.lgw.msg.MessageHandler;
 import org.instedd.geochat.lgw.msg.QstClient;
+
+import android.util.Xml;
+import android.util.Xml.Encoding;
 
 public class QstClientApiTest extends TestCase {
 	
@@ -14,7 +20,7 @@ public class QstClientApiTest extends TestCase {
 		
 		assertEquals("foo", restClient.getUser());
 		assertEquals("bar", restClient.getPassword());
-		assertEquals("https://nuntium.instedd.org/instedd/qst/setaddress?address=lala", restClient.getGetUrl());
+		assertEquals("https://nuntium.instedd.org/instedd/qst/setaddress?address=lala", restClient.getUrl());
 	}
 	
 	public void testGetMessages() throws Exception {
@@ -33,8 +39,8 @@ public class QstClientApiTest extends TestCase {
 		
 		assertEquals("foo", restClient.getUser());
 		assertEquals("bar", restClient.getPassword());
-		assertEquals("https://nuntium.instedd.org/instedd/qst/outgoing", restClient.getGetUrl());
-		assertEquals("lastone", restClient.getHeader("If-None-Match"));
+		assertEquals("https://nuntium.instedd.org/instedd/qst/outgoing", restClient.getUrl());
+		assertEquals("lastone", restClient.getGetHeader("If-None-Match"));
 		
 		assertEquals(2, messages.length);
 		
@@ -50,7 +56,43 @@ public class QstClientApiTest extends TestCase {
 	}
 	
 	public void testSendMessages() throws Exception {
-		 
+		MockRestClient restClient = new MockRestClient("");
+		restClient.addResponseHeader("ETag", "etagg");
+		
+		QstClient client = new QstClient("foo", "bar", restClient);
+		
+		Message[] messages = new Message[2];
+		for (int i = 0; i < messages.length; i++) {
+			messages[i] = new Message();
+			messages[i].id = String.valueOf(i);
+			messages[i].from = "from" + i;
+			messages[i].to = "to" + i;
+			messages[i].text = "text" + i;
+			messages[i].when = System.currentTimeMillis() + i;	
+		}
+		
+		String lastMessageId = client.sendMessages(messages);
+		
+		assertEquals("foo", restClient.getUser());
+		assertEquals("bar", restClient.getPassword());
+		assertEquals("https://nuntium.instedd.org/instedd/qst/incoming", restClient.getUrl());
+		assertEquals("etagg", lastMessageId);
+		
+		assertEquals("application/xml", restClient.getPostContentType());
+		String data = restClient.getPostData();
+		
+		MessageHandler handler = new MessageHandler();
+		Xml.parse(new ByteArrayInputStream(data.getBytes()), Encoding.UTF_8, handler);
+		
+		Message[] actualMessages = handler.getMessages();
+		
+		assertEquals(messages.length, actualMessages.length);
+		for (int i = 0; i < messages.length; i++) {
+			assertEquals(messages[i].id, actualMessages[i].id);
+			assertEquals(messages[i].from, actualMessages[i].from);
+			assertEquals(messages[i].to, actualMessages[i].to);
+			assertEquals(messages[i].text, actualMessages[i].text);
+		}
 	}
 
 }

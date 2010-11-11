@@ -1,5 +1,6 @@
 package org.instedd.geochat.lgw.msg;
 
+
 public class Message {
 	
 	public String id;
