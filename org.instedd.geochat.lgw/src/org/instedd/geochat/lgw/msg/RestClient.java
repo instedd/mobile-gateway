@@ -8,6 +8,7 @@ import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ClientConnectionManager;
@@ -64,6 +65,18 @@ public class RestClient implements IRestClient {
 				get.addHeader(header.getName(), header.getValue());
 		auth(get);
 		HttpResponse response = this.client.execute(get, new BasicHttpContext());
+		if (response.getStatusLine().getStatusCode() != 200) {
+			response.getEntity().getContent().close();
+			return null;
+		}
+		return response;
+	}
+	
+	@Override
+	public HttpResponse head(String url) throws IOException {
+		HttpHead head = new HttpHead(url);
+		auth(head);
+		HttpResponse response = this.client.execute(head, new BasicHttpContext());
 		if (response.getStatusLine().getStatusCode() != 200) {
 			response.getEntity().getContent().close();
 			return null;

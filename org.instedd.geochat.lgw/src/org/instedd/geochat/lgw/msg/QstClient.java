@@ -48,7 +48,7 @@ public class QstClient {
 			response.getEntity().getContent().close();
 		} catch (IOException e) {
 			throw new QstClientException(e);
-		}	
+		}
 	}
 	
 	public String sendMessages(Message[] messages) throws QstClientException {
@@ -88,7 +88,6 @@ public class QstClient {
 		} catch (Exception e) {
 			throw new QstClientException(e);
 		}
-		
 		return null;
 	}
 	
@@ -115,6 +114,24 @@ public class QstClient {
 		} catch (SAXException e) {
 			throw new QstClientException(e);
 		}
+	}
+	
+	public String getLastSentMessageId() throws QstClientException {
+		try {
+			HttpResponse response = this.client.head("https://nuntium.instedd.org/instedd/qst/incoming");
+			if (response == null) throw new QstClientException("Status not HTTP_OK (200) on getLastSentMessageId");
+			
+			try {
+				Header header = response.getFirstHeader("ETag");
+				if (header != null)
+					return header.getValue();
+			} finally {
+				response.getEntity().getContent().close();
+			}
+		} catch (IOException e) {
+			throw new QstClientException(e);
+		}
+		return null;
 	}
 	
 	private String encode(String str) {
