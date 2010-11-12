@@ -33,14 +33,6 @@ public class Message {
 		return msg;
 	}
 	
-	public static ContentValues[] toContentValues(Message[] messages) {
-		ContentValues[] values = new ContentValues[messages.length];
-		for (int i = 0; i < messages.length; i++) {
-			values[i] = messages[i].toContentValues();
-		}
-		return values;
-	}
-	
 	public static ContentValues toContentValues(String guid, String from, String to, String text, long when) {
 		ContentValues values = new ContentValues();
 		values.put(Messages.GUID, guid);
