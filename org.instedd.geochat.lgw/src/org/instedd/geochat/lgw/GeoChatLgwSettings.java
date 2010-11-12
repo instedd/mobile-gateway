@@ -14,6 +14,7 @@ public class GeoChatLgwSettings {
 	public final static String NAME = "name";
 	public final static String PASSWORD = "password";
 	public final static String NUMBER = "number";
+	public final static String HTTP_BASE = "httpBase";
 	public final static String LAST_RECEIVED_MESSAGE_ID = "lastSentMessageId";
 	
 	private final Context context;
@@ -52,6 +53,10 @@ public class GeoChatLgwSettings {
 		return openRead().getString(LAST_RECEIVED_MESSAGE_ID, null);
 	}
 	
+	public String getHttpBase() {
+		return openRead().getString(HTTP_BASE, "http://nuntium.manas.com.ar/geochat/qst");
+	}
+	
 	private SharedPreferences openRead() {
 		return context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
 	}
@@ -61,7 +66,7 @@ public class GeoChatLgwSettings {
 	}
 
 	public QstClient newQstClient() {
-		return new QstClient(getName(), getPassword(), new RestClient());
+		return new QstClient(getHttpBase(), getName(), getPassword(), new RestClient());
 	}
 
 }
