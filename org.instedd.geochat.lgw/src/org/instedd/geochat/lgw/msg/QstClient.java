@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -48,7 +49,7 @@ public class QstClient {
 			HttpResponse response = this.client.get(base + "/qst/setaddress?address=" + encode(address));
 			if (response == null) throw new QstClientException("Status not HTTP_OK (200) on sendAddress");
 			
-			response.getEntity().getContent().close();
+			close(response);
 		} catch (IOException e) {
 			throw new QstClientException(e);
 		}
@@ -89,7 +90,7 @@ public class QstClient {
 				if (header != null)
 					return header.getValue();
 			} finally {
-				response.getEntity().getContent().close();
+				close(response);
 			}
 		} catch (Exception e) {
 			throw new QstClientException(e);
@@ -132,12 +133,22 @@ public class QstClient {
 				if (header != null)
 					return header.getValue();
 			} finally {
-				response.getEntity().getContent().close();
+				close(response);
 			}
 		} catch (IOException e) {
 			throw new QstClientException(e);
 		}
 		return null;
+	}
+	
+	private void close(HttpResponse response) throws IOException {
+		HttpEntity entity = response.getEntity();
+		if (entity == null) return;
+		
+		InputStream content = entity.getContent();
+		if (content == null) return;
+		
+		content.close();
 	}
 	
 	private String encode(String str) {

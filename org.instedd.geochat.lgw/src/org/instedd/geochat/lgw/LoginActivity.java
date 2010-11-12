@@ -87,7 +87,9 @@ public final static String EXTRA_WRONG_CREDENTIALS = "WrongCredentials";
 							
 							try {
 								QstClient client = new QstClient(name, password);
-								client.sendAddress(number);
+								
+								// Do this as a login
+								client.getLastSentMessageId();
 								
 								settings.setCredentials(name, password, number);
 								
@@ -111,7 +113,7 @@ public final static String EXTRA_WRONG_CREDENTIALS = "WrongCredentials";
 									public void run() {
 										uiStart.setEnabled(true);
 										dismissDialog(DIALOG_LOGGING_IN);
-										showDialog(DIALOG_WRONG_CREDENTIALS);
+										showDialog(Connectivity.hasConnectivity(LoginActivity.this) ? DIALOG_WRONG_CREDENTIALS : DIALOG_UNKNOWN_ERROR);
 									}									
 								});
 							} catch (Exception e) {
