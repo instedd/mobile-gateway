@@ -27,24 +27,17 @@ public class Transceiver {
 	private final static String SMS_SENT_ACTION = "org.instedd.geochat.lgw.SMS_SENT_ACTION";
 	private final static String INTENT_EXTRA_GUID = "org.instedd.geochat.lgw.Guid";
 	
-	private final static ContentValues SENDING_CONTENT_VALUES = new ContentValues();
-	static {
-		SENDING_CONTENT_VALUES.put(OutgoingMessages.SENDING, 1);
-	}
-	
 	private BroadcastReceiver smsSentReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if (SMS_SENT_ACTION.equals(intent.getAction())) {
-				String guid = intent.getExtras().getString(INTENT_EXTRA_GUID);
-				switch(getResultCode()) {
-				case Activity.RESULT_OK:
-					data.deleteOutgoingMessage(guid);
-					break;
-				default:
-					data.markOutgoingMessageAsBeingSent(guid);
-					break;
-				}
+			String guid = intent.getExtras().getString(INTENT_EXTRA_GUID);
+			switch(getResultCode()) {
+			case Activity.RESULT_OK:
+				data.deleteOutgoingMessage(guid);
+				break;
+			default:
+				data.markOutgoingMessageAsBeingSent(guid);
+				break;
 			}
 		}
 	};
