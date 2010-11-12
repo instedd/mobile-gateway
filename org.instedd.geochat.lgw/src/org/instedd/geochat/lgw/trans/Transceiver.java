@@ -165,9 +165,13 @@ public class Transceiver {
 							if (receivedId != null)
 								data.deleteIncomingMessageUpTo(receivedId);
 							
+							if (resync)	continue;
+							
 							// 2. Send pending messages
 							Message[] pending = data.getOutgoingMessagesNotBeingSentAndMarkAsBeingSent();
 							sendMessages(pending);
+							
+							if (resync)	continue;
 							
 							// 3.a. Get outgoing messages (to be sent to users)
 							Message[] outgoing = client.getMessages(settings.getLastReceivedMessageId());
