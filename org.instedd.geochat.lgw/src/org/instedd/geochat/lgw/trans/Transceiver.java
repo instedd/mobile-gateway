@@ -8,6 +8,7 @@ import org.instedd.geochat.lgw.Notifier;
 import org.instedd.geochat.lgw.data.GeoChatLgwData;
 import org.instedd.geochat.lgw.msg.Message;
 import org.instedd.geochat.lgw.msg.QstClient;
+import org.instedd.geochat.lgw.msg.QstClientException;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -133,10 +134,11 @@ public class Transceiver {
 	
 	class SyncThread extends Thread {
 		
+		boolean firstRun = true;
+		
 		@Override
 		public void run() {
 			boolean hasConnectivity = false;
-			
 			while(running) {
 				try {
 					notifier.startTranscieving();
@@ -145,6 +147,17 @@ public class Transceiver {
 					
 					if (hasConnectivity) {
 						try {
+							// 0. Send address
+							if (firstRun) {
+								try {
+									client.sendAddress(settings.getNumber());
+								} catch (QstClientException e) {
+									// Might happen if server doesn't support
+									// setting an address
+								}
+								firstRun = false;
+							}
+							
 							// 1.a. Get incoming messages
 							Message[] incoming = data.getIncomingMessages();
 							

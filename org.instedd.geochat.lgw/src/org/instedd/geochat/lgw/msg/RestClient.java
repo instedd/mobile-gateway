@@ -3,6 +3,7 @@ package org.instedd.geochat.lgw.msg;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.http.HttpMessage;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
@@ -10,7 +11,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.conn.scheme.PlainSocketFactory;
@@ -59,34 +59,21 @@ public class RestClient implements IRestClient {
 	}
 
 	public HttpResponse get(String url, List<NameValuePair> headers) throws IOException {
-		HttpGet get = new HttpGet(url);
-		if (headers != null)
+		HttpGet get = auth(new HttpGet(url));
 			for(NameValuePair header : headers)
 				get.addHeader(header.getName(), header.getValue());
 		auth(get);
-		HttpResponse response = this.client.execute(get, new BasicHttpContext());
-		if (response.getStatusLine().getStatusCode() != 200) {
-			response.getEntity().getContent().close();
-			return null;
-		}
-		return response;
+		return handleResponse(this.client.execute(get, new BasicHttpContext()));
 	}
 	
 	@Override
 	public HttpResponse head(String url) throws IOException {
-		HttpHead head = new HttpHead(url);
-		auth(head);
-		HttpResponse response = this.client.execute(head, new BasicHttpContext());
-		if (response.getStatusLine().getStatusCode() != 200) {
-			response.getEntity().getContent().close();
-			return null;
-		}
-		return response;
+		HttpHead head = auth(new HttpHead(url));
+		return handleResponse(this.client.execute(head, new BasicHttpContext()));
 	}
 	
 	public HttpResponse post(String url, String data, String contentType) throws IOException {
-		HttpPost post = new HttpPost(url);
-		auth(post);
+		HttpPost post = auth(new HttpPost(url));
 		
 		StringEntity entity = new StringEntity(data, "UTF-8");
 		entity.setContentType(contentType);
@@ -94,22 +81,27 @@ public class RestClient implements IRestClient {
 		post.setEntity(entity);
 		post.getParams().setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
 		
-		HttpResponse response = this.client.execute(post, new BasicHttpContext());
-		if (response.getStatusLine().getStatusCode() != 200) {
-			response.getEntity().getContent().close();
-			return null;
-		}
-		return response;
+		return handleResponse(this.client.execute(post, new BasicHttpContext()));
 	}
 
 	public void setAuth(String user, String password) {
 		this.auth = "Basic " + Base64.encodeBytes((user + ":" + password).getBytes());
 	}
 	
-	private void auth(HttpRequestBase request) {
+	private <T extends HttpMessage> T auth(T request) {
 		if (auth != null) {
 			request.addHeader("Authorization", auth);
 		}
+		return request;
+	}
+	
+	private HttpResponse handleResponse(HttpResponse response) throws IOException {
+		int code = response.getStatusLine().getStatusCode();
+		if (code != 200 && code != 304) {
+			response.getEntity().getContent().close();
+			return null;
+		}
+		return response;
 	}
 
 }
