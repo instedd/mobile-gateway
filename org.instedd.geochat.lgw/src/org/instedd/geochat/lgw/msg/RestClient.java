@@ -60,16 +60,16 @@ public class RestClient implements IRestClient {
 
 	public HttpResponse get(String url, List<NameValuePair> headers) throws IOException {
 		HttpGet get = auth(new HttpGet(url));
+		if (headers != null)
 			for(NameValuePair header : headers)
 				get.addHeader(header.getName(), header.getValue());
-		auth(get);
-		return handleResponse(this.client.execute(get, new BasicHttpContext()));
+		return this.client.execute(get, new BasicHttpContext());
 	}
 	
 	@Override
 	public HttpResponse head(String url) throws IOException {
 		HttpHead head = auth(new HttpHead(url));
-		return handleResponse(this.client.execute(head, new BasicHttpContext()));
+		return this.client.execute(head, new BasicHttpContext());
 	}
 	
 	public HttpResponse post(String url, String data, String contentType) throws IOException {
@@ -81,7 +81,7 @@ public class RestClient implements IRestClient {
 		post.setEntity(entity);
 		post.getParams().setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
 		
-		return handleResponse(this.client.execute(post, new BasicHttpContext()));
+		return this.client.execute(post, new BasicHttpContext());
 	}
 
 	public void setAuth(String user, String password) {
@@ -93,15 +93,6 @@ public class RestClient implements IRestClient {
 			request.addHeader("Authorization", auth);
 		}
 		return request;
-	}
-	
-	private HttpResponse handleResponse(HttpResponse response) throws IOException {
-		int code = response.getStatusLine().getStatusCode();
-		if (code != 200 && code != 304) {
-			response.getEntity().getContent().close();
-			return null;
-		}
-		return response;
 	}
 
 }

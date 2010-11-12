@@ -54,7 +54,7 @@ public class GeoChatLgwSettings {
 	}
 	
 	public String getHttpBase() {
-		return openRead().getString(HTTP_BASE, "http://nuntium.manas.com.ar/geochat/qst");
+		return openRead().getString(HTTP_BASE, "https://nuntium.instedd.org/instedd/qst");
 	}
 	
 	private SharedPreferences openRead() {

@@ -15,4 +15,10 @@
     <string name="receiving_messages">Receiving messages...</string>
     <string name="signed_in_as_name">Connected in as %s</string>
     <string name="signed_in_as_name_offline">Connected in as %s (offline)</string>
+    <string name="incoming">Incoming</string>
+    <string name="outgoing">Outgoing</string>
+    <string name="geochat_lgw_settings">GeoChat Local Gateway settings</string>
+    <string name="endpoint_url">Endpoint URL</string>
+    <string name="endpoint_url_summary">Tap here to change the http endpoint URL</string>
+    <string name="settings">Settings</string>
 </resources>

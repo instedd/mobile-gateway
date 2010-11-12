@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.instedd.geochat.lgw.Uris;
 import org.instedd.geochat.lgw.data.GeoChatLgw.IncomingMessages;
+import org.instedd.geochat.lgw.data.GeoChatLgw.Messages;
 import org.instedd.geochat.lgw.data.GeoChatLgw.OutgoingMessages;
 import org.instedd.geochat.lgw.msg.Message;
 
@@ -56,12 +57,12 @@ public class GeoChatLgwData {
 	}
 	
 	public Message[] getIncomingMessages() {
-		Cursor c = content.query(IncomingMessages.CONTENT_URI, Message.PROJECTION, null, null, null);
-		int count = c.getCount();
-		if (count == 0)
-			return null;
-		
+		Cursor c = content.query(IncomingMessages.CONTENT_URI, Messages.PROJECTION, null, null, null);
 		try {
+			int count = c.getCount();
+			if (count == 0)
+				return null;
+			
 			Message[] incoming = new Message[count];
 			for (int i = 0; c.moveToNext(); i++)
 				incoming[i] = Message.readFrom(c);
@@ -77,7 +78,7 @@ public class GeoChatLgwData {
 	
 	public Message[] getOutgoingMessagesNotBeingSentAndMarkAsBeingSent() {
 		synchronized(notSendingLock) {
-			Cursor c = content.query(Uris.OutgoingMessagesNotBeingSent, Message.PROJECTION, null, null, null);
+			Cursor c = content.query(Uris.OutgoingMessagesNotBeingSent, Messages.PROJECTION, null, null, null);
 			try {
 				int count = c.getCount();
 				if (count == 0)

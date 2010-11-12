@@ -8,15 +8,6 @@ import android.database.Cursor;
 
 public class Message {
 	
-	public final static String[] PROJECTION = {
-		Messages._ID,
-		Messages.GUID,
-		Messages.FROM,
-		Messages.TO,
-		Messages.TEXT,
-		Messages.WHEN,
-	};
-	
 	public String guid;
 	public String from;
 	public String to;

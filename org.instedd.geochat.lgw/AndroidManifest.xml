@@ -30,6 +30,23 @@
             </intent-filter>
         </activity>
         
+        <activity android:name=".HomeActivity"
+                  android:label="@string/app_name"
+                  android:launchMode="singleTask"
+                  />
+                  
+        <activity android:name=".IncomingMessagesActivity"
+        		  android:label="@string/incoming"
+        		  android:theme="@android:style/Theme.NoTitleBar" />
+        		  
+        <activity android:name=".OutgoingMessagesActivity"
+        		  android:label="outgoing"
+        		  android:theme="@android:style/Theme.NoTitleBar" />
+        		  
+        <activity android:name=".GeoChatLgwPreferences"
+                  android:label="@string/geochat_lgw_settings"
+                  />
+        
         <service android:name=".trans.GeoChatTransceiverService"
             android:exported="true"/>
     </application>

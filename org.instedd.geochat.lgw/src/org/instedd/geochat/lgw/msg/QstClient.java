@@ -16,6 +16,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.instedd.geochat.lgw.UnauthorizedException;
 import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlSerializer;
 
@@ -49,9 +50,11 @@ public class QstClient {
 	public void sendAddress(String address) throws QstClientException {
 		try {
 			HttpResponse response = this.client.get(httpBase + "/setaddress?address=" + encode(address));
-			if (response == null) throw new QstClientException("Status not HTTP_OK (200) on sendAddress");
-			
-			close(response);
+			try {
+				check(response);
+			} finally {
+				close(response);
+			}
 		} catch (IOException e) {
 			throw new QstClientException(e);
 		}
@@ -73,8 +76,8 @@ public class QstClient {
 				
 				serializer.startTag("", "message");				
 				serializer.attribute("", "id", msg.guid);
-				serializer.attribute("", "from", msg.from);
-				serializer.attribute("", "to", msg.to);
+				serializer.attribute("", "from", addProtocol(msg.from));
+				serializer.attribute("", "to", addProtocol(msg.to));
 				serializer.attribute("", "when", DATE_FORMAT.format(new Date(msg.when)));
 				serializer.startTag("", "text");
 				serializer.text(msg.text);
@@ -85,9 +88,9 @@ public class QstClient {
 			serializer.flush();
 			
 			HttpResponse response = this.client.post(httpBase + "/incoming", writer.toString(), "application/xml");
-			if (response == null) throw new QstClientException("Status not HTTP_OK (200) on sendMessages");
-			
 			try {
+				check(response);
+				
 				Header header = response.getFirstHeader("ETag");
 				if (header != null)
 					return header.getValue();
@@ -99,7 +102,7 @@ public class QstClient {
 		}
 		return null;
 	}
-	
+
 	public Message[] getMessages(String lastReceivedMessageId) throws QstClientException {
 		try {
 			List<NameValuePair> headers = new ArrayList<NameValuePair>(1);
@@ -108,7 +111,7 @@ public class QstClient {
 			}
 			
 			HttpResponse response = this.client.get(httpBase + "/outgoing", headers);
-			if (response == null) throw new QstClientException("Status not HTTP_OK (200) on getMessages");
+			check(response);
 			
 			InputStream content = response.getEntity().getContent();
 			try {
@@ -128,9 +131,9 @@ public class QstClient {
 	public String getLastSentMessageId() throws QstClientException {
 		try {
 			HttpResponse response = this.client.head(httpBase + "/incoming");
-			if (response == null) throw new QstClientException("Status not HTTP_OK (200) on getLastSentMessageId");
-			
 			try {
+				check(response);
+				
 				Header header = response.getFirstHeader("ETag");
 				if (header != null)
 					return header.getValue();
@@ -143,6 +146,18 @@ public class QstClient {
 		return null;
 	}
 	
+	private void check(HttpResponse response) throws QstClientException {
+		switch(response.getStatusLine().getStatusCode()) {
+		case 200:
+		case 304:
+			return;
+		case 401:
+			throw new UnauthorizedException();
+		default:
+			throw new QstClientException("Received HTTP status code " + response.getStatusLine().getStatusCode());
+		}
+	}
+	
 	private void close(HttpResponse response) throws IOException {
 		HttpEntity entity = response.getEntity();
 		if (entity == null) return;
@@ -151,6 +166,13 @@ public class QstClient {
 		if (content == null) return;
 		
 		content.close();
+	}
+	
+	private String addProtocol(String address) {
+		if (address != null && !address.startsWith("sms://")) {
+			return "sms://" + address;
+		}
+		return address;
 	}
 	
 	private String encode(String str) {

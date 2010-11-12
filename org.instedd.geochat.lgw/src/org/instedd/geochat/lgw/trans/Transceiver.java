@@ -60,9 +60,9 @@ public class Transceiver {
 	final Context context;
 	final Handler handler;
 	final Notifier notifier;
-	final QstClient client;
 	final GeoChatLgwData data;
 	final GeoChatLgwSettings settings;
+	QstClient client;
 	SyncThread syncThread;
 	boolean connectivityChanged;
 	boolean running;
@@ -76,7 +76,11 @@ public class Transceiver {
 		this.notifier = new Notifier(context);
 		this.settings = new GeoChatLgwSettings(context);
 		this.data = new GeoChatLgwData(context, settings.getNumber());
-		this.client = settings.newQstClient();		
+		recreateQstClient();		
+	}
+	
+	public void recreateQstClient() {
+		this.client = settings.newQstClient();
 	}
 
 	public void start() {
@@ -154,6 +158,7 @@ public class Transceiver {
 								} catch (QstClientException e) {
 									// Might happen if server doesn't support
 									// setting an address
+									e.printStackTrace();
 								}
 								firstRun = false;
 							}
