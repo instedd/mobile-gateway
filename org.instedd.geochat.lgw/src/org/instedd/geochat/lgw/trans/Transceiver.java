@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.instedd.geochat.lgw.Connectivity;
 import org.instedd.geochat.lgw.GeoChatLgwSettings;
 import org.instedd.geochat.lgw.Notifier;
+import org.instedd.geochat.lgw.Uris;
 import org.instedd.geochat.lgw.data.GeoChatLgw.IncomingMessages;
 import org.instedd.geochat.lgw.data.GeoChatLgw.OutgoingMessages;
 import org.instedd.geochat.lgw.msg.Message;
@@ -31,7 +32,6 @@ public class Transceiver {
 	private final static String SMS_SENT_ACTION = "org.instedd.geochat.lgw.SMS_SENT_ACTION";
 	private final static String INTENT_EXTRA_GUID = "org.instedd.geochat.lgw.Guid";
 	
-	private final static Uri NOT_SENDING_URI = Uri.withAppendedPath(OutgoingMessages.CONTENT_URI, "not_sending");
 	private final static ContentValues SENDING_CONTENT_VALUES = new ContentValues();
 	static {
 		SENDING_CONTENT_VALUES.put(OutgoingMessages.SENDING, 1);
@@ -46,7 +46,7 @@ public class Transceiver {
 		public void onReceive(Context context, Intent intent) {
 			if (SMS_SENT_ACTION.equals(intent.getAction())) {
 				String guid = intent.getExtras().getString(INTENT_EXTRA_GUID);
-				Uri uri = Uri.withAppendedPath(Uri.withAppendedPath(OutgoingMessages.CONTENT_URI, "guid"), guid);
+				Uri uri = Uris.outgoingMessage(guid);
 				
 				switch(getResultCode()) {
 				case Activity.RESULT_OK:
@@ -177,7 +177,7 @@ public class Transceiver {
 										incoming[i] = Message.readFrom(c);
 									
 									String receivedId = client.sendMessages(incoming);
-									context.getContentResolver().delete(Uri.withAppendedPath(IncomingMessages.CONTENT_URI, receivedId), null, null);
+									context.getContentResolver().delete(Uris.incomingMessage(receivedId), null, null);
 								}
 							} finally {
 								c.close();
@@ -185,11 +185,11 @@ public class Transceiver {
 							
 							// Get pending messages
 							synchronized(notSendingLock) {
-								c = context.getContentResolver().query(NOT_SENDING_URI, Message.PROJECTION, null, null, null);
+								c = context.getContentResolver().query(Uris.OutgoingMessagesNotSending, Message.PROJECTION, null, null, null);
 								
 								// Mark them as sending
 								if (c.getCount() > 0)
-									context.getContentResolver().update(NOT_SENDING_URI, SENDING_CONTENT_VALUES, null, null);
+									context.getContentResolver().update(Uris.OutgoingMessagesNotSending, SENDING_CONTENT_VALUES, null, null);
 							}
 							
 							// Send them via phone
@@ -205,9 +205,11 @@ public class Transceiver {
 							Message[] outgoing = client.getMessages(settings.getLastReceivedMessageId());
 							if (outgoing.length != 0) {
 								// Persist as "sending"
-								ContentValues[] values = Message.toContentValues(outgoing);
-								for(ContentValues v : values)
-									v.put(OutgoingMessages.SENDING, 1);
+								ContentValues[] values = new ContentValues[outgoing.length];
+								for (int i = 0; i < outgoing.length; i++) {
+									values[i] = outgoing[i].toContentValues();
+									values[i].put(OutgoingMessages.SENDING, 1);
+								}
 								context.getContentResolver().bulkInsert(OutgoingMessages.CONTENT_URI, values);
 								
 								// Send them via phone
