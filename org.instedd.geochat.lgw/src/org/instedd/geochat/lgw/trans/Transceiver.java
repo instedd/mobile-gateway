@@ -186,10 +186,10 @@ public class Transceiver {
 							
 							// 3.b. Persist them and mark them as being sent
 							String lastReceivedMessageId = data.createOutgoingMessagesAsBeingSent(outgoing);
-								
+							
 							// 3.c. Send them via phone
 							sendMessages(outgoing);
-								
+							
 							// 3.d. Remember last id
 							if (lastReceivedMessageId != null)
 								settings.setLastReceivedMessageId(lastReceivedMessageId);

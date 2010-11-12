@@ -21,14 +21,6 @@ public class Notifier {
 		setForegroundNotificationContent(R.drawable.ic_stat_geochat_sync, R.string.connecting);
 	}
 	
-	public void startSendingMessages() {
-		setForegroundNotificationContent(R.drawable.ic_stat_geochat_sync, R.string.sending_messages);
-	}
-	
-	public void startReceivingMessages() {
-		setForegroundNotificationContent(R.drawable.ic_stat_geochat_sync, R.string.receiving_messages);
-	}
-	
 	public void stopTransceiving() {
 		setForegroundNotificationContent(R.drawable.ic_stat_geochat, R.string.signed_in_as_name, new GeoChatLgwSettings(context).getName());
 	}
@@ -54,11 +46,11 @@ public class Notifier {
 	}
 	
 	private Intent getViewMessagesIntent() {
-		return getLoginIntent(context);
+		return getHomeIntent(context);
 	}
 	
-	public static Intent getLoginIntent(Context context) {
-		Intent intent = new Intent().setClass(context, LoginActivity.class);
+	public static Intent getHomeIntent(Context context) {
+		Intent intent = new Intent().setClass(context, HomeActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 		return intent;
 	}
