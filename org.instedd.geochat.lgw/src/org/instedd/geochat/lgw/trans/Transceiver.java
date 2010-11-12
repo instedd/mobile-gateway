@@ -50,7 +50,7 @@ public class Transceiver {
 	        Object[] pdus = (Object[]) extras.get("pdus");
 	        for (int i = 0; i < pdus.length; i++) {
 	            SmsMessage sms = SmsMessage.createFromPdu((byte[]) pdus[i]);
-	            data.createIncomingMessage(sms, settings.getNumber());
+	            data.createIncomingMessage(sms, settingsNumber);
 	        }
 	        
 	        resync();
@@ -62,7 +62,8 @@ public class Transceiver {
 	final Notifier notifier;
 	final QstClient client;
 	final GeoChatLgwData data;
-	final GeoChatLgwSettings settings;	
+	final GeoChatLgwSettings settings;
+	final String settingsNumber;
 	SyncThread syncThread;
 	boolean connectivityChanged;
 	boolean running;
@@ -76,7 +77,8 @@ public class Transceiver {
 		this.notifier = new Notifier(context);
 		this.data = new GeoChatLgwData(context);
 		this.settings = new GeoChatLgwSettings(context);
-		this.client = this.settings.newQstClient();		
+		this.settingsNumber = settings.getNumber();
+		this.client = settings.newQstClient();		
 	}
 
 	public void start() {
