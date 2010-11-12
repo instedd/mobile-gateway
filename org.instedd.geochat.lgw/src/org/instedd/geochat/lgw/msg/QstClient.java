@@ -25,7 +25,7 @@ import android.util.Xml.Encoding;
 public class QstClient {
 	
 	//private final static String base = "https://nuntium.instedd.org/instedd";
-	private final static String base = "http://nuntium.manas.com.ar/geochat";
+	// private final static String base = "http://nuntium.manas.com.ar/geochat/qst";
 	
 	private final static SimpleDateFormat DATE_FORMAT;
 	static {
@@ -34,19 +34,21 @@ public class QstClient {
 	}
 	
 	private final IRestClient client;
+	private final String httpBase;
 	
-	public QstClient(String name, String password) {
-		this(name, password, new RestClient());
+	public QstClient(String httpBase, String name, String password) {
+		this(httpBase, name, password, new RestClient());
 	}
 
-	public QstClient(String name, String password, IRestClient restClient) {
+	public QstClient(String httpBase, String name, String password, IRestClient restClient) {
+		this.httpBase = httpBase;
 		this.client = restClient;
 		this.client.setAuth(name, password);
 	}
 
 	public void sendAddress(String address) throws QstClientException {
 		try {
-			HttpResponse response = this.client.get(base + "/qst/setaddress?address=" + encode(address));
+			HttpResponse response = this.client.get(httpBase + "/setaddress?address=" + encode(address));
 			if (response == null) throw new QstClientException("Status not HTTP_OK (200) on sendAddress");
 			
 			close(response);
@@ -82,7 +84,7 @@ public class QstClient {
 			serializer.endTag("", "messages");
 			serializer.flush();
 			
-			HttpResponse response = this.client.post(base + "/qst/incoming", writer.toString(), "application/xml");
+			HttpResponse response = this.client.post(httpBase + "/incoming", writer.toString(), "application/xml");
 			if (response == null) throw new QstClientException("Status not HTTP_OK (200) on sendMessages");
 			
 			try {
@@ -105,7 +107,7 @@ public class QstClient {
 				headers.add(new BasicNameValuePair("If-None-Match", lastReceivedMessageId));
 			}
 			
-			HttpResponse response = this.client.get(base + "/qst/outgoing", headers);
+			HttpResponse response = this.client.get(httpBase + "/outgoing", headers);
 			if (response == null) throw new QstClientException("Status not HTTP_OK (200) on getMessages");
 			
 			InputStream content = response.getEntity().getContent();
@@ -125,7 +127,7 @@ public class QstClient {
 	
 	public String getLastSentMessageId() throws QstClientException {
 		try {
-			HttpResponse response = this.client.head(base + "/qst/incoming");
+			HttpResponse response = this.client.head(httpBase + "/incoming");
 			if (response == null) throw new QstClientException("Status not HTTP_OK (200) on getLastSentMessageId");
 			
 			try {

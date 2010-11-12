@@ -15,12 +15,12 @@ public class QstClientApiTest extends TestCase {
 	
 	public void testCredentialsFalse() throws Exception {
 		MockRestClient restClient = new MockRestClient("");
-		QstClient client = new QstClient("foo", "bar", restClient);
+		QstClient client = new QstClient("http://example.com", "foo", "bar", restClient);
 		client.sendAddress("lala");
 		
 		assertEquals("foo", restClient.getUser());
 		assertEquals("bar", restClient.getPassword());
-		assertEquals("https://nuntium.instedd.org/instedd/qst/setaddress?address=lala", restClient.getUrl());
+		assertEquals("http://example.com/setaddress?address=lala", restClient.getUrl());
 	}
 	
 	public void testGetMessages() throws Exception {
@@ -34,13 +34,13 @@ public class QstClientApiTest extends TestCase {
 				"  </message>\n" + 
 				"</messages>");
 		
-		QstClient client = new QstClient("foo", "bar", restClient);
+		QstClient client = new QstClient("http://example.com", "foo", "bar", restClient);
 		Message[] messages = client.getMessages("lastone");
 		
 		assertEquals("foo", restClient.getUser());
 		assertEquals("bar", restClient.getPassword());
 		assertEquals("get", restClient.getMethod());
-		assertEquals("https://nuntium.instedd.org/instedd/qst/outgoing", restClient.getUrl());
+		assertEquals("http://example.com/outgoing", restClient.getUrl());
 		assertEquals("lastone", restClient.getGetHeader("If-None-Match"));
 		
 		assertEquals(2, messages.length);
@@ -60,7 +60,7 @@ public class QstClientApiTest extends TestCase {
 		MockRestClient restClient = new MockRestClient("");
 		restClient.addResponseHeader("ETag", "etagg");
 		
-		QstClient client = new QstClient("foo", "bar", restClient);
+		QstClient client = new QstClient("http://example.com", "foo", "bar", restClient);
 		
 		Message[] messages = new Message[2];
 		for (int i = 0; i < messages.length; i++) {
@@ -77,7 +77,7 @@ public class QstClientApiTest extends TestCase {
 		assertEquals("foo", restClient.getUser());
 		assertEquals("bar", restClient.getPassword());
 		assertEquals("post", restClient.getMethod());
-		assertEquals("https://nuntium.instedd.org/instedd/qst/incoming", restClient.getUrl());
+		assertEquals("http://example.com/incoming", restClient.getUrl());
 		assertEquals("etagg", lastMessageId);
 		
 		assertEquals("application/xml", restClient.getPostContentType());
@@ -101,14 +101,14 @@ public class QstClientApiTest extends TestCase {
 		MockRestClient restClient = new MockRestClient("");
 		restClient.addResponseHeader("ETag", "123");
 		
-		QstClient client = new QstClient("foo", "bar", restClient);
+		QstClient client = new QstClient("http://example.com", "foo", "bar", restClient);
 		String lastId = client.getLastSentMessageId();
 		assertEquals("123", lastId);
 		
 		assertEquals("foo", restClient.getUser());
 		assertEquals("bar", restClient.getPassword());
 		assertEquals("head", restClient.getMethod());
-		assertEquals("https://nuntium.instedd.org/instedd/qst/incoming", restClient.getUrl());
+		assertEquals("http://example.com/incoming", restClient.getUrl());
 	}
 
 }

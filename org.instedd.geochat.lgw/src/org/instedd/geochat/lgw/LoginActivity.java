@@ -85,13 +85,13 @@ public final static String EXTRA_WRONG_CREDENTIALS = "WrongCredentials";
 							String password = uiPassword.getText().toString();
 							String number = uiNumber.getText().toString();
 							
+							settings.setCredentials(name, password, number);
+							
 							try {
-								QstClient client = new QstClient(name, password);
+								QstClient client = settings.newQstClient();
 								
 								// Do this as a login
 								client.getLastSentMessageId();
-								
-								settings.setCredentials(name, password, number);
 								
 								handler.post(new Runnable() {
 									public void run() {
