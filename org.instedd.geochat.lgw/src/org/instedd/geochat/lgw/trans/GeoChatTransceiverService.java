@@ -10,12 +10,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.ConnectivityManager;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 
-public class GeoChatTransceiverService extends CompatibilityService {
+public class GeoChatTransceiverService extends CompatibilityService implements OnSharedPreferenceChangeListener {
 	
 	public class LocalBinder extends Binder {
 		public GeoChatTransceiverService getService() {
@@ -46,6 +48,10 @@ public class GeoChatTransceiverService extends CompatibilityService {
 		
 		this.displayForegroundNotification();
 		
+		// Listen for preference changes to resync when that happens
+		this.getSharedPreferences(GeoChatLgwSettings.SHARED_PREFS_NAME, 0)
+			.registerOnSharedPreferenceChangeListener(this);
+		
 		// Listen for network changes
 		this.registerReceiver(receiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 	}
@@ -60,6 +66,10 @@ public class GeoChatTransceiverService extends CompatibilityService {
 	@Override
 	public void onDestroy() {
 		stopTransceiving();
+		
+		// Unregister preferences listener
+		this.getSharedPreferences(GeoChatLgwSettings.SHARED_PREFS_NAME, 0)
+			.unregisterOnSharedPreferenceChangeListener(this);
 		
 		// Unregister the network changes receiver
 		this.unregisterReceiver(receiver);
@@ -85,6 +95,14 @@ public class GeoChatTransceiverService extends CompatibilityService {
 	@Override
 	public IBinder onBind(Intent intent) {
 		return mBinder;
+	}
+	
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) {
+		if (GeoChatLgwSettings.HTTP_BASE.equals(key)) {
+			transceiver.recreateQstClient();
+			transceiver.resync();
+		}
 	}
 
 }

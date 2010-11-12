@@ -38,8 +38,8 @@ public class MessageHandler extends DefaultHandler {
 				}
 				message = new Message();
 				message.guid = attributes.getValue("id");
-				message.from = attributes.getValue("from");
-				message.to = attributes.getValue("to");
+				message.from = removeProtocol(attributes.getValue("from"));
+				message.to = removeProtocol(attributes.getValue("to"));
 				inMessage = true;
 				tagName = NONE;
 			}
@@ -52,7 +52,7 @@ public class MessageHandler extends DefaultHandler {
 			tagName = NONE;
 		}
 	}
-	
+
 	@Override
 	public void characters(char[] ch, int start, int length)
 			throws SAXException {
@@ -77,6 +77,13 @@ public class MessageHandler extends DefaultHandler {
 			inMessage = false;
 		}
 		tagName = NONE;
+	}
+	
+	private String removeProtocol(String address) {
+		if (address != null && address.startsWith("sms://")) {
+			return address.substring(6);
+		}
+		return address;
 	}
 
 }

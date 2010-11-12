@@ -15,36 +15,45 @@ public class GeoChatLgw {
          * The id of this message
          * <P>Type: TEXT</P>
          */
-        public static final String GUID = "_guid";
+        String GUID = "_guid";
         
         /**
          * The id of this message
          * <P>Type: TEXT</P>
          */
-        public static final String FROM = "_from";
+        String FROM = "_from";
         
         /**
          * The id of this message
          * <P>Type: TEXT</P>
          */
-        public static final String TO = "_to";
+        String TO = "_to";
         
         /**
          * The text of this message
          * <P>Type: TEXT</P>
          */
-        public static final String TEXT = "_text";
+        String TEXT = "_text";
         
         /**
          * The timestamp for when the message was created
          * <P>Type: INTEGER (long from System.curentTimeMillis())</P>
          */
-        public static final String WHEN = "_when";
+        String WHEN = "_when";
         
         /**
          * The default sort order for this table
          */
-        public static final String DEFAULT_SORT_ORDER = BaseColumns._ID + " DESC";
+        String DEFAULT_SORT_ORDER = BaseColumns._ID + " DESC";
+        
+        String[] PROJECTION = {
+    		Messages._ID,
+    		Messages.GUID,
+    		Messages.FROM,
+    		Messages.TO,
+    		Messages.TEXT,
+    		Messages.WHEN,
+    	};
     }
     
     public final static class IncomingMessages implements BaseColumns {
