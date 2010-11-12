@@ -56,7 +56,7 @@ public final class R {
         public static final int start=0x7f040004;
         public static final int starting=0x7f040008;
         public static final int stop=0x7f040009;
-        public static final int telephone_number_colon=0x7f040003;
+        public static final int this_telephone_number_colon=0x7f040003;
         public static final int transceiving=0x7f04000a;
     }
 }
