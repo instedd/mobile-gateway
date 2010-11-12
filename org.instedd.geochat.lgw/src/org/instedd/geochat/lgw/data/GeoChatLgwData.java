@@ -26,9 +26,11 @@ public class GeoChatLgwData {
 	}
 	
 	private final ContentResolver content;
-	private final Object notSendingLock = new Object();
+	private final String toNumber;
+	private final Object notSendingLock = new Object();	
 
-	public GeoChatLgwData(Context context) {
+	public GeoChatLgwData(Context context, String fromNumber) {
+		this.toNumber = fromNumber;
 		this.content = context.getContentResolver();		
 	}
 	
@@ -42,10 +44,10 @@ public class GeoChatLgwData {
 		}
 	}
 	
-	public void createIncomingMessage(SmsMessage message, String fromNumber) {
+	public void createIncomingMessage(SmsMessage message) {
 		String guid = UUID.randomUUID().toString();
         String from = message.getOriginatingAddress();
-        String to = fromNumber;
+        String to = toNumber;
         String text = message.getMessageBody();
         long when = message.getTimestampMillis();
 		
