@@ -42,7 +42,6 @@ public final class R {
         public static final int app_name=0x7f040000;
         public static final int cannot_start=0x7f040006;
         public static final int cannot_start_maybe_no_connection=0x7f040007;
-        public static final int connecting=0x7f04000a;
         public static final int endpoint_url=0x7f040010;
         public static final int endpoint_url_summary=0x7f040011;
         public static final int geochat_lgw_settings=0x7f04000f;
@@ -58,5 +57,6 @@ public final class R {
         public static final int starting=0x7f040008;
         public static final int stop=0x7f040009;
         public static final int telephone_number_colon=0x7f040003;
+        public static final int transceiving=0x7f04000a;
     }
 }

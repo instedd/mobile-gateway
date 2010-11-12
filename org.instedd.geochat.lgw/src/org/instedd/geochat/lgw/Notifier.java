@@ -18,7 +18,7 @@ public class Notifier {
 	}
 	
 	public void startTranscieving() {
-		setForegroundNotificationContent(R.drawable.ic_stat_geochat_sync, R.string.connecting);
+		setForegroundNotificationContent(R.drawable.ic_stat_geochat_sync, R.string.transceiving);
 	}
 	
 	public void stopTransceiving() {
