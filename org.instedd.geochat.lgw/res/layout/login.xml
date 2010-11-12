@@ -1,49 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
 	xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:padding="5dp">
-    <TextView
-    	android:layout_width="wrap_content"
-    	android:layout_height="wrap_content"
-    	style="@android:style/TextAppearance.Large"
-    	android:text="@string/local_gateway_name_colon"
-    	/>
-    <EditText 
+    >
+    <LinearLayout
     	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:id="@+id/name"
-    	/>
-    <TextView
-    	android:layout_width="wrap_content"
-    	android:layout_height="wrap_content"
-    	style="@android:style/TextAppearance.Large"
-    	android:text="@string/password_colon"
-    	/>
-    <EditText 
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:id="@+id/password"
-    	android:password="true"
-    	/>
-    <TextView
-    	android:layout_width="wrap_content"
-    	android:layout_height="wrap_content"
-    	style="@android:style/TextAppearance.Large"
-    	android:text="@string/telephone_number_colon"
-    	/>
-    <EditText 
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:id="@+id/number"
-    	android:inputType="phone"
-    	/>
-    <Button
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:id="@+id/start_button"
-    	android:text="@string/start"
-    	/>
-</LinearLayout>
+    	android:layout_height="fill_parent"
+    	android:orientation="vertical"
+    	android:padding="5dp"
+    >
+	    <TextView
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	style="@android:style/TextAppearance.Large"
+	    	android:text="@string/local_gateway_name_colon"
+	    	/>
+	    <EditText 
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:id="@+id/name"
+	    	/>
+	    <TextView
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	style="@android:style/TextAppearance.Large"
+	    	android:text="@string/password_colon"
+	    	/>
+	    <EditText 
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:id="@+id/password"
+	    	android:password="true"
+	    	/>
+	    <TextView
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	style="@android:style/TextAppearance.Large"
+	    	android:text="@string/this_telephone_number_colon"
+	    	/>
+	    <EditText 
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:id="@+id/number"
+	    	android:inputType="phone"
+	    	/>
+	    <Button
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:id="@+id/start_button"
+	    	android:text="@string/start"
+	    	/>
+	</LinearLayout>
+</ScrollView>
