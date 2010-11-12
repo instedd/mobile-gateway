@@ -55,6 +55,9 @@ public class QstClient {
 	}
 	
 	public String sendMessages(Message[] messages) throws QstClientException {
+		if (messages == null || messages.length == 0)
+			return null;
+		
 		StringWriter writer = new StringWriter();
 		
 		XmlSerializer serializer = Xml.newSerializer();
