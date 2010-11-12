@@ -167,13 +167,13 @@ public class Transceiver {
 							
 							if (resync)	continue;
 							
-							// 2. Send pending messages
+							// 2. Send pending messages (those that were sent at least once and failed)
 							Message[] pending = data.getOutgoingMessagesNotBeingSentAndMarkAsBeingSent();
 							sendMessages(pending);
 							
 							if (resync)	continue;
 							
-							// 3.a. Get outgoing messages (to be sent to users)
+							// 3.a. Get outgoing messages
 							Message[] outgoing = client.getMessages(settings.getLastReceivedMessageId());
 							
 							// 3.b. Persist them and mark them as being sent
