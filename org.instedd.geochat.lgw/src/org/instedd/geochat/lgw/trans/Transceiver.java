@@ -1,17 +1,14 @@
 package org.instedd.geochat.lgw.trans;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import org.instedd.geochat.lgw.Connectivity;
 import org.instedd.geochat.lgw.GeoChatLgwSettings;
 import org.instedd.geochat.lgw.Notifier;
-import org.instedd.geochat.lgw.Uris;
-import org.instedd.geochat.lgw.data.GeoChatLgw.IncomingMessages;
+import org.instedd.geochat.lgw.data.GeoChatLgwData;
 import org.instedd.geochat.lgw.data.GeoChatLgw.OutgoingMessages;
 import org.instedd.geochat.lgw.msg.Message;
 import org.instedd.geochat.lgw.msg.QstClient;
-import org.instedd.geochat.lgw.msg.QstClientException;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -20,8 +17,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.SmsManager;
@@ -36,26 +31,18 @@ public class Transceiver {
 	static {
 		SENDING_CONTENT_VALUES.put(OutgoingMessages.SENDING, 1);
 	}
-	private final static ContentValues NOT_SENDING_CONTENT_VALUES = new ContentValues();
-	static {
-		NOT_SENDING_CONTENT_VALUES.put(OutgoingMessages.SENDING, 0);
-	}
 	
 	private BroadcastReceiver smsSentReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (SMS_SENT_ACTION.equals(intent.getAction())) {
 				String guid = intent.getExtras().getString(INTENT_EXTRA_GUID);
-				Uri uri = Uris.outgoingMessage(guid);
-				
 				switch(getResultCode()) {
 				case Activity.RESULT_OK:
-					Transceiver.this.context.getContentResolver().delete(uri, null, null);
+					data.deleteOutgoingMessage(guid);
 					break;
 				default:
-					synchronized(notSendingLock) {
-						Transceiver.this.context.getContentResolver().update(uri, NOT_SENDING_CONTENT_VALUES, null, null);
-					}
+					data.markOutgoingMessageAsBeingSent(guid);
 					break;
 				}
 			}
@@ -71,16 +58,8 @@ public class Transceiver {
 	        
 	        Object[] pdus = (Object[]) extras.get("pdus");
 	        for (int i = 0; i < pdus.length; i++) {
-	            SmsMessage message = SmsMessage.createFromPdu((byte[]) pdus[i]);
-	            
-	            String guid = UUID.randomUUID().toString();
-	            String from = message.getOriginatingAddress();
-	            String to = settings.getNumber();
-	            String text = message.getMessageBody();
-	            long when = message.getTimestampMillis();
-	            
-	            Transceiver.this.context.getContentResolver().insert(IncomingMessages.CONTENT_URI, 
-	            		Message.toContentValues(guid, from, to, text, when));
+	            SmsMessage sms = SmsMessage.createFromPdu((byte[]) pdus[i]);
+	            data.createIncomingMessage(sms, settings.getNumber());
 	        }
 	        
 	        resync();
@@ -90,21 +69,23 @@ public class Transceiver {
 	final Context context;
 	final Handler handler;
 	final Notifier notifier;
-	GeoChatLgwSettings settings;
-	QstClient client;
+	final QstClient client;
+	final GeoChatLgwData data;
+	final GeoChatLgwSettings settings;	
 	SyncThread syncThread;
 	boolean connectivityChanged;
 	boolean running;
 	boolean resync;
 	Object sleepLock;
-	Object notSendingLock = new Object();
+	
 
 	public Transceiver(Context context, Handler handler) {
 		this.context = context;
 		this.handler = handler;
 		this.notifier = new Notifier(context);
+		this.data = new GeoChatLgwData(context);
 		this.settings = new GeoChatLgwSettings(context);
-		this.client = this.settings.newQstClient();
+		this.client = this.settings.newQstClient();		
 	}
 
 	public void start() {
@@ -140,6 +121,14 @@ public class Transceiver {
 		this.resync = true;
 	}
 	
+	void sendMessages(Message[] messages) {
+		if (messages == null || messages.length == 0)
+			return;
+			
+		for(Message msg : messages)
+			sendMessage(msg);
+	}
+	
 	void sendMessage(Message message) {
 		SmsManager sms = SmsManager.getDefault();
 		ArrayList<String> parts = sms.divideMessage(message.text);
@@ -166,62 +155,32 @@ public class Transceiver {
 					
 					if (hasConnectivity) {
 						try {
-							Cursor c;
+							// 1.a. Get incoming messages
+							Message[] incoming = data.getIncomingMessages();
 							
-							// Send incoming messages (to be sent to the app)
-							c = context.getContentResolver().query(IncomingMessages.CONTENT_URI, Message.PROJECTION, null, null, null);
-							try {
-								if (c.getCount() > 0) {
-									Message[] incoming = new Message[c.getCount()];
-									for (int i = 0; c.moveToNext(); i++)
-										incoming[i] = Message.readFrom(c);
-									
-									String receivedId = client.sendMessages(incoming);
-									context.getContentResolver().delete(Uris.incomingMessage(receivedId), null, null);
-								}
-							} finally {
-								c.close();
-							}
+							// 1.b. Send them to the application
+							String receivedId = client.sendMessages(incoming);
 							
-							// Get pending messages
-							synchronized(notSendingLock) {
-								c = context.getContentResolver().query(Uris.OutgoingMessagesNotSending, Message.PROJECTION, null, null, null);
-								
-								// Mark them as sending
-								if (c.getCount() > 0)
-									context.getContentResolver().update(Uris.OutgoingMessagesNotSending, SENDING_CONTENT_VALUES, null, null);
-							}
+							// 1.c. Delete previous incoming messages
+							if (receivedId != null)
+								data.deleteIncomingMessageUpTo(receivedId);
 							
-							// Send them via phone
-							try {
-								for (int i = 0; c.moveToNext(); i++)
-									sendMessage(Message.readFrom(c));
-							} finally {
-								c.close();
-							}
+							// 2. Send pending messages
+							Message[] pending = data.getOutgoingMessagesNotBeingSentAndMarkAsBeingSent();
+							sendMessages(pending);
 							
-							
-							// Get outgoing messages (to be sent to users)
+							// 3.a. Get outgoing messages (to be sent to users)
 							Message[] outgoing = client.getMessages(settings.getLastReceivedMessageId());
-							if (outgoing.length != 0) {
-								// Persist as "sending"
-								ContentValues[] values = new ContentValues[outgoing.length];
-								for (int i = 0; i < outgoing.length; i++) {
-									values[i] = outgoing[i].toContentValues();
-									values[i].put(OutgoingMessages.SENDING, 1);
-								}
-								context.getContentResolver().bulkInsert(OutgoingMessages.CONTENT_URI, values);
+							
+							// 3.b. Persist them and mark them as being sent
+							String lastReceivedMessageId = data.createOutgoingMessagesAsBeingSent(outgoing);
 								
-								// Send them via phone
-								for (int i = 0; i < outgoing.length; i++)
-									sendMessage(outgoing[i]);
+							// 3.c. Send them via phone
+							sendMessages(outgoing);
 								
-								// Remember last id
-								settings.setLastReceivedMessageId(outgoing[outgoing.length - 1].guid);
-							}
-						} catch (QstClientException e) {
-							// TODO handle this exception
-							e.printStackTrace();
+							// 3.d. Remember last id
+							if (lastReceivedMessageId != null)
+								settings.setLastReceivedMessageId(lastReceivedMessageId);
 						} catch (Throwable t) {
 							t.printStackTrace();
 						}
