@@ -6,14 +6,12 @@ import org.instedd.geochat.lgw.Connectivity;
 import org.instedd.geochat.lgw.GeoChatLgwSettings;
 import org.instedd.geochat.lgw.Notifier;
 import org.instedd.geochat.lgw.data.GeoChatLgwData;
-import org.instedd.geochat.lgw.data.GeoChatLgw.OutgoingMessages;
 import org.instedd.geochat.lgw.msg.Message;
 import org.instedd.geochat.lgw.msg.QstClient;
 
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
