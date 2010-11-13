@@ -44,7 +44,7 @@ public class GeoChatLgw {
         /**
          * The default sort order for this table
          */
-        String DEFAULT_SORT_ORDER = BaseColumns._ID + " DESC";
+        String DEFAULT_SORT_ORDER = BaseColumns._ID;
         
         String[] PROJECTION = {
     		_ID,
