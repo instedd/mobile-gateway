@@ -177,7 +177,7 @@ public class Transceiver {
 								case 0:
 									break;
 								case 1:
-									log.append("Sent '").append(incoming[0].text).append("' (previously failed) to application from ").append(incoming[0].from);
+									log.append("Sent '").append(incoming[0].text).append("' to application from ").append(incoming[0].from);
 									break;
 								default:
 									log.append("Sent ").append(incoming.length).append(" messages to application.\n");
@@ -193,7 +193,6 @@ public class Transceiver {
 							
 							// 2. Send pending messages (those that were sent at least once and failed)
 							Message[] pending = data.getOutgoingMessagesNotBeingSentAndMarkAsBeingSent();
-							sendMessages(pending);
 							
 							if (pending != null) {
 								switch(pending.length) {
@@ -206,7 +205,8 @@ public class Transceiver {
 									log.append("Sent ").append(pending.length).append(" (previously failed) messages to phones.\n");
 									break;
 								}
-							}
+							}							
+							sendMessages(pending);
 							
 							if (resync)	continue;
 							
