@@ -15,12 +15,5 @@
 	   android:layout_width="wrap_content"
 	   android:layout_height="wrap_content"
 	   style="@android:style/TextAppearance.Small"
-	   android:textStyle="bold"
-	   android:drawablePadding="1dp"
-	   android:id="@+id/number" />
-	<TextView
-	   android:layout_width="wrap_content"
-	   android:layout_height="wrap_content"
-	   style="@android:style/TextAppearance.Small"
 	   android:id="@+id/date" />
 </LinearLayout>

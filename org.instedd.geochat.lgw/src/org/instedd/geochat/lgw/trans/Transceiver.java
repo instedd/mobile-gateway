@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
+import android.text.TextUtils;
 
 public class Transceiver {
 	
@@ -36,6 +37,7 @@ public class Transceiver {
 				break;
 			default:
 				data.markOutgoingMessageAsBeingSent(guid);
+				data.log("A message could not be sent to phone");
 				break;
 			}
 		}
@@ -150,15 +152,17 @@ public class Transceiver {
 					resync = false;
 					
 					if (hasConnectivity) {
+						StringBuilder log = new StringBuilder();
+						
 						try {
 							// 0. Send address
 							if (firstRun) {
+								String number = settings.getNumber();
 								try {
-									client.sendAddress(settings.getNumber());
+									client.sendAddress(number);
+									log.append("Sent address: ").append(number).append("\n");
 								} catch (QstClientException e) {
-									// Might happen if server doesn't support
-									// setting an address
-									e.printStackTrace();
+									log.append("Couldn't send address: ").append(e.getMessage()).append("\n");
 								}
 								firstRun = false;
 							}
@@ -168,6 +172,18 @@ public class Transceiver {
 							
 							// 1.b. Send them to the application
 							String receivedId = client.sendMessages(incoming);
+							if (incoming != null) {
+								switch(incoming.length) {
+								case 0:
+									break;
+								case 1:
+									log.append("Sent 1 message to application.\n");
+									break;
+								default:
+									log.append("Sent ").append(incoming.length).append(" message to application.\n");
+									break;
+								}
+							}
 							
 							// 1.c. Delete previous incoming messages
 							if (receivedId != null)
@@ -179,6 +195,19 @@ public class Transceiver {
 							Message[] pending = data.getOutgoingMessagesNotBeingSentAndMarkAsBeingSent();
 							sendMessages(pending);
 							
+							if (pending != null) {
+								switch(pending.length) {
+								case 0:
+									break;
+								case 1:
+									log.append("Sent 1 previously failed message to phone");
+									break;
+								default:
+									log.append("Sent ").append(pending.length).append(" previously failed messages to phone.\n");
+									break;
+								}
+							}
+							
 							if (resync)	continue;
 							
 							// 3.a. Get outgoing messages
@@ -188,13 +217,29 @@ public class Transceiver {
 							String lastReceivedMessageId = data.createOutgoingMessagesAsBeingSent(outgoing);
 							
 							// 3.c. Send them via phone
+							if (outgoing != null) {
+								switch(outgoing.length) {
+								case 0:
+									break;
+								case 1:
+									log.append("Sent 1 message to phone");
+									break;
+								default:
+									log.append("Sent ").append(pending.length).append(" messages to phone.\n");
+									break;
+								}
+							}
 							sendMessages(outgoing);
 							
 							// 3.d. Remember last id
 							if (lastReceivedMessageId != null)
 								settings.setLastReceivedMessageId(lastReceivedMessageId);
 						} catch (Throwable t) {
-							t.printStackTrace();
+							log.append("Fatal error: " + t.getMessage());
+						} finally {
+							if (!TextUtils.isEmpty(log)) {
+								data.log(log.toString().trim());
+							}
 						}
 					}
 				} finally {
