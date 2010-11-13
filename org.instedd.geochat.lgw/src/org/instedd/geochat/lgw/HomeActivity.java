@@ -23,6 +23,12 @@ public class HomeActivity extends TabActivity {
 	    TabHost tabHost = getTabHost();
 	    TabHost.TabSpec spec;
 	    Intent intent;
+	    
+	    intent = new Intent().setClass(this, LogsActivity.class);
+	    spec = tabHost.newTabSpec("logs").setIndicator(res.getString(R.string.activity),
+	                      res.getDrawable(R.drawable.ic_tab_messages))
+	                  .setContent(intent);
+	    tabHost.addTab(spec);
 	
 	    intent = new Intent().setClass(this, IncomingMessagesActivity.class);
 	    spec = tabHost.newTabSpec("incoming").setIndicator(res.getString(R.string.incoming),

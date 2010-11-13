@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.instedd.geochat.lgw.Uris;
 import org.instedd.geochat.lgw.data.GeoChatLgw.IncomingMessages;
+import org.instedd.geochat.lgw.data.GeoChatLgw.Logs;
 import org.instedd.geochat.lgw.data.GeoChatLgw.Messages;
 import org.instedd.geochat.lgw.data.GeoChatLgw.OutgoingMessages;
 import org.instedd.geochat.lgw.msg.Message;
@@ -108,6 +109,15 @@ public class GeoChatLgwData {
 		}
 		content.bulkInsert(OutgoingMessages.CONTENT_URI, values);
 		return outgoing[outgoing.length - 1].guid;
+	}
+	
+	public void log(String message) {
+		ContentValues values = new ContentValues();
+		values.put(Logs.WHEN, System.currentTimeMillis());
+		values.put(Logs.TEXT, message);
+		content.insert(Logs.CONTENT_URI, values);
+		
+		content.delete(Uris.OldLogs, null, null);
 	}
 
 }

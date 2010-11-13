@@ -35,6 +35,10 @@
                   android:launchMode="singleTask"
                   />
                   
+        <activity android:name=".LogsActivity"
+        		  android:label="logs"
+        		  android:theme="@android:style/Theme.NoTitleBar" />
+                  
         <activity android:name=".IncomingMessagesActivity"
         		  android:label="@string/incoming"
         		  android:theme="@android:style/Theme.NoTitleBar" />

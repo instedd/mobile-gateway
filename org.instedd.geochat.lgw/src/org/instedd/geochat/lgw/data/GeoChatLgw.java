@@ -47,12 +47,12 @@ public class GeoChatLgw {
         String DEFAULT_SORT_ORDER = BaseColumns._ID + " DESC";
         
         String[] PROJECTION = {
-    		Messages._ID,
-    		Messages.GUID,
-    		Messages.FROM,
-    		Messages.TO,
-    		Messages.TEXT,
-    		Messages.WHEN,
+    		_ID,
+    		GUID,
+    		FROM,
+    		TO,
+    		TEXT,
+    		WHEN,
     	};
     }
     
@@ -105,6 +105,49 @@ public class GeoChatLgw {
          * <P>Type: INTEGER</P>
          */
         public static final String SENDING = "_sending";
+    }
+    
+    public final static class Logs implements BaseColumns {
+    	// This class cannot be instantiated
+        private Logs() {}
+        
+        /**
+         * The content:// style URL for this table
+         */
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/logs");
+        
+        /**
+         * The MIME type of {@link #CONTENT_URI} providing a directory of log messages.
+         */
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.geochat.lgw.logs";
+        
+        /**
+         * The MIME type of a {@link #CONTENT_URI} sub-directory of a single log message.
+         */
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.geochat.lgw.log";
+        
+        /**
+         * The text of this log
+         * <P>Type: TEXT</P>
+         */
+        public final static String TEXT = "_text";
+        
+        /**
+         * The timestamp for when the log was created
+         * <P>Type: INTEGER (long from System.curentTimeMillis())</P>
+         */
+        public final static String WHEN = "_when";
+        
+        /**
+         * The default sort order for this table
+         */
+        public final static String DEFAULT_SORT_ORDER = BaseColumns._ID + " DESC";
+        
+        public final static String[] PROJECTION = {
+    		_ID,
+    		TEXT,
+    		WHEN,
+    	};
     }
 
 }

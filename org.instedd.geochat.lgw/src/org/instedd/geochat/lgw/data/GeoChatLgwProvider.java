@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.instedd.geochat.lgw.data.GeoChatLgw.IncomingMessages;
+import org.instedd.geochat.lgw.data.GeoChatLgw.Logs;
 import org.instedd.geochat.lgw.data.GeoChatLgw.Messages;
 import org.instedd.geochat.lgw.data.GeoChatLgw.OutgoingMessages;
 
@@ -27,13 +28,15 @@ public class GeoChatLgwProvider extends ContentProvider {
 	private static final String TAG = "GeoChatLgwProvider";
 	
 	private static final String DATABASE_NAME = "geochat_lgw.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     
     private static final String INCOMING_TABLE_NAME = "incoming";
     private static final String OUTGOING_TABLE_NAME = "outgoing";
+    private static final String LOGS_TABLE_NAME = "logs";
     
     private static HashMap<String, String> sIncomingProjectionMap;
     private static HashMap<String, String> sOutgoingProjectionMap;
+    private static HashMap<String, String> sLogsProjectionMap;
     
     public final static int INCOMING = 1;
     public final static int OUTGOING = 2;
@@ -41,6 +44,8 @@ public class GeoChatLgwProvider extends ContentProvider {
     public final static int OUTGOING_ID = 4;
     public final static int OUTGOING_GUID = 5;
     public final static int OUTGOING_NOT_SENDING = 6;
+    public final static int LOGS = 7;
+    public final static int LOGS_OLD = 8;
     
     public static final UriMatcher URI_MATCHER;
     
@@ -72,6 +77,11 @@ public class GeoChatLgwProvider extends ContentProvider {
                     + Messages.WHEN + " INTEGER,"
                     + OutgoingMessages.SENDING + " INTEGER"
                     + ");");
+            db.execSQL("CREATE TABLE " + LOGS_TABLE_NAME + " ("
+                    + BaseColumns._ID + " INTEGER PRIMARY KEY,"
+                    + Logs.TEXT + " TEXT,"
+                    + Logs.WHEN + " INTEGER"
+                    + ");");
         }
 
         @Override
@@ -80,6 +90,7 @@ public class GeoChatLgwProvider extends ContentProvider {
                     + newVersion + ", which will destroy all old data");
             db.execSQL("DROP TABLE IF EXISTS " + INCOMING_TABLE_NAME);
             db.execSQL("DROP TABLE IF EXISTS " + OUTGOING_TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + LOGS_TABLE_NAME);
             onCreate(db);
         }
     }
@@ -117,6 +128,11 @@ public class GeoChatLgwProvider extends ContentProvider {
                     + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
             break;
         }
+        case LOGS_OLD: {
+            count = db.delete(LOGS_TABLE_NAME, BaseColumns._ID + " <= (SELECT MAX(" + BaseColumns._ID + ") - 50 FROM " + LOGS_TABLE_NAME + ")"
+                    + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
+            break;
+        }
         default:
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -137,6 +153,9 @@ public class GeoChatLgwProvider extends ContentProvider {
         case OUTGOING_ID:
         case OUTGOING_GUID:
             return IncomingMessages.CONTENT_TYPE;
+        case LOGS:
+        case LOGS_OLD:
+            return Logs.CONTENT_TYPE;
         default:
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -158,17 +177,25 @@ public class GeoChatLgwProvider extends ContentProvider {
 		case INCOMING:
 			rowId = db.insert(INCOMING_TABLE_NAME, Messages.GUID, values);
 			if (rowId > 0) {
-				Uri msgUri = ContentUris.withAppendedId(IncomingMessages.CONTENT_URI, rowId);
-	            getContext().getContentResolver().notifyChange(msgUri, null);
-	            return msgUri;
+				Uri entryUri = ContentUris.withAppendedId(IncomingMessages.CONTENT_URI, rowId);
+	            getContext().getContentResolver().notifyChange(entryUri, null);
+	            return entryUri;
 			}
 			break;
 		case OUTGOING:
 			rowId = db.insert(OUTGOING_TABLE_NAME, Messages.GUID, values);
 			if (rowId > 0) {
-				Uri msgUri = ContentUris.withAppendedId(OutgoingMessages.CONTENT_URI, rowId);
-	            getContext().getContentResolver().notifyChange(msgUri, null);
-	            return msgUri;
+				Uri entryUri = ContentUris.withAppendedId(OutgoingMessages.CONTENT_URI, rowId);
+	            getContext().getContentResolver().notifyChange(entryUri, null);
+	            return entryUri;
+			}
+			break;
+		case LOGS:
+			rowId = db.insert(LOGS_TABLE_NAME, Messages.WHEN, values);
+			if (rowId > 0) {
+				Uri entryUri = ContentUris.withAppendedId(Logs.CONTENT_URI, rowId);
+	            getContext().getContentResolver().notifyChange(entryUri, null);
+	            return entryUri;
 			}
 			break;
 		default:
@@ -217,6 +244,12 @@ public class GeoChatLgwProvider extends ContentProvider {
                 orderBy = Messages.DEFAULT_SORT_ORDER;
             }
         	break;
+        case LOGS:
+        	qb.setTables(LOGS_TABLE_NAME);
+        	if (TextUtils.isEmpty(sortOrder)) {
+                orderBy = Logs.DEFAULT_SORT_ORDER;
+            }
+        	break;
         default:
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -262,6 +295,8 @@ public class GeoChatLgwProvider extends ContentProvider {
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "outgoing/#", OUTGOING_ID);
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "outgoing/guid/*", OUTGOING_GUID);
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "outgoing/not_sending", OUTGOING_NOT_SENDING);
+        URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "logs", LOGS);
+        URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "logs/old", LOGS_OLD);
 
         for (int i = 0; i < 2; i++) {
         	Map<String, String> map;
@@ -279,5 +314,10 @@ public class GeoChatLgwProvider extends ContentProvider {
         	map.put(Messages.TEXT, Messages.TEXT);
         	map.put(Messages.WHEN, Messages.WHEN);
 		}
+        
+        sLogsProjectionMap = new HashMap<String, String>();
+        sLogsProjectionMap.put(Logs._ID, Logs._ID);
+        sLogsProjectionMap.put(Logs.TEXT, Logs.TEXT);
+        sLogsProjectionMap.put(Logs.WHEN, Logs.WHEN);
 	}
 }
