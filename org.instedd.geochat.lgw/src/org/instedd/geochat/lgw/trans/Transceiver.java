@@ -177,10 +177,10 @@ public class Transceiver {
 								case 0:
 									break;
 								case 1:
-									log.append("Sent 1 message to application.\n");
+									log.append("Sent '").append(incoming[0].text).append("' (previously failed) to application from ").append(incoming[0].from);
 									break;
 								default:
-									log.append("Sent ").append(incoming.length).append(" message to application.\n");
+									log.append("Sent ").append(incoming.length).append(" messages to application.\n");
 									break;
 								}
 							}
@@ -200,10 +200,10 @@ public class Transceiver {
 								case 0:
 									break;
 								case 1:
-									log.append("Sent 1 previously failed message to phone");
+									log.append("Sent '").append(pending[0].text).append("' (previously failed) to ").append(pending[0].to);
 									break;
 								default:
-									log.append("Sent ").append(pending.length).append(" previously failed messages to phone.\n");
+									log.append("Sent ").append(pending.length).append(" (previously failed) messages to phones.\n");
 									break;
 								}
 							}
@@ -222,7 +222,7 @@ public class Transceiver {
 								case 0:
 									break;
 								case 1:
-									log.append("Sent 1 message to phone");
+									log.append("Sent '").append(outgoing[0].text).append("' to ").append(outgoing[0].to);
 									break;
 								default:
 									log.append("Sent ").append(pending.length).append(" messages to phone.\n");
