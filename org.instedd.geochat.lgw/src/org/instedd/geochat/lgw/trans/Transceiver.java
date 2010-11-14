@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.instedd.geochat.lgw.Connectivity;
 import org.instedd.geochat.lgw.GeoChatLgwSettings;
 import org.instedd.geochat.lgw.Notifier;
+import org.instedd.geochat.lgw.R;
 import org.instedd.geochat.lgw.data.GeoChatLgwData;
 import org.instedd.geochat.lgw.msg.Message;
 import org.instedd.geochat.lgw.msg.QstClient;
@@ -16,6 +17,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.SmsManager;
@@ -37,7 +39,7 @@ public class Transceiver {
 				break;
 			default:
 				data.markOutgoingMessageAsBeingSent(guid);
-				data.log("A message could not be sent to phone");
+				data.log(context.getResources().getString(R.string.message_could_not_be_sent));
 				break;
 			}
 		}
@@ -143,6 +145,8 @@ public class Transceiver {
 		
 		@Override
 		public void run() {
+			Resources r = context.getResources();
+			
 			boolean hasConnectivity = false;
 			while(running) {
 				try {
@@ -154,14 +158,14 @@ public class Transceiver {
 						StringBuilder log = new StringBuilder();
 						
 						try {
-							// 0. Send address
+							// 0. Send addressCouldn
 							if (firstRun) {
 								String number = settings.getNumber();
 								try {
 									client.sendAddress(number);
-									log.append("Sent address: ").append(number).append("\n");
+									log.append(r.getString(R.string.sent_address, number)).append("\n");
 								} catch (QstClientException e) {
-									log.append("Couldn't send address: ").append(e.getMessage()).append("\n");
+									log.append(r.getString(R.string.couldnt_send_address, e.getMessage())).append("\n");
 								}
 								firstRun = false;
 							}
@@ -176,10 +180,10 @@ public class Transceiver {
 								case 0:
 									break;
 								case 1:
-									log.append("Sent '").append(incoming[0].text).append("' to application from ").append(incoming[0].from);
+									log.append(r.getString(R.string.sent_message_to_application, incoming[0].text, incoming[0].from)).append("\n");
 									break;
 								default:
-									log.append("Sent ").append(incoming.length).append(" messages to application.\n");
+									log.append(r.getString(R.string.sent_messages_to_application, incoming.length)).append("\n");
 									break;
 								}
 							}
@@ -198,10 +202,10 @@ public class Transceiver {
 								case 0:
 									break;
 								case 1:
-									log.append("Sent '").append(pending[0].text).append("' (previously failed) to ").append(pending[0].to);
+									log.append(r.getString(R.string.sent_previously_failed_message_to_phone, pending[0].text, pending[0].to)).append("\n");
 									break;
 								default:
-									log.append("Sent ").append(pending.length).append(" (previously failed) messages to phones.\n");
+									log.append(r.getString(R.string.sent_previously_failed_messages_to_phone, pending.length)).append("\n");
 									break;
 								}
 							}							
@@ -221,10 +225,10 @@ public class Transceiver {
 								case 0:
 									break;
 								case 1:
-									log.append("Sent '").append(outgoing[0].text).append("' to ").append(outgoing[0].to);
+									log.append(r.getString(R.string.sent_message_to_phone, outgoing[0].text, outgoing[0].to)).append("\n");
 									break;
 								default:
-									log.append("Sent ").append(outgoing.length).append(" messages to phone.\n");
+									log.append(r.getString(R.string.sent_messages_to_phone, outgoing.length)).append("\n");
 									break;
 								}
 							}
@@ -234,7 +238,7 @@ public class Transceiver {
 							if (lastReceivedMessageId != null)
 								settings.setLastReceivedMessageId(lastReceivedMessageId);
 						} catch (Throwable t) {
-							log.append("Fatal error: " + t.getMessage());
+							log.append(r.getString(R.string.fatal_error, t.getMessage())).append("\n");
 						} finally {
 							if (!TextUtils.isEmpty(log)) {
 								data.log(log.toString().trim());
