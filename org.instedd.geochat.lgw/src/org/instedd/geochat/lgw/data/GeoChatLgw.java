@@ -45,18 +45,9 @@ public class GeoChatLgw {
          * The default sort order for this table
          */
         String DEFAULT_SORT_ORDER = BaseColumns._ID;
-        
-        String[] PROJECTION = {
-    		_ID,
-    		GUID,
-    		FROM,
-    		TO,
-    		TEXT,
-    		WHEN,
-    	};
     }
     
-    public final static class IncomingMessages implements BaseColumns {
+    public final static class IncomingMessages implements Messages, BaseColumns {
     	// This class cannot be instantiated
         private IncomingMessages() {}
         
@@ -79,9 +70,18 @@ public class GeoChatLgw {
          * The default sort order for this table
          */
         public static final String DEFAULT_SORT_ORDER = BaseColumns._ID + " DESC";
+        
+        public final static String[] PROJECTION = {
+    		_ID,
+    		GUID,
+    		FROM,
+    		TO,
+    		TEXT,
+    		WHEN,
+    	};
     }
     
-    public final static class OutgoingMessages implements BaseColumns {
+    public final static class OutgoingMessages implements Messages, BaseColumns {
     	// This class cannot be instantiated
         private OutgoingMessages() {}
         
@@ -105,6 +105,16 @@ public class GeoChatLgw {
          * <P>Type: INTEGER</P>
          */
         public static final String SENDING = "_sending";
+        
+        public final static String[] PROJECTION = {
+    		_ID,
+    		GUID,
+    		FROM,
+    		TO,
+    		TEXT,
+    		WHEN,
+    		SENDING,
+    	};
     }
     
     public final static class Logs implements BaseColumns {

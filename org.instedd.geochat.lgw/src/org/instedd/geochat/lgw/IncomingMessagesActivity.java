@@ -27,7 +27,7 @@ public class IncomingMessagesActivity extends ListActivity {
 			intent.setData(IncomingMessages.CONTENT_URI);
 		}
 		
-		this.cursor = managedQuery(intent.getData(), Messages.PROJECTION, null, null, null);
+		this.cursor = managedQuery(intent.getData(), IncomingMessages.PROJECTION, null, null, null);
 
         SimpleCursorAdapter adapter = new MessageCursorAdapter(this, R.layout.message_item, cursor,
                 new String[] { }, new int[] { });

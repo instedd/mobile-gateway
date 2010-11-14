@@ -130,10 +130,9 @@ public class Transceiver {
 		SmsManager sms = SmsManager.getDefault();
 		ArrayList<String> parts = sms.divideMessage(message.text);
 		for (int i = 0; i < parts.size(); i++) {
+			Intent intent = new Intent(SMS_SENT_ACTION).putExtra(INTENT_EXTRA_GUID, message.guid);
 			sms.sendTextMessage(message.to, null, parts.get(i), 
-					PendingIntent.getBroadcast(context, 0, 
-							new Intent(SMS_SENT_ACTION)
-								.putExtra(INTENT_EXTRA_GUID, message.guid), 0), 
+					PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_ONE_SHOT), 
 					null);
 		}
 	}
@@ -225,7 +224,7 @@ public class Transceiver {
 									log.append("Sent '").append(outgoing[0].text).append("' to ").append(outgoing[0].to);
 									break;
 								default:
-									log.append("Sent ").append(pending.length).append(" messages to phone.\n");
+									log.append("Sent ").append(outgoing.length).append(" messages to phone.\n");
 									break;
 								}
 							}

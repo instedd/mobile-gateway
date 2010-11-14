@@ -23,11 +23,12 @@ public final class R {
     }
     public static final class id {
         public static final int date=0x7f050001;
-        public static final int httpBase=0x7f050006;
+        public static final int httpBase=0x7f050007;
         public static final int message=0x7f050000;
         public static final int name=0x7f050002;
         public static final int number=0x7f050004;
         public static final int password=0x7f050003;
+        public static final int sending=0x7f050006;
         public static final int start_button=0x7f050005;
     }
     public static final class layout {
@@ -50,6 +51,7 @@ public final class R {
         public static final int local_gateway_name_colon=0x7f040001;
         public static final int outgoing=0x7f04000e;
         public static final int password_colon=0x7f040002;
+        public static final int sending=0x7f040014;
         public static final int settings=0x7f040012;
         public static final int signed_in_as_name=0x7f04000b;
         public static final int signed_in_as_name_offline=0x7f04000c;
