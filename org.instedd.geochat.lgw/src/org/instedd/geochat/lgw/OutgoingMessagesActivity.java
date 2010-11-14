@@ -27,7 +27,7 @@ public class OutgoingMessagesActivity extends ListActivity {
 			intent.setData(OutgoingMessages.CONTENT_URI);
 		}
 		
-		this.cursor = managedQuery(intent.getData(), Messages.PROJECTION, null, null, null);
+		this.cursor = managedQuery(intent.getData(), OutgoingMessages.PROJECTION, null, null, null);
 
         SimpleCursorAdapter adapter = new MessageCursorAdapter(this, R.layout.message_item, cursor,
                 new String[] { }, new int[] { });
@@ -60,12 +60,25 @@ public class OutgoingMessagesActivity extends ListActivity {
 			((TextView) v.findViewById(R.id.message)).setText(c.getString(c.getColumnIndex(Messages.TEXT)));
 			((TextView) v.findViewById(R.id.number)).setText(c.getString(c.getColumnIndex(Messages.TO)));
 			
-			long longDate = c.getLong(c.getColumnIndex(Messages.WHEN));
+			TextView uiDate = (TextView) v.findViewById(R.id.date);
+			long longDate = c.getLong(c.getColumnIndex(Messages.WHEN));			
 			if (longDate > 0) {
 				CharSequence date = DateUtils.getRelativeDateTimeString(context, longDate, DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0);;
-				((TextView) v.findViewById(R.id.date)).setText(date);
+				uiDate.setText(date);
+				uiDate.setVisibility(View.VISIBLE);
 			} else {
-				((TextView) v.findViewById(R.id.date)).setText("");
+				uiDate.setText("");
+				uiDate.setVisibility(View.GONE);
+			}
+			
+			TextView uiSending = (TextView) v.findViewById(R.id.sending);
+			int sending = c.getInt(c.getColumnIndex(OutgoingMessages.SENDING));			
+			if (sending == 1) {
+				uiSending.setText(R.string.sending);
+				uiSending.setVisibility(View.VISIBLE);
+			} else {
+				uiSending.setText("");
+				uiSending.setVisibility(View.GONE);
 			}
 			
 			return v;
