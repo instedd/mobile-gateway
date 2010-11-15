@@ -97,6 +97,10 @@ public class GeoChatTransceiverService extends CompatibilityService implements O
 		return mBinder;
 	}
 	
+	public void resync() {
+		transceiver.resync();
+	}
+	
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 		if (GeoChatLgwSettings.HTTP_BASE.equals(key)) {
