@@ -15,6 +15,7 @@ public class GeoChatLgwSettings {
 	public final static String PASSWORD = "password";
 	public final static String NUMBER = "number";
 	public final static String HTTP_BASE = "httpBase";
+	public final static String REFRESH_RATE = "refreshRate";
 	public final static String LAST_RECEIVED_MESSAGE_ID = "lastSentMessageId";
 	
 	private final Context context;
@@ -55,6 +56,14 @@ public class GeoChatLgwSettings {
 	
 	public String getHttpBase() {
 		return openRead().getString(HTTP_BASE, "https://nuntium.instedd.org/instedd/qst");
+	}
+	
+	public int getRefreshRateInMinutes() {
+		return Integer.parseInt(openRead().getString(REFRESH_RATE, "5"));
+	}
+	
+	public int getRefreshRateInMilliseconds() {
+		return 1000 * 60 * getRefreshRateInMinutes();
 	}
 	
 	private SharedPreferences openRead() {
