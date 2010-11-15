@@ -102,6 +102,8 @@ public class GeoChatTransceiverService extends CompatibilityService implements O
 		if (GeoChatLgwSettings.HTTP_BASE.equals(key)) {
 			transceiver.recreateQstClient();
 			transceiver.resync();
+		} else if (GeoChatLgwSettings.REFRESH_RATE.equals(key)) {
+			transceiver.resync();
 		}
 	}
 

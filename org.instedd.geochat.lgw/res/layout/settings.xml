@@ -3,8 +3,16 @@
         
     <EditTextPreference
 	    android:title="@string/endpoint_url"
-	    android:summary="@string/endpoint_url_summary"
 	    android:key="httpBase"
-	    android:id="@+id/httpBase"/>
+	    android:id="@+id/httpBase"
+	    />
+	    
+	<ListPreference
+		android:title="@string/refresh_rate"
+		android:key="refreshRate"
+		android:id="@+id/refreshRate"
+		android:entries="@array/refresh_rate_entries"
+		android:entryValues="@array/refresh_rate_entry_values"
+		/>
 
 </PreferenceScreen>

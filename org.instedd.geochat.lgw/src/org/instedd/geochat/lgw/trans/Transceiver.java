@@ -258,7 +258,7 @@ public class Transceiver {
 					sleepLock = new Object();
 					synchronized (sleepLock) {
 						try {
-							sleepLock.wait(1000 * 60 * 1);
+							sleepLock.wait(settings.getRefreshRateInMilliseconds());
 						} catch (InterruptedException e) {
 						}
 					}
