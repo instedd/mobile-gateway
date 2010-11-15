@@ -148,7 +148,7 @@ public final static String EXTRA_WRONG_CREDENTIALS = "WrongCredentials";
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Menues.executeAction(this, item.getItemId());
+		Menues.executeAction(this, handler, item.getItemId());
 		return true;
 	}
 }

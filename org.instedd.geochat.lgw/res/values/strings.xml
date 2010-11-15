@@ -31,6 +31,8 @@
     <string name="sent_previously_failed_messages_to_phone">Sent %d (previously failed) messages to phones.</string>
     <string name="fatal_error">Fatal error: %s.</string>
     <string name="refresh_rate">Refresh rate</string>
+    <string name="refresh">Refresh</string>
+    <string name="refreshing">Refreshing...</string>
     <string-array name="refresh_rate_entries">
     	<item>1 minute</item>
     	<item>5 minutes</item>
