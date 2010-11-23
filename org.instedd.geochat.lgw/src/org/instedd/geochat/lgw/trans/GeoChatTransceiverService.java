@@ -103,7 +103,7 @@ public class GeoChatTransceiverService extends CompatibilityService implements O
 	
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		if (GeoChatLgwSettings.HTTP_BASE.equals(key)) {
+		if (GeoChatLgwSettings.ENDPOINT_URL.equals(key)) {
 			transceiver.recreateQstClient();
 			transceiver.resync();
 		} else if (GeoChatLgwSettings.REFRESH_RATE.equals(key)) {

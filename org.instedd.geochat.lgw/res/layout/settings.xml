@@ -1,12 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
         android:title="@string/geochat_lgw_settings">
         
-    <EditTextPreference
-	    android:title="@string/endpoint_url"
-	    android:key="httpBase"
-	    android:id="@+id/httpBase"
-	    />
-	    
 	<ListPreference
 		android:title="@string/refresh_rate"
 		android:key="refreshRate"

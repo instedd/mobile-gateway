@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
@@ -23,21 +22,13 @@ public class GeoChatLgwPreferences extends PreferenceActivity implements OnShare
         getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         this.settings = new GeoChatLgwSettings(this);
-        updateEndpointUrl();
         updateRefreshRate();
     }
 	
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if (GeoChatLgwSettings.HTTP_BASE.equals(key)) {
-			updateEndpointUrl();
-		} else if (GeoChatLgwSettings.REFRESH_RATE.equals(key)) {
+		if (GeoChatLgwSettings.REFRESH_RATE.equals(key)) {
 			updateRefreshRate();
 		}
-	}
-
-	private void updateEndpointUrl() {
-		Preference preference = findPreference(GeoChatLgwSettings.HTTP_BASE);
-		preference.setSummary(settings.getHttpBase());
 	}
 	
 	private void updateRefreshRate() {
