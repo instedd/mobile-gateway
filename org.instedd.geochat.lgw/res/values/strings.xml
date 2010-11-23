@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">GeoChat Local Gateway</string>
-    <string name="local_gateway_name_colon">Local Gateway name:</string>
+    <string name="app_name">Nuntium Local Gateway</string>
+    <string name="name_colon">Name:</string>
     <string name="password_colon">Password:</string>
     <string name="this_telephone_number_colon">This telephone number:</string>
     <string name="start">Start</string>
@@ -15,8 +15,8 @@
     <string name="signed_in_as_name_offline">Connected as %s (offline)</string>
     <string name="incoming">Incoming</string>
     <string name="outgoing">Outgoing</string>
-    <string name="geochat_lgw_settings">GeoChat Local Gateway settings</string>
-    <string name="endpoint_url">Endpoint URL</string>
+    <string name="geochat_lgw_settings">Nuntium Local Gateway settings</string>
+    <string name="endpoint_url_colon">Endpoint URL:</string>
     <string name="settings">Settings</string>
     <string name="activity">Activity</string>
     <string name="sending">Sending...</string>

@@ -28,14 +28,14 @@ public final class R {
     }
     public static final class id {
         public static final int date=0x7f060001;
-        public static final int httpBase=0x7f060007;
+        public static final int endpoint_url=0x7f060002;
         public static final int message=0x7f060000;
-        public static final int name=0x7f060002;
-        public static final int number=0x7f060004;
-        public static final int password=0x7f060003;
+        public static final int name=0x7f060003;
+        public static final int number=0x7f060005;
+        public static final int password=0x7f060004;
         public static final int refreshRate=0x7f060008;
-        public static final int sending=0x7f060006;
-        public static final int start_button=0x7f060005;
+        public static final int sending=0x7f060007;
+        public static final int start_button=0x7f060006;
     }
     public static final class layout {
         public static final int home=0x7f030000;
@@ -50,13 +50,13 @@ public final class R {
         public static final int cannot_start=0x7f040006;
         public static final int cannot_start_maybe_no_connection=0x7f040007;
         public static final int couldnt_send_address=0x7f040016;
-        public static final int endpoint_url=0x7f040010;
+        public static final int endpoint_url_colon=0x7f040010;
         public static final int fatal_error=0x7f04001d;
         public static final int geochat_lgw_settings=0x7f04000f;
         public static final int incoming=0x7f04000d;
         public static final int invalid_credentials=0x7f040005;
-        public static final int local_gateway_name_colon=0x7f040001;
         public static final int message_could_not_be_sent=0x7f040014;
+        public static final int name_colon=0x7f040001;
         public static final int outgoing=0x7f04000e;
         public static final int password_colon=0x7f040002;
         public static final int refresh=0x7f04001f;
