@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Nuntium Local Gateway</string>
+    <string name="name_colon">Nombre:</string>
+    <string name="password_colon">Clave:</string>
+    <string name="this_telephone_number_colon">Tu número de teléfono:</string>
+    <string name="start">Iniciar</string>
+    <string name="invalid_credentials">Nombre/clave incorrectos</string>
+    <string name="cannot_start">No se puede iniciar</string>
+    <string name="cannot_start_maybe_no_connection">No se puede iniciar, quizás no hay conexión?</string>
+    <string name="starting">Iniciando...</string>
+    <string name="stop">Detener</string>
+    <string name="transceiving">Trabajando...</string>
+    <string name="signed_in_as_name">Conectado como %s</string>
+    <string name="signed_in_as_name_offline">Conectado como %s (sin conexión)</string>
+    <string name="MTs">MTs</string>
+    <string name="MOs">MOs</string>
+    <string name="geochat_lgw_settings">Ajustes de Nuntium Local Gateway</string>
+    <string name="endpoint_url_colon">URL:</string>
+    <string name="settings">Ajustes</string>
+    <string name="activity">Actividad</string>
+    <string name="sending">Enviando...</string>
+    <string name="message_could_not_be_sent">Un mensaje no se pudo enviar a un teléfono.</string>
+    <string name="sent_address">Enviada la dirección: %s.</string>
+    <string name="couldnt_send_address">No se pudo enviar la dirección: %s.</string>
+    <string name="sent_message_to_application">Enviado \'%s\' a la aplicación por %s.</string>
+    <string name="sent_messages_to_application">Enviados %d mensajes a la aplicación.</string>
+    <string name="sent_message_to_phone">Enviado \'%s\' a %s.</string>
+    <string name="sent_messages_to_phone">Enviados %d mensajes a teléfonos.</string>
+    <string name="sent_previously_failed_message_to_phone">Enviado \'%s\' (anteriormente fallado) a %s.</string>
+    <string name="sent_previously_failed_messages_to_phone">Enviado %d (anteriormente fallado) mensajes a teléfonos.</string>
+    <string name="fatal_error">Error fatal: %s.</string>
+    <string name="refresh_rate">Intervalo de actualización</string>
+    <string name="refresh">Actualizar</string>
+    <string name="refreshing">Actualizando...</string>
+    <string-array name="refresh_rate_entries">
+    	<item>1 minuto</item>
+    	<item>5 minutos</item>
+    	<item>10 minutos</item>
+    	<item>15 minutos</item>
+    	<item>30 minutos</item>
+    	<item>1 hora</item>
+    </string-array>
+    <string-array name="refresh_rate_entry_values">
+    	<item>1</item>
+    	<item>5</item>
+    	<item>10</item>
+    	<item>15</item>
+    	<item>30</item>
+    	<item>60</item>
+    </string-array>
+</resources>
