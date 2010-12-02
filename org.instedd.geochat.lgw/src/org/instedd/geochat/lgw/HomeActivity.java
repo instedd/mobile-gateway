@@ -33,14 +33,14 @@ public class HomeActivity extends TabActivity {
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 	
-	    intent = new Intent().setClass(this, IncomingMessagesActivity.class);
-	    spec = tabHost.newTabSpec("incoming").setIndicator(res.getString(R.string.incoming),
+	    intent = new Intent().setClass(this, OutgoingMessagesActivity.class);
+	    spec = tabHost.newTabSpec("outgoing").setIndicator(res.getString(R.string.MTs),
 	                      res.getDrawable(R.drawable.ic_tab_messages))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 	    
-	    intent = new Intent().setClass(this, OutgoingMessagesActivity.class);
-	    spec = tabHost.newTabSpec("incoming").setIndicator(res.getString(R.string.outgoing),
+	    intent = new Intent().setClass(this, IncomingMessagesActivity.class);
+	    spec = tabHost.newTabSpec("incoming").setIndicator(res.getString(R.string.MOs),
 	                      res.getDrawable(R.drawable.ic_tab_messages))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
