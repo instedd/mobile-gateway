@@ -13,8 +13,8 @@
     <string name="transceiving">Transceiving...</string>
     <string name="signed_in_as_name">Connected as %s</string>
     <string name="signed_in_as_name_offline">Connected as %s (offline)</string>
-    <string name="incoming">Incoming</string>
-    <string name="outgoing">Outgoing</string>
+    <string name="MTs">MTs</string>
+    <string name="MOs">MOs</string>
     <string name="geochat_lgw_settings">Nuntium Local Gateway settings</string>
     <string name="endpoint_url_colon">Endpoint URL:</string>
     <string name="settings">Settings</string>

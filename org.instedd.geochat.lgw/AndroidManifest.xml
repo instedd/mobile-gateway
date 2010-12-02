@@ -41,11 +41,11 @@
         		  android:theme="@android:style/Theme.NoTitleBar" />
                   
         <activity android:name=".IncomingMessagesActivity"
-        		  android:label="@string/incoming"
+        		  android:label="@string/MOs"
         		  android:theme="@android:style/Theme.NoTitleBar" />
         		  
         <activity android:name=".OutgoingMessagesActivity"
-        		  android:label="outgoing"
+        		  android:label="@string/MTs"
         		  android:theme="@android:style/Theme.NoTitleBar" />
         		  
         <activity android:name=".GeoChatLgwPreferences"
