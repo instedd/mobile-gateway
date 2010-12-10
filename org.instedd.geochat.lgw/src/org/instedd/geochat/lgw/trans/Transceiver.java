@@ -33,14 +33,24 @@ public class Transceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String guid = intent.getExtras().getString(INTENT_EXTRA_GUID);
+			Message msg = data.getOutgoingMessage(guid);
 			switch(getResultCode()) {
 			case Activity.RESULT_OK:
 				data.deleteOutgoingMessage(guid);
+				if (msg != null) {
+					data.log(context.getResources().getString(R.string.sent_message_to_phone, msg.text, msg.to));
+				}
 				break;
 			default:
-				data.markOutgoingMessageAsBeingSent(guid);
-				data.log(context.getResources().getString(R.string.message_could_not_be_sent));
+				data.markOutgoingMessageAsNotBeingSent(guid);
+				if (msg != null) {
+					data.log(context.getResources().getString(R.string.message_could_not_be_sent, msg.text, msg.to));
+				}
 				break;
+			}
+			
+			synchronized (sendLock) {
+				sendLock.notify();
 			}
 		}
 	};
@@ -72,7 +82,7 @@ public class Transceiver {
 	boolean running;
 	boolean resync;
 	Object sleepLock;
-	
+	Object sendLock = new Object();
 
 	public Transceiver(Context context, Handler handler) {
 		this.context = context;
@@ -137,6 +147,13 @@ public class Transceiver {
 					PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_ONE_SHOT), 
 					null);
 		}
+		
+		synchronized (sendLock) {
+			try {
+				sendLock.wait(10000);
+			} catch (InterruptedException e) {
+			}
+		}
 	}
 	
 	class SyncThread extends Thread {
@@ -146,6 +163,11 @@ public class Transceiver {
 		@Override
 		public void run() {
 			Resources r = context.getResources();
+			
+			// Since maybe some messages were marked as being sent and the application
+			// was exited or crashed, mark all of them as not being sent so we can
+			// send them again
+			data.markOutgoingMessagesAsNotBeingSent();
 			
 			boolean hasConnectivity = false;
 			while(running) {
@@ -163,9 +185,9 @@ public class Transceiver {
 								String number = settings.getNumber();
 								try {
 									client.sendAddress(number);
-									log.append(r.getString(R.string.sent_address, number)).append("\n");
+									log.append(r.getString(R.string.sent_your_number, number)).append("\n");
 								} catch (QstClientException e) {
-									log.append(r.getString(R.string.couldnt_send_address, e.getMessage())).append("\n");
+									log.append(r.getString(R.string.couldnt_send_your_number, e.getMessage())).append("\n");
 								}
 								firstRun = false;
 							}
@@ -176,15 +198,8 @@ public class Transceiver {
 							// 1.b. Send them to the application
 							String receivedId = client.sendMessages(incoming);
 							if (incoming != null) {
-								switch(incoming.length) {
-								case 0:
-									break;
-								case 1:
-									log.append(r.getString(R.string.sent_message_to_application, incoming[0].text, incoming[0].from)).append("\n");
-									break;
-								default:
-									log.append(r.getString(R.string.sent_messages_to_application, incoming.length)).append("\n");
-									break;
+								for(Message msg : incoming) {
+									log.append(r.getString(R.string.sent_message_to_application, msg.text, msg.from)).append("\n");
 								}
 							}
 							
@@ -196,19 +211,6 @@ public class Transceiver {
 							
 							// 2. Send pending messages (those that were sent at least once and failed)
 							Message[] pending = data.getOutgoingMessagesNotBeingSentAndMarkAsBeingSent();
-							
-							if (pending != null) {
-								switch(pending.length) {
-								case 0:
-									break;
-								case 1:
-									log.append(r.getString(R.string.sent_previously_failed_message_to_phone, pending[0].text, pending[0].to)).append("\n");
-									break;
-								default:
-									log.append(r.getString(R.string.sent_previously_failed_messages_to_phone, pending.length)).append("\n");
-									break;
-								}
-							}							
 							sendMessages(pending);
 							
 							if (resync)	continue;
@@ -220,18 +222,6 @@ public class Transceiver {
 							String lastReceivedMessageId = data.createOutgoingMessagesAsBeingSent(outgoing);
 							
 							// 3.c. Send them via phone
-							if (outgoing != null) {
-								switch(outgoing.length) {
-								case 0:
-									break;
-								case 1:
-									log.append(r.getString(R.string.sent_message_to_phone, outgoing[0].text, outgoing[0].to)).append("\n");
-									break;
-								default:
-									log.append(r.getString(R.string.sent_messages_to_phone, outgoing.length)).append("\n");
-									break;
-								}
-							}
 							sendMessages(outgoing);
 							
 							// 3.d. Remember last id
