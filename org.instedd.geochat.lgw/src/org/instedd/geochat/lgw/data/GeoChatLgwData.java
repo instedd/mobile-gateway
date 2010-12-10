@@ -35,13 +35,19 @@ public class GeoChatLgwData {
 		this.content = context.getContentResolver();		
 	}
 	
-	public void deleteOutgoingMessage(String guid) {
-		content.delete(Uris.outgoingMessage(guid), null, null);
+	public int deleteOutgoingMessage(String guid) {
+		return content.delete(Uris.outgoingMessage(guid), null, null);
 	}
 	
-	public void markOutgoingMessageAsBeingSent(String guid) {
+	public int markOutgoingMessageAsNotBeingSent(String guid) {
 		synchronized(notSendingLock) {
-			content.update(Uris.outgoingMessage(guid), NOT_BEING_SENT, null, null);
+			return content.update(Uris.outgoingMessage(guid), NOT_BEING_SENT, null, null);
+		}
+	}
+	
+	public int markOutgoingMessagesAsNotBeingSent() {
+		synchronized(notSendingLock) {
+			return content.update(OutgoingMessages.CONTENT_URI, NOT_BEING_SENT, null, null);
 		}
 	}
 	
@@ -110,6 +116,19 @@ public class GeoChatLgwData {
 		return outgoing[outgoing.length - 1].guid;
 	}
 	
+	public Message getOutgoingMessage(String guid) {
+		Cursor c = content.query(Uris.outgoingMessage(guid), OutgoingMessages.PROJECTION, null, null, null);
+		try {
+			if (c.moveToNext()) {
+				return Message.readFrom(c);
+			} else {
+				return null;
+			}
+		} finally {
+			c.close();
+		}
+	}
+	
 	public void log(String message) {
 		ContentValues values = new ContentValues();
 		values.put(Logs.WHEN, System.currentTimeMillis());
@@ -117,6 +136,6 @@ public class GeoChatLgwData {
 		content.insert(Logs.CONTENT_URI, values);
 		
 		content.delete(Uris.OldLogs, null, null);
-	}
+	}	
 
 }

@@ -129,7 +129,7 @@ public class GeoChatLgwProvider extends ContentProvider {
             break;
         }
         case LOGS_OLD: {
-            count = db.delete(LOGS_TABLE_NAME, BaseColumns._ID + " <= (SELECT MAX(" + BaseColumns._ID + ") - 50 FROM " + LOGS_TABLE_NAME + ")"
+            count = db.delete(LOGS_TABLE_NAME, BaseColumns._ID + " <= (SELECT MAX(" + BaseColumns._ID + ") - 200 FROM " + LOGS_TABLE_NAME + ")"
                     + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
             break;
         }
@@ -237,6 +237,13 @@ public class GeoChatLgwProvider extends ContentProvider {
                 orderBy = Messages.DEFAULT_SORT_ORDER;
             }
         	break;
+        case OUTGOING_GUID:
+        	qb.setTables(OUTGOING_TABLE_NAME);
+        	qb.appendWhere(Messages.GUID + "='" + uri.getPathSegments().get(2) + "'");
+        	if (TextUtils.isEmpty(sortOrder)) {
+                orderBy = Messages.DEFAULT_SORT_ORDER;
+            }
+        	break;
         case OUTGOING_NOT_SENDING:
         	qb.setTables(OUTGOING_TABLE_NAME);
         	qb.appendWhere(OutgoingMessages.SENDING + " = 0");
@@ -269,6 +276,9 @@ public class GeoChatLgwProvider extends ContentProvider {
     	SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         int count;
         switch (URI_MATCHER.match(uri)) {
+        case OUTGOING:
+        	count = db.update(OUTGOING_TABLE_NAME, values, (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
+        	break;
         case OUTGOING_GUID:
         	String msgId = uri.getPathSegments().get(2);
             msgId = msgId.replace("'", "''");
