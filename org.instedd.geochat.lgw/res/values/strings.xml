@@ -20,7 +20,10 @@
     <string name="settings">Settings</string>
     <string name="activity">Activity</string>
     <string name="sending">Sending...</string>
-    <string name="message_could_not_be_sent">The message \'%s\' could not be sent to %s.</string>
+    <string name="message_could_not_be_sent_tries">The message \'%s\' could not be sent to %s (try #%s) </string>
+    <string name="message_could_not_be_sent_no_service">The message \'%s\' could not be sent to %s: there is no service.</string>
+    <string name="message_could_not_be_sent_radio_off">The message \'%s\' could not be sent to %s: the radio is off.</string>
+    <string name="message_could_not_be_sent_tries_deleting">The message \'%s\' could not be sent to %s (try #%s): deleting it...</string>
     <string name="sent_your_number">Sent your number: %s.</string>
     <string name="couldnt_send_your_number">Couldn\'t send your number: %s.</string>
     <string name="sent_message_to_application">Sent \'%s\' to application from %s.</string>
