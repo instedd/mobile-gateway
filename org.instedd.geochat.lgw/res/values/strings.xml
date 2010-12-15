@@ -32,6 +32,9 @@
     <string name="refresh_rate">Refresh rate</string>
     <string name="refresh">Refresh</string>
     <string name="refreshing">Refreshing...</string>
+    <string name="delete">Delete</string>
+    <string name="MT">MT</string>
+    <string name="MO">MO</string>
     <string-array name="refresh_rate_entries">
     	<item>1 minute</item>
     	<item>5 minutes</item>

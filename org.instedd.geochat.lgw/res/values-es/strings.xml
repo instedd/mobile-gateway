@@ -32,6 +32,9 @@
     <string name="refresh_rate">Intervalo de actualización</string>
     <string name="refresh">Actualizar</string>
     <string name="refreshing">Actualizando...</string>
+    <string name="delete">Eliminar</string>
+    <string name="MT">MT</string>
+    <string name="MO">MO</string>
     <string-array name="refresh_rate_entries">
     	<item>1 minuto</item>
     	<item>5 minutos</item>

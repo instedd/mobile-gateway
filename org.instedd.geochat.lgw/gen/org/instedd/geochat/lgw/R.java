@@ -45,13 +45,16 @@ public final class R {
         public static final int settings=0x7f030004;
     }
     public static final class string {
+        public static final int MO=0x7f040022;
         public static final int MOs=0x7f04000e;
+        public static final int MT=0x7f040021;
         public static final int MTs=0x7f04000d;
         public static final int activity=0x7f040012;
         public static final int app_name=0x7f040000;
         public static final int cannot_start=0x7f040006;
         public static final int cannot_start_maybe_no_connection=0x7f040007;
         public static final int couldnt_send_your_number=0x7f040019;
+        public static final int delete=0x7f040020;
         public static final int endpoint_url_colon=0x7f040010;
         public static final int fatal_error=0x7f04001c;
         public static final int geochat_lgw_settings=0x7f04000f;
