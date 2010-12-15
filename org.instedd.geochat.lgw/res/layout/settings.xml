@@ -1,0 +1,10 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+        android:title="@string/geochat_lgw_settings">
+        
+    <EditTextPreference
+	    android:title="@string/endpoint_url"
+	    android:summary="@string/endpoint_url_summary"
+	    android:key="httpBase"
+	    android:id="@+id/httpBase"/>
+
+</PreferenceScreen>
