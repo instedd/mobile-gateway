@@ -19,6 +19,10 @@ public class Uris {
 		return Uri.withAppendedPath(Uri.withAppendedPath(OutgoingMessages.CONTENT_URI, "guid"), guid);
 	}
 	
+	public static Uri incomingMessage(int id) {
+		return Uri.withAppendedPath(Uri.withAppendedPath(IncomingMessages.CONTENT_URI, "id"), String.valueOf(id));
+	}
+	
 	public static Uri incomingMessageBefore(String guid) {
 		return Uri.withAppendedPath(IncomingMessages.CONTENT_URI, guid);
 	}
