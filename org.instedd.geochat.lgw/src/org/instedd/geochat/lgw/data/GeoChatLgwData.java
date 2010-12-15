@@ -27,16 +27,18 @@ public class GeoChatLgwData {
 	}
 	
 	private final ContentResolver content;
-	private final String toNumber;
 	private final Object notSendingLock = new Object();	
 
-	public GeoChatLgwData(Context context, String fromNumber) {
-		this.toNumber = fromNumber;
+	public GeoChatLgwData(Context context) {
 		this.content = context.getContentResolver();		
 	}
 	
 	public int deleteOutgoingMessage(String guid) {
 		return content.delete(Uris.outgoingMessage(guid), null, null);
+	}
+	
+	public int deleteOutgoingMessage(int id) {
+		return content.delete(Uris.outgoingMessage(id), null, null);
 	}
 	
 	public int markOutgoingMessageAsNotBeingSent(String guid) {
@@ -60,7 +62,7 @@ public class GeoChatLgwData {
 		}
 	}
 	
-	public void createIncomingMessage(SmsMessage message) {
+	public void createIncomingMessage(SmsMessage message, String toNumber) {
 		String guid = UUID.randomUUID().toString();
         String from = message.getOriginatingAddress();
         String to = toNumber;

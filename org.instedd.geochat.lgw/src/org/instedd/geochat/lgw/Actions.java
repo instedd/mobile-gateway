@@ -71,6 +71,6 @@ public class Actions {
 		context.startActivity(new Intent().setClass(context, clazz));
 	}
 	
-	private Actions() { }
+	private Actions() { }	
 
 }
