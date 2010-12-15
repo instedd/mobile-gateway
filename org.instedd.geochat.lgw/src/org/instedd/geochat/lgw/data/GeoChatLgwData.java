@@ -41,6 +41,10 @@ public class GeoChatLgwData {
 		return content.delete(Uris.outgoingMessage(id), null, null);
 	}
 	
+	public int deleteIncomingMessage(int id) {
+		return content.delete(Uris.incomingMessage(id), null, null);
+	}
+	
 	public int markOutgoingMessageAsNotBeingSent(String guid) {
 		synchronized(notSendingLock) {
 			return content.update(Uris.outgoingMessage(guid), NOT_BEING_SENT, null, null);
