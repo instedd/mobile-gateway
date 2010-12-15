@@ -41,10 +41,28 @@ public class Transceiver {
 					data.log(context.getResources().getString(R.string.sent_message_to_phone, msg.text, msg.to));
 				}
 				break;
-			default:
+			case SmsManager.RESULT_ERROR_NO_SERVICE:
 				data.markOutgoingMessageAsNotBeingSent(guid);
 				if (msg != null) {
-					data.log(context.getResources().getString(R.string.message_could_not_be_sent, msg.text, msg.to));
+					data.log(context.getResources().getString(R.string.message_could_not_be_sent_no_service, msg.text, msg.to));
+				}
+				break;
+			case SmsManager.RESULT_ERROR_RADIO_OFF:
+				data.markOutgoingMessageAsNotBeingSent(guid);
+				if (msg != null) {
+					data.log(context.getResources().getString(R.string.message_could_not_be_sent_radio_off, msg.text, msg.to, msg.tries));
+				}
+				break;
+			default:
+				if (msg != null) {
+					msg.tries++;
+					if (msg.tries >= 3) {
+						data.log(context.getResources().getString(R.string.message_could_not_be_sent_tries_deleting, msg.text, msg.to, msg.tries));
+						data.deleteOutgoingMessage(guid);
+					} else {
+						data.log(context.getResources().getString(R.string.message_could_not_be_sent_tries, msg.text, msg.to, msg.tries));
+						data.markOutgoingMessageAsNotBeingSent(guid, msg.tries);
+					}
 				}
 				break;
 			}

@@ -45,6 +45,15 @@ public class GeoChatLgwData {
 		}
 	}
 	
+	public int markOutgoingMessageAsNotBeingSent(String guid, int tries) {
+		synchronized(notSendingLock) {
+			ContentValues values = new ContentValues();
+			values.put(OutgoingMessages.SENDING, 0);
+			values.put(OutgoingMessages.TRIES, tries);
+			return content.update(Uris.outgoingMessage(guid), values, null, null);
+		}
+	}
+	
 	public int markOutgoingMessagesAsNotBeingSent() {
 		synchronized(notSendingLock) {
 			return content.update(OutgoingMessages.CONTENT_URI, NOT_BEING_SENT, null, null);

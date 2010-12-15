@@ -20,7 +20,10 @@
     <string name="settings">Ajustes</string>
     <string name="activity">Actividad</string>
     <string name="sending">Enviando...</string>
-    <string name="message_could_not_be_sent">El mensaje \'%s\' no se pudo enviar a %s.</string>
+    <string name="message_could_not_be_sent_tries">El mensaje \'%s\' no se pudo enviar a %s (intento #%s).</string>
+    <string name="message_could_not_be_sent_no_service">El mensaje \'%s\' no se pudo enviar a %s: no hay señal.</string>
+    <string name="message_could_not_be_sent_radio_off">El mensaje \'%s\' no se pudo enviar a %s: la radio está apagada.</string>
+    <string name="message_could_not_be_sent_tries_deleting">El mensaje \'%s\' no se pudo enviar a %s (intento #%s): borrándolo...</string>
     <string name="sent_your_number">Enviado tu número: %s.</string>
     <string name="couldnt_send_your_number">No se pudo enviar tu número: %s.</string>
     <string name="sent_message_to_application">Enviado \'%s\' a la aplicación por %s.</string>
