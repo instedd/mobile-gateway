@@ -10,11 +10,22 @@
     	android:orientation="vertical"
     	android:padding="5dp"
     >
+    	<TextView
+	    	android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	style="@android:style/TextAppearance.Large"
+	    	android:text="@string/endpoint_url_colon"
+	    	/>
+	    <EditText 
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:id="@+id/endpoint_url"
+	    	/>
 	    <TextView
 	    	android:layout_width="wrap_content"
 	    	android:layout_height="wrap_content"
 	    	style="@android:style/TextAppearance.Large"
-	    	android:text="@string/local_gateway_name_colon"
+	    	android:text="@string/name_colon"
 	    	/>
 	    <EditText 
 	    	android:layout_width="fill_parent"

@@ -6,11 +6,14 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TabHost;
 
 public class HomeActivity extends TabActivity {
+	
+	Handler handler = new Handler();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,14 +33,14 @@ public class HomeActivity extends TabActivity {
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 	
-	    intent = new Intent().setClass(this, IncomingMessagesActivity.class);
-	    spec = tabHost.newTabSpec("incoming").setIndicator(res.getString(R.string.incoming),
+	    intent = new Intent().setClass(this, OutgoingMessagesActivity.class);
+	    spec = tabHost.newTabSpec("outgoing").setIndicator(res.getString(R.string.MTs),
 	                      res.getDrawable(R.drawable.ic_tab_messages))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 	    
-	    intent = new Intent().setClass(this, OutgoingMessagesActivity.class);
-	    spec = tabHost.newTabSpec("incoming").setIndicator(res.getString(R.string.outgoing),
+	    intent = new Intent().setClass(this, IncomingMessagesActivity.class);
+	    spec = tabHost.newTabSpec("incoming").setIndicator(res.getString(R.string.MOs),
 	                      res.getDrawable(R.drawable.ic_tab_messages))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
@@ -52,6 +55,7 @@ public class HomeActivity extends TabActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		Menues.refresh(menu);
 		Menues.settings(menu);
 		Menues.stop(menu);
 		return true;
@@ -59,7 +63,7 @@ public class HomeActivity extends TabActivity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Menues.executeAction(this, item.getItemId());
+		Menues.executeAction(this, handler, item.getItemId());
 		return true;
 	}
 

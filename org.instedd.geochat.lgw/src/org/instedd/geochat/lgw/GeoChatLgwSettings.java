@@ -14,7 +14,8 @@ public class GeoChatLgwSettings {
 	public final static String NAME = "name";
 	public final static String PASSWORD = "password";
 	public final static String NUMBER = "number";
-	public final static String HTTP_BASE = "httpBase";
+	public final static String ENDPOINT_URL = "endpointUrl";
+	public final static String REFRESH_RATE = "refreshRate";
 	public final static String LAST_RECEIVED_MESSAGE_ID = "lastSentMessageId";
 	
 	private final Context context;
@@ -35,8 +36,9 @@ public class GeoChatLgwSettings {
 		return openRead().getString(NUMBER, null);
 	}
 	
-	public void setCredentials(String name, String password, String number) {
+	public void setCredentials(String endpointUrl, String name, String password, String number) {
 		Editor editor = openWrite();
+		editor.putString(ENDPOINT_URL, endpointUrl);
 		editor.putString(NAME, name);
 		editor.putString(PASSWORD, password);
 		editor.putString(NUMBER, number);
@@ -53,8 +55,16 @@ public class GeoChatLgwSettings {
 		return openRead().getString(LAST_RECEIVED_MESSAGE_ID, null);
 	}
 	
-	public String getHttpBase() {
-		return openRead().getString(HTTP_BASE, "https://nuntium.instedd.org/instedd/qst");
+	public String getEndpointUrl() {
+		return openRead().getString(ENDPOINT_URL, "https://nuntium.instedd.org/instedd/qst");
+	}
+	
+	public int getRefreshRateInMinutes() {
+		return Integer.parseInt(openRead().getString(REFRESH_RATE, "5"));
+	}
+	
+	public int getRefreshRateInMilliseconds() {
+		return 1000 * 60 * getRefreshRateInMinutes();
 	}
 	
 	private SharedPreferences openRead() {
@@ -66,7 +76,7 @@ public class GeoChatLgwSettings {
 	}
 
 	public QstClient newQstClient() {
-		return new QstClient(getHttpBase(), getName(), getPassword(), new RestClient());
+		return new QstClient(getEndpointUrl(), getName(), getPassword(), new RestClient());
 	}
 
 }
