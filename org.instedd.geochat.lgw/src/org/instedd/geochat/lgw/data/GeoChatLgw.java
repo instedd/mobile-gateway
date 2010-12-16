@@ -106,6 +106,12 @@ public class GeoChatLgw {
          */
         public static final String SENDING = "_sending";
         
+        /**
+         * How many times we tried sending this message?
+         * <P>Type: INTEGER</P>
+         */
+        public static final String TRIES = "_tries";
+        
         public final static String[] PROJECTION = {
     		_ID,
     		GUID,
@@ -114,6 +120,7 @@ public class GeoChatLgw {
     		TEXT,
     		WHEN,
     		SENDING,
+    		TRIES,
     	};
     }
     

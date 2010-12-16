@@ -27,25 +27,46 @@ public class GeoChatLgwData {
 	}
 	
 	private final ContentResolver content;
-	private final String toNumber;
 	private final Object notSendingLock = new Object();	
 
-	public GeoChatLgwData(Context context, String fromNumber) {
-		this.toNumber = fromNumber;
+	public GeoChatLgwData(Context context) {
 		this.content = context.getContentResolver();		
 	}
 	
-	public void deleteOutgoingMessage(String guid) {
-		content.delete(Uris.outgoingMessage(guid), null, null);
+	public int deleteOutgoingMessage(String guid) {
+		return content.delete(Uris.outgoingMessage(guid), null, null);
 	}
 	
-	public void markOutgoingMessageAsBeingSent(String guid) {
+	public int deleteOutgoingMessage(int id) {
+		return content.delete(Uris.outgoingMessage(id), null, null);
+	}
+	
+	public int deleteIncomingMessage(int id) {
+		return content.delete(Uris.incomingMessage(id), null, null);
+	}
+	
+	public int markOutgoingMessageAsNotBeingSent(String guid) {
 		synchronized(notSendingLock) {
-			content.update(Uris.outgoingMessage(guid), NOT_BEING_SENT, null, null);
+			return content.update(Uris.outgoingMessage(guid), NOT_BEING_SENT, null, null);
 		}
 	}
 	
-	public void createIncomingMessage(SmsMessage message) {
+	public int markOutgoingMessageAsNotBeingSent(String guid, int tries) {
+		synchronized(notSendingLock) {
+			ContentValues values = new ContentValues();
+			values.put(OutgoingMessages.SENDING, 0);
+			values.put(OutgoingMessages.TRIES, tries);
+			return content.update(Uris.outgoingMessage(guid), values, null, null);
+		}
+	}
+	
+	public int markOutgoingMessagesAsNotBeingSent() {
+		synchronized(notSendingLock) {
+			return content.update(OutgoingMessages.CONTENT_URI, NOT_BEING_SENT, null, null);
+		}
+	}
+	
+	public void createIncomingMessage(SmsMessage message, String toNumber) {
 		String guid = UUID.randomUUID().toString();
         String from = message.getOriginatingAddress();
         String to = toNumber;
@@ -110,6 +131,19 @@ public class GeoChatLgwData {
 		return outgoing[outgoing.length - 1].guid;
 	}
 	
+	public Message getOutgoingMessage(String guid) {
+		Cursor c = content.query(Uris.outgoingMessage(guid), OutgoingMessages.PROJECTION, null, null, null);
+		try {
+			if (c.moveToNext()) {
+				return Message.readFrom(c);
+			} else {
+				return null;
+			}
+		} finally {
+			c.close();
+		}
+	}
+	
 	public void log(String message) {
 		ContentValues values = new ContentValues();
 		values.put(Logs.WHEN, System.currentTimeMillis());
@@ -117,6 +151,6 @@ public class GeoChatLgwData {
 		content.insert(Logs.CONTENT_URI, values);
 		
 		content.delete(Uris.OldLogs, null, null);
-	}
+	}	
 
 }

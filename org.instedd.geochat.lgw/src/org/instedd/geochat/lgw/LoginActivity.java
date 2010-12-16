@@ -11,7 +11,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.TelephonyManager;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,15 +35,18 @@ public final static String EXTRA_WRONG_CREDENTIALS = "WrongCredentials";
         setContentView(R.layout.login);
 	    
 	    final GeoChatLgwSettings settings = new GeoChatLgwSettings(this);
+	    String existingEndpointUrl = settings.getEndpointUrl();
 	    String existingName = settings.getName();
 	    String existingPassword = settings.getPassword();
 	    String existingNumber = settings.getNumber();
 	    
+	    final EditText uiEndpointUrl = (EditText) findViewById(R.id.endpoint_url);
 	    final EditText uiName = (EditText) findViewById(R.id.name);
 	    final EditText uiPassword = (EditText) findViewById(R.id.password);
 	    final EditText uiNumber = (EditText) findViewById(R.id.number);
 	    final Button uiStart = (Button) findViewById(R.id.start_button); 
 	    
+	    uiEndpointUrl.setText(existingEndpointUrl);
 	    uiName.setText(existingName);
 	    uiPassword.setText(existingPassword);
 	    
@@ -68,11 +70,12 @@ public final static String EXTRA_WRONG_CREDENTIALS = "WrongCredentials";
 							}
 						});
 						
+						String endpointUrl = uiEndpointUrl.getText().toString();
 						String name = uiName.getText().toString();
 						String password = uiPassword.getText().toString();
 						String number = uiNumber.getText().toString();
 						
-						settings.setCredentials(name, password, number);
+						settings.setCredentials(endpointUrl, name, password, number);
 						
 						try {
 							QstClient client = settings.newQstClient();
@@ -149,17 +152,7 @@ public final static String EXTRA_WRONG_CREDENTIALS = "WrongCredentials";
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Menues.executeAction(this, item.getItemId());
+		Menues.executeAction(this, handler, item.getItemId());
 		return true;
-	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// This is to go HOME when the user presses BACK
-		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-	        moveTaskToBack(true);
-	        return true;
-	    }
-	    return super.onKeyDown(keyCode, event);
 	}
 }

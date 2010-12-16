@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="org.instedd.geochat.lgw"
-      android:versionCode="1"
-      android:versionName="1.0">
+      android:versionCode="2"
+      android:versionName="1.1">
+      
+    <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="4" />
       
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -13,7 +15,6 @@
     <application
     	android:icon="@drawable/icon"
     	android:label="@string/app_name"
-    	android:debuggable="true"
     	>
     	
     	<provider android:name=".data.GeoChatLgwProvider"
@@ -40,11 +41,11 @@
         		  android:theme="@android:style/Theme.NoTitleBar" />
                   
         <activity android:name=".IncomingMessagesActivity"
-        		  android:label="@string/incoming"
+        		  android:label="@string/MOs"
         		  android:theme="@android:style/Theme.NoTitleBar" />
         		  
         <activity android:name=".OutgoingMessagesActivity"
-        		  android:label="outgoing"
+        		  android:label="@string/MTs"
         		  android:theme="@android:style/Theme.NoTitleBar" />
         		  
         <activity android:name=".GeoChatLgwPreferences"
