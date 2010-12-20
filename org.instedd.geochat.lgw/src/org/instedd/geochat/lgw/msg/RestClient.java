@@ -22,6 +22,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.BasicHttpContext;
@@ -39,6 +40,11 @@ public class RestClient implements IRestClient {
 		// Create and initialize HTTP parameters
 		HttpParams params = new BasicHttpParams();
 		ConnManagerParams.setMaxTotalConnections(params, 20);
+		
+		// 30 seconds timeout
+		HttpConnectionParams.setConnectionTimeout(params, 30 * 1000);
+		HttpConnectionParams.setSoTimeout(params, 30 * 1000);
+		
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
 		           
 		// Create and initialize scheme registry 

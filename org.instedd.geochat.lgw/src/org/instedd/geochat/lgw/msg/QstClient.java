@@ -25,9 +25,6 @@ import android.util.Xml.Encoding;
 
 public class QstClient {
 	
-	//private final static String base = "https://nuntium.instedd.org/instedd";
-	// private final static String base = "http://nuntium.manas.com.ar/geochat/qst";
-	
 	private final static SimpleDateFormat DATE_FORMAT;
 	static {
 		DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");

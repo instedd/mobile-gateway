@@ -28,6 +28,8 @@ public final static String EXTRA_WRONG_CREDENTIALS = "WrongCredentials";
 	
 	final Handler handler = new Handler();
 	ProgressDialog progressDialog;
+	
+	Exception exception;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,6 +102,7 @@ public final static String EXTRA_WRONG_CREDENTIALS = "WrongCredentials";
 								}									
 							});
 						} catch (QstClientException e) {
+							exception = e;
 							handler.post(new Runnable() {
 								public void run() {
 									uiStart.setEnabled(true);
@@ -108,6 +111,7 @@ public final static String EXTRA_WRONG_CREDENTIALS = "WrongCredentials";
 								}									
 							});
 						} catch (Exception e) {
+							exception = e;
 							handler.post(new Runnable() {
 								public void run() {
 									uiStart.setEnabled(true);
@@ -133,10 +137,14 @@ public final static String EXTRA_WRONG_CREDENTIALS = "WrongCredentials";
 			progressDialog.setCancelable(false);
 			return progressDialog;	
 		} else {
-			int messageResourceId = id == DIALOG_WRONG_CREDENTIALS ? R.string.invalid_credentials : R.string.cannot_start_maybe_no_connection; 
-
+			String message;
+			if (id == DIALOG_WRONG_CREDENTIALS) {
+				message = getResources().getString(R.string.invalid_credentials);
+			} else {
+				message = getResources().getString(R.string.cannot_start_error, exception.getMessage());
+			}
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(messageResourceId)
+			builder.setMessage(message)
 				.setTitle(R.string.cannot_start)
 				.setCancelable(true)
 				.setNeutralButton(android.R.string.ok, null);

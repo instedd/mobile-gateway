@@ -7,7 +7,7 @@
     <string name="start">Iniciar</string>
     <string name="invalid_credentials">Nombre/clave incorrectos</string>
     <string name="cannot_start">No se puede iniciar</string>
-    <string name="cannot_start_maybe_no_connection">No se puede iniciar, quizás no hay conexión?</string>
+    <string name="cannot_start_error">No se puede iniciar: %s</string>
     <string name="starting">Iniciando...</string>
     <string name="stop">Detener</string>
     <string name="transceiving">Trabajando...</string>
