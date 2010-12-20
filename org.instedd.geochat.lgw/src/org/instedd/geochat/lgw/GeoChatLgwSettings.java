@@ -56,11 +56,11 @@ public class GeoChatLgwSettings {
 	}
 	
 	public String getEndpointUrl() {
-		return openRead().getString(ENDPOINT_URL, "https://nuntium.instedd.org/instedd/qst");
+		return openRead().getString(ENDPOINT_URL, "http://nuntium.instedd.org/instedd/qst");
 	}
 	
 	public int getRefreshRateInMinutes() {
-		return Integer.parseInt(openRead().getString(REFRESH_RATE, "5"));
+		return Integer.parseInt(openRead().getString(REFRESH_RATE, "1"));
 	}
 	
 	public int getRefreshRateInMilliseconds() {

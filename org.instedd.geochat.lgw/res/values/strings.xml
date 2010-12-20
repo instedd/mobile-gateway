@@ -7,7 +7,7 @@
     <string name="start">Start</string>
     <string name="invalid_credentials">Incorrect name/password</string>
     <string name="cannot_start">Cannot start</string>
-    <string name="cannot_start_maybe_no_connection">Cannot start, maybe no connection?</string>
+    <string name="cannot_start_error">Cannot start: %s</string>
     <string name="starting">Starting...</string>
     <string name="stop">Stop</string>
     <string name="transceiving">Transceiving...</string>

@@ -258,14 +258,14 @@ public class Transceiver {
 					}
 				}
 				
+				if (resync)	continue;
+				
 				// Wait 1 minutes
-				if (!resync) {
-					try {
-						synchronized (sleepLock) {
-							sleepLock.wait(settings.getRefreshRateInMilliseconds());
-						}
-					} catch (InterruptedException e) {
+				try {
+					synchronized (sleepLock) {
+						sleepLock.wait(settings.getRefreshRateInMilliseconds());
 					}
+				} catch (InterruptedException e) {
 				}
 			}
 		}
