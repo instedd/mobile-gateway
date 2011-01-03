@@ -33,10 +33,6 @@ public class QstClient {
 	
 	private final IRestClient client;
 	private final String httpBase;
-	
-	public QstClient(String httpBase, String name, String password) {
-		this(httpBase, name, password, new RestClient());
-	}
 
 	public QstClient(String httpBase, String name, String password, IRestClient restClient) {
 		this.httpBase = httpBase;
