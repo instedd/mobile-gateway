@@ -150,6 +150,12 @@ public class GeoChatLgw {
         public final static String TEXT = "_text";
         
         /**
+         * The stack trace, if any, of this log
+         * <P>Type: TEXT</P>
+         */
+        public final static String STACK_TRACE = "_stack_trace";
+        
+        /**
          * The timestamp for when the log was created
          * <P>Type: INTEGER (long from System.curentTimeMillis())</P>
          */
@@ -164,6 +170,7 @@ public class GeoChatLgw {
     		_ID,
     		TEXT,
     		WHEN,
+    		STACK_TRACE,
     	};
     }
 

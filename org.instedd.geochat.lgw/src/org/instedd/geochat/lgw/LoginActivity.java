@@ -155,6 +155,7 @@ public final static String EXTRA_WRONG_CREDENTIALS = "WrongCredentials";
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		Menues.settings(menu);
+		Menues.sendActivityLog(menu);
 		return true;
 	}
 	

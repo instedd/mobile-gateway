@@ -35,6 +35,11 @@
     <string name="delete">Delete</string>
     <string name="MT">MT</string>
     <string name="MO">MO</string>
+    <string name="send_activity_log">Send activity log</string>
+    <string name="sending_activity_log">Sending activity log...</string>
+    <string name="could_not_send_activity_log">Could not send activity log</string>
+    <string name="activity_log_sent">Activity log sent</string>
+    <string name="send_activity_log_description">All your activity log will be sent to InSTEDD. Are you sure?</string>
     <string-array name="refresh_rate_entries">
     	<item>1 minute</item>
     	<item>5 minutes</item>

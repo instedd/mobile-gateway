@@ -39,6 +39,10 @@ public class QstClient {
 		this.client = restClient;
 		this.client.setAuth(name, password);
 	}
+	
+	public IRestClient getRestClient() {
+		return client;
+	}
 
 	public void sendAddress(String address) throws QstClientException {
 		try {

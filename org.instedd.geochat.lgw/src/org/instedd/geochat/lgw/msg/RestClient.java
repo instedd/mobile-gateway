@@ -11,6 +11,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.conn.params.ConnManagerParams;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.params.BasicHttpParams;
@@ -66,6 +67,18 @@ public class RestClient implements IRestClient {
 	
 	public HttpResponse post(String url, String data, String contentType) throws IOException {
 		HttpPost post = auth(new HttpPost(url));
+		
+		StringEntity entity = new StringEntity(data, "UTF-8");
+		entity.setContentType(contentType);
+
+		post.setEntity(entity);
+		post.getParams().setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
+		
+		return this.client.execute(post, new BasicHttpContext());
+	}
+	
+	public HttpResponse put(String url, String data, String contentType) throws IOException {
+		HttpPut post = auth(new HttpPut(url));
 		
 		StringEntity entity = new StringEntity(data, "UTF-8");
 		entity.setContentType(contentType);

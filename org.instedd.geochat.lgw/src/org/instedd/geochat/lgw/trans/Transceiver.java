@@ -186,6 +186,8 @@ public class Transceiver {
 			
 			boolean hasConnectivity = false;
 			while(running) {
+				Throwable throwable = null;
+				
 				try {
 					notifier.startTranscieving();
 					hasConnectivity = Connectivity.hasConnectivity(context);
@@ -244,9 +246,10 @@ public class Transceiver {
 								settings.setLastReceivedMessageId(lastReceivedMessageId);
 						} catch (Throwable t) {
 							log.append(r.getString(R.string.fatal_error, t.getMessage())).append("\n");
+							throwable = t;
 						} finally {
 							if (!TextUtils.isEmpty(log)) {
-								data.log(log.toString().trim());
+								data.log(log.toString().trim(), throwable);
 							}
 						}
 					}
