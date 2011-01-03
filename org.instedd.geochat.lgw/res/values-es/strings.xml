@@ -35,6 +35,11 @@
     <string name="delete">Eliminar</string>
     <string name="MT">MT</string>
     <string name="MO">MO</string>
+    <string name="send_activity_log">Enviar el log de actividades</string>
+    <string name="sending_activity_log">Enviando el log de actividades...</string>
+    <string name="could_not_send_activity_log">No se pudo enviar el log de actividades</string>
+    <string name="activity_log_sent">El log de actividades ha sido enviado</string>
+    <string name="send_activity_log_description">Su log de actividades será enviado a InSTEDD. Está seguro?</string>
     <string-array name="refresh_rate_entries">
     	<item>1 minuto</item>
     	<item>5 minutos</item>

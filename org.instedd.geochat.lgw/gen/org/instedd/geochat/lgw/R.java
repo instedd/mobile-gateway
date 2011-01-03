@@ -15,17 +15,16 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int ic_menu_preferences=0x7f020000;
-        public static final int ic_menu_refresh=0x7f020001;
-        public static final int ic_menu_signout=0x7f020002;
-        public static final int ic_stat_geochat=0x7f020003;
-        public static final int ic_stat_geochat_offline=0x7f020004;
-        public static final int ic_stat_geochat_sync=0x7f020005;
-        public static final int ic_tab_messages=0x7f020006;
-        public static final int ic_tab_messages_grey=0x7f020007;
-        public static final int ic_tab_messages_white=0x7f020008;
-        public static final int icon=0x7f020009;
-        public static final int stat_sys_warning=0x7f02000a;
+        public static final int ic_menu_refresh=0x7f020000;
+        public static final int ic_menu_signout=0x7f020001;
+        public static final int ic_stat_geochat=0x7f020002;
+        public static final int ic_stat_geochat_offline=0x7f020003;
+        public static final int ic_stat_geochat_sync=0x7f020004;
+        public static final int ic_tab_messages=0x7f020005;
+        public static final int ic_tab_messages_grey=0x7f020006;
+        public static final int ic_tab_messages_white=0x7f020007;
+        public static final int icon=0x7f020008;
+        public static final int stat_sys_warning=0x7f020009;
     }
     public static final class id {
         public static final int date=0x7f070001;
@@ -54,9 +53,11 @@ public final class R {
         public static final int MT=0x7f050021;
         public static final int MTs=0x7f05000d;
         public static final int activity=0x7f050012;
+        public static final int activity_log_sent=0x7f050026;
         public static final int app_name=0x7f050000;
         public static final int cannot_start=0x7f050006;
         public static final int cannot_start_error=0x7f050007;
+        public static final int could_not_send_activity_log=0x7f050025;
         public static final int couldnt_send_your_number=0x7f050019;
         public static final int delete=0x7f050020;
         public static final int endpoint_url_colon=0x7f050010;
@@ -72,7 +73,10 @@ public final class R {
         public static final int refresh=0x7f05001e;
         public static final int refresh_rate=0x7f05001d;
         public static final int refreshing=0x7f05001f;
+        public static final int send_activity_log=0x7f050023;
+        public static final int send_activity_log_description=0x7f050027;
         public static final int sending=0x7f050013;
+        public static final int sending_activity_log=0x7f050024;
         public static final int sent_message_to_application=0x7f05001a;
         public static final int sent_message_to_phone=0x7f05001b;
         public static final int sent_your_number=0x7f050018;

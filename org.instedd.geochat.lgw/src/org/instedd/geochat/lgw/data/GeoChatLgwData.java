@@ -1,5 +1,7 @@
 package org.instedd.geochat.lgw.data;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.UUID;
 
 import org.instedd.geochat.lgw.Uris;
@@ -145,12 +147,24 @@ public class GeoChatLgwData {
 	}
 	
 	public void log(String message) {
+		log(message, null);
+	}
+	
+	public void log(String message, Throwable t) {
 		ContentValues values = new ContentValues();
 		values.put(Logs.WHEN, System.currentTimeMillis());
 		values.put(Logs.TEXT, message);
+		if (t != null) {
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			t.printStackTrace(pw);
+			pw.flush();
+			sw.flush();
+			values.put(Logs.STACK_TRACE, sw.getBuffer().toString());
+		}
 		content.insert(Logs.CONTENT_URI, values);
 		
 		content.delete(Uris.OldLogs, null, null);
-	}	
+	}
 
 }

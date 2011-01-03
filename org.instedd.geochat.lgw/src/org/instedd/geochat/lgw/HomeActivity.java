@@ -57,6 +57,7 @@ public class HomeActivity extends TabActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		Menues.refresh(menu);
 		Menues.settings(menu);
+		Menues.sendActivityLog(menu);
 		Menues.stop(menu);
 		return true;
 	}

@@ -10,6 +10,7 @@ public class Menues {
 	public final static int SETTINGS = 1;
 	public final static int STOP = 2;
 	public final static int REFRESH = 3;
+	public final static int SEND_ACTIVITY_LOG = 4;
 	
 	public static void executeAction(Context context, Handler handler, int menuItemId) {
 		executeAction(context, handler, menuItemId, null);
@@ -23,6 +24,9 @@ public class Menues {
 		case Menues.SETTINGS:
 			Actions.settings(context);
 			break;
+		case Menues.SEND_ACTIVITY_LOG:
+			Actions.sendActivityLog(context, handler);
+			break;
 		case Menues.STOP:
 			Actions.stop(context);
 			break;
@@ -34,7 +38,11 @@ public class Menues {
 	}
 	
 	public static void settings(Menu menu) {
-		menu.add(0, SETTINGS, 0, R.string.settings).setIcon(R.drawable.ic_menu_preferences);
+		menu.add(0, SETTINGS, 0, R.string.settings).setIcon(android.R.drawable.ic_menu_preferences);
+	}
+	
+	public static void sendActivityLog(Menu menu) {
+		menu.add(0, SEND_ACTIVITY_LOG, 0, R.string.send_activity_log).setIcon(android.R.drawable.ic_menu_send);
 	}
 	
 	public static void stop(Menu menu) {
