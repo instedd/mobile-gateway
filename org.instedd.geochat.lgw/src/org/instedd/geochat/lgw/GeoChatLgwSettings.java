@@ -56,7 +56,7 @@ public class GeoChatLgwSettings {
 	}
 	
 	public String getEndpointUrl() {
-		return openRead().getString(ENDPOINT_URL, "http://nuntium.instedd.org/instedd/qst");
+		return openRead().getString(ENDPOINT_URL, "https://nuntium.instedd.org/instedd/qst");
 	}
 	
 	public int getRefreshRateInMinutes() {
@@ -76,7 +76,7 @@ public class GeoChatLgwSettings {
 	}
 
 	public QstClient newQstClient() {
-		return new QstClient(getEndpointUrl(), getName(), getPassword(), new RestClient());
+		return new QstClient(getEndpointUrl(), getName(), getPassword(), new RestClient(context));
 	}
 
 }
