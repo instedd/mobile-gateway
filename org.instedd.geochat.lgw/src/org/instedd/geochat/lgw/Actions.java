@@ -3,7 +3,6 @@ package org.instedd.geochat.lgw;
 import java.io.IOException;
 
 import org.instedd.geochat.lgw.data.GeoChatLgw.Logs;
-import org.instedd.geochat.lgw.msg.RestClient;
 import org.instedd.geochat.lgw.trans.GeoChatTransceiverService;
 
 import android.app.AlertDialog;
@@ -75,7 +74,7 @@ public class Actions {
         					cursor.close();
         				}
         				
-        				ExternalLog log = new ExternalLog(new RestClient(context));
+        				ExternalLog log = new ExternalLog(context);
         				try {
         					log.send(message.toString());
         					
