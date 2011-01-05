@@ -64,6 +64,7 @@ public class Transceiver {
 						data.markOutgoingMessageAsNotBeingSent(guid, msg.tries);
 					}
 				}
+				notify.someMessagesCouldNotBeSent();
 				break;
 			}
 			
@@ -90,7 +91,7 @@ public class Transceiver {
 
 	final Context context;
 	final Handler handler;
-	final Notifier notifier;
+	final Notifier notify;
 	final GeoChatLgwData data;
 	final GeoChatLgwSettings settings;
 	QstClient client;
@@ -104,7 +105,7 @@ public class Transceiver {
 	public Transceiver(Context context, Handler handler) {
 		this.context = context;
 		this.handler = handler;
-		this.notifier = new Notifier(context);
+		this.notify = new Notifier(context);
 		this.settings = new GeoChatLgwSettings(context);
 		this.data = new GeoChatLgwData(context);
 		recreateQstClient();		
@@ -189,7 +190,7 @@ public class Transceiver {
 				Throwable throwable = null;
 				
 				try {
-					notifier.startTranscieving();
+					notify.startTranscieving();
 					hasConnectivity = Connectivity.hasConnectivity(context);
 					resync = false;
 					
@@ -257,9 +258,9 @@ public class Transceiver {
 					}
 				} finally {
 					if (hasConnectivity) { 
-						notifier.stopTransceiving();
+						notify.stopTransceiving();
 					} else {
-						notifier.offline();
+						notify.offline();
 					}
 				}
 				
