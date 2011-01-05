@@ -83,6 +83,8 @@ public final class R {
         public static final int settings=0x7f050011;
         public static final int signed_in_as_name=0x7f05000b;
         public static final int signed_in_as_name_offline=0x7f05000c;
+        public static final int some_messages_could_not_be_sent=0x7f050028;
+        public static final int some_messages_could_not_be_sent_description=0x7f050029;
         public static final int start=0x7f050004;
         public static final int starting=0x7f050008;
         public static final int stop=0x7f050009;

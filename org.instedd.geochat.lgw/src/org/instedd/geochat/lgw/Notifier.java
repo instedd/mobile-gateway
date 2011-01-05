@@ -12,6 +12,7 @@ public class Notifier {
 	private final Context context;
 	
 	public final static int SERVICE = 1;
+	public final static int MESSAGES_COULD_NOT_BE_SENT = 2;
 
 	public Notifier(Context context) {
 		this.context = context;
@@ -27,6 +28,20 @@ public class Notifier {
 	
 	public void offline() {
 		setForegroundNotificationContent(R.drawable.ic_stat_geochat_offline, R.string.signed_in_as_name_offline, new GeoChatLgwSettings(context).getName());
+	}
+	
+	public void someMessagesCouldNotBeSent() {
+		NotificationManager man = getNotificationManager();
+		Notification notification = new Notification(R.drawable.ic_stat_geochat_offline, null, System.currentTimeMillis());
+		notification.defaults |= Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS;
+		notification.flags = Notification.FLAG_AUTO_CANCEL;
+		
+		Resources r = context.getResources();
+		String title = r.getString(R.string.some_messages_could_not_be_sent);
+		String content = r.getString(R.string.some_messages_could_not_be_sent_description);
+		
+		notification.setLatestEventInfo(context, title, content, PendingIntent.getActivity(context, 0, getViewMessagesIntent(), 0));
+		man.notify(MESSAGES_COULD_NOT_BE_SENT, notification);
 	}
 	
 	private void setForegroundNotificationContent(int icon, int resource) {
