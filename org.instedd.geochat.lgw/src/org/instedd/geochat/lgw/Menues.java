@@ -11,6 +11,9 @@ public class Menues {
 	public final static int STOP = 2;
 	public final static int REFRESH = 3;
 	public final static int SEND_ACTIVITY_LOG = 4;
+	public final static int RETRY_ALL_OUTGOING_MESSAGES = 5;
+	public final static int DELETE_ALL_OUTGOING_MESSAGES = 6;
+	public final static int DELETE_ALL_INCOMING_MESSAGES = 7;
 	
 	public static void executeAction(Context context, Handler handler, int menuItemId) {
 		executeAction(context, handler, menuItemId, null);
@@ -18,17 +21,26 @@ public class Menues {
 	
 	public static void executeAction(Context context, Handler handler, int menuItemId, Uri data) {
 		switch(menuItemId) {
-		case Menues.REFRESH:
+		case REFRESH:
 			Actions.refresh(context, handler);
 			break;
-		case Menues.SETTINGS:
+		case SETTINGS:
 			Actions.settings(context);
 			break;
-		case Menues.SEND_ACTIVITY_LOG:
+		case SEND_ACTIVITY_LOG:
 			Actions.sendActivityLog(context, handler);
 			break;
-		case Menues.STOP:
+		case STOP:
 			Actions.stop(context);
+			break;
+		case RETRY_ALL_OUTGOING_MESSAGES:
+			Actions.retryAllOutgoingMessages(context, handler);
+			break;
+		case DELETE_ALL_OUTGOING_MESSAGES:
+			Actions.deleteAllOutgoingMessages(context);
+			break;
+		case DELETE_ALL_INCOMING_MESSAGES:
+			Actions.deleteAllIncomingMessages(context);
 			break;
 		}
 	}
@@ -47,6 +59,18 @@ public class Menues {
 	
 	public static void stop(Menu menu) {
 		menu.add(0, STOP, 0, R.string.stop).setIcon(R.drawable.ic_menu_signout);
+	}
+	
+	public static void retryAllOutgoingMessages(Menu menu) {
+		menu.add(0, RETRY_ALL_OUTGOING_MESSAGES, 0, R.string.retry_all).setIcon(android.R.drawable.ic_menu_share);
+	}
+
+	public static void deleteAllOutgoingMessages(Menu menu) {
+		menu.add(0, DELETE_ALL_OUTGOING_MESSAGES, 0, R.string.delete_all).setIcon(android.R.drawable.ic_menu_delete);
+	}
+	
+	public static void deleteAllIncomingMessages(Menu menu) {
+		menu.add(0, DELETE_ALL_INCOMING_MESSAGES, 0, R.string.delete_all).setIcon(android.R.drawable.ic_menu_delete);
 	}
 
 }

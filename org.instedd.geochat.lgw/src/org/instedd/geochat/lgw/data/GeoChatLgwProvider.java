@@ -106,10 +106,10 @@ public class GeoChatLgwProvider extends ContentProvider {
         int count;
         switch (URI_MATCHER.match(uri)) {
         case INCOMING:
-        	count = db.delete(INCOMING_TABLE_NAME, where, whereArgs);
+        	count = db.delete(INCOMING_TABLE_NAME, where == null ? "1" : where, whereArgs);
             break;
         case OUTGOING:
-        	count = db.delete(OUTGOING_TABLE_NAME, where, whereArgs);
+        	count = db.delete(OUTGOING_TABLE_NAME, where == null ? "1" : where, whereArgs);
             break;
         case INCOMING_ID: {
             String msgId = uri.getPathSegments().get(2);

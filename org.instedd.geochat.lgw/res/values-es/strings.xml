@@ -32,6 +32,7 @@
     <string name="refresh">Actualizar</string>
     <string name="refreshing">Actualizando...</string>
     <string name="delete">Eliminar</string>
+    <string name="delete_all">Eliminar todos</string>
     <string name="MT">MT</string>
     <string name="MO">MO</string>
     <string name="send_activity_log">Enviar el log de actividades</string>
@@ -41,7 +42,11 @@
     <string name="send_activity_log_description">Su log de actividades será enviado a InSTEDD. Está seguro?</string>
     <string name="some_messages_not_sent">Algunos mensajes no enviados</string>
     <string name="some_messages_not_sent_description">Quizás no tenga crédito disponible?</string>
-    <string name="try_resend">Intentar reenviar</string>
+    <string name="retry">Reintentar</string>
+    <string name="retry_all">Reintentar todos</string>
+    <string name="retrying_all">Reintentando todos...</string>
+    <string name="retrying">Reintentando...</string>
+    <string name="are_you_sure">Está seguro?</string>
     <string-array name="refresh_rate_entries">
     	<item>1 minuto</item>
     	<item>5 minutos</item>

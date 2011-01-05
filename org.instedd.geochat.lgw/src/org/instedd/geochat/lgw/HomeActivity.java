@@ -56,9 +56,18 @@ public class HomeActivity extends TabActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		Menues.refresh(menu);
-		Menues.settings(menu);
 		Menues.sendActivityLog(menu);
+		switch(getTabHost().getCurrentTab()) {
+		case 1: // outgoing
+			Menues.retryAllOutgoingMessages(menu);
+			Menues.deleteAllOutgoingMessages(menu);
+			break;
+		case 2: // incoming
+			Menues.deleteAllIncomingMessages(menu);
+			break;
+		}
 		Menues.stop(menu);
+		Menues.settings(menu);
 		return true;
 	}
 	

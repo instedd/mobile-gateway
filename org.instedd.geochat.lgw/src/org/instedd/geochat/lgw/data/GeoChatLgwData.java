@@ -48,12 +48,24 @@ public class GeoChatLgwData {
 		return content.delete(Uris.outgoingMessage(id), null, null);
 	}
 	
+	public int deleteAllOutgoingMessages() {
+		return content.delete(OutgoingMessages.CONTENT_URI, null, null);
+	}
+	
+	public int deleteAllIncomingMessages() {
+		return content.delete(IncomingMessages.CONTENT_URI, null, null);
+	}
+	
 	public int deleteIncomingMessage(int id) {
 		return content.delete(Uris.incomingMessage(id), null, null);
 	}
 	
 	public int resetOutgoingMessageTries(int id) {
 		return content.update(Uris.outgoingMessage(id), TRIES_ZERO, null, null);
+	}
+	
+	public int resetAllOutgoingMessageTries() {
+		return content.update(OutgoingMessages.CONTENT_URI, TRIES_ZERO, null, null);
 	}
 	
 	public int markOutgoingMessageAsNotBeingSent(String guid) {

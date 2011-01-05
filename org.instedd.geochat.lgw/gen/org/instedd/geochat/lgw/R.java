@@ -48,18 +48,20 @@ public final class R {
         public static final int keystore=0x7f040000;
     }
     public static final class string {
-        public static final int MO=0x7f050021;
+        public static final int MO=0x7f050022;
         public static final int MOs=0x7f05000e;
-        public static final int MT=0x7f050020;
+        public static final int MT=0x7f050021;
         public static final int MTs=0x7f05000d;
         public static final int activity=0x7f050012;
-        public static final int activity_log_sent=0x7f050025;
+        public static final int activity_log_sent=0x7f050026;
         public static final int app_name=0x7f050000;
+        public static final int are_you_sure=0x7f05002e;
         public static final int cannot_start=0x7f050006;
         public static final int cannot_start_error=0x7f050007;
-        public static final int could_not_send_activity_log=0x7f050024;
+        public static final int could_not_send_activity_log=0x7f050025;
         public static final int couldnt_send_your_number=0x7f050018;
         public static final int delete=0x7f05001f;
+        public static final int delete_all=0x7f050020;
         public static final int endpoint_url_colon=0x7f050010;
         public static final int fatal_error=0x7f05001b;
         public static final int geochat_lgw_settings=0x7f05000f;
@@ -72,23 +74,26 @@ public final class R {
         public static final int refresh=0x7f05001d;
         public static final int refresh_rate=0x7f05001c;
         public static final int refreshing=0x7f05001e;
-        public static final int send_activity_log=0x7f050022;
-        public static final int send_activity_log_description=0x7f050026;
+        public static final int retry=0x7f05002a;
+        public static final int retry_all=0x7f05002b;
+        public static final int retrying=0x7f05002d;
+        public static final int retrying_all=0x7f05002c;
+        public static final int send_activity_log=0x7f050023;
+        public static final int send_activity_log_description=0x7f050027;
         public static final int sending=0x7f050013;
-        public static final int sending_activity_log=0x7f050023;
+        public static final int sending_activity_log=0x7f050024;
         public static final int sent_message_to_application=0x7f050019;
         public static final int sent_message_to_phone=0x7f05001a;
         public static final int sent_your_number=0x7f050017;
         public static final int settings=0x7f050011;
         public static final int signed_in_as_name=0x7f05000b;
         public static final int signed_in_as_name_offline=0x7f05000c;
-        public static final int some_messages_not_sent=0x7f050027;
-        public static final int some_messages_not_sent_description=0x7f050028;
+        public static final int some_messages_not_sent=0x7f050028;
+        public static final int some_messages_not_sent_description=0x7f050029;
         public static final int start=0x7f050004;
         public static final int starting=0x7f050008;
         public static final int stop=0x7f050009;
         public static final int this_telephone_number_colon=0x7f050003;
         public static final int transceiving=0x7f05000a;
-        public static final int try_resend=0x7f050029;
     }
 }

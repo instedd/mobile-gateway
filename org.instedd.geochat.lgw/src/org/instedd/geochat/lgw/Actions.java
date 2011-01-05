@@ -2,6 +2,7 @@ package org.instedd.geochat.lgw;
 
 import java.io.IOException;
 
+import org.instedd.geochat.lgw.data.GeoChatLgwData;
 import org.instedd.geochat.lgw.data.GeoChatLgw.Logs;
 import org.instedd.geochat.lgw.trans.GeoChatTransceiverService;
 
@@ -40,11 +41,7 @@ public class Actions {
 		final Toast toastOk = Toast.makeText(context, context.getResources().getString(R.string.activity_log_sent), Toast.LENGTH_LONG);
 		final Toast toastError = Toast.makeText(context, context.getResources().getString(R.string.could_not_send_activity_log), Toast.LENGTH_LONG);
 		
-		new AlertDialog.Builder(context)
-        .setIcon(android.R.drawable.ic_dialog_alert)
-        .setTitle(R.string.send_activity_log)
-        .setMessage(R.string.send_activity_log_description)
-        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+		confirm(context, R.string.send_activity_log, R.string.send_activity_log_description, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             	new Thread() {
@@ -92,9 +89,30 @@ public class Actions {
         			};
         		}.start();
             }
-        })
-        .setNegativeButton(android.R.string.no, null)
-        .show();
+        });
+	}
+	
+	public static void retryAllOutgoingMessages(Context context, Handler handler) {
+		new GeoChatLgwData(context).resetAllOutgoingMessageTries();
+		refresh(context, handler, R.string.retrying_all);
+	}
+	
+	public static void deleteAllOutgoingMessages(final Context context) {
+		confirm(context, R.string.delete_all, R.string.are_you_sure, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				new GeoChatLgwData(context).deleteAllOutgoingMessages();
+			}
+		});
+	}
+	
+	public static void deleteAllIncomingMessages(final Context context) {
+		confirm(context, R.string.delete_all, R.string.are_you_sure, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				new GeoChatLgwData(context).deleteAllIncomingMessages();
+			}
+		});
 	}
 	
 	public static void stop(Context context) {
@@ -109,6 +127,10 @@ public class Actions {
 	}
 	
 	public static synchronized void refresh(final Context context, final Handler handler) {
+		refresh(context, handler, R.string.refreshing);
+	}
+	
+	public static synchronized void refresh(final Context context, final Handler handler, final int message) {
 		if (geochatService == null) {
 			geochatServiceConnection = new ServiceConnection() {
 				public void onServiceDisconnected(ComponentName className) {
@@ -116,19 +138,19 @@ public class Actions {
 				}
 				public void onServiceConnected(ComponentName className, IBinder service) {
 					geochatService = ((GeoChatTransceiverService.LocalBinder)service).getService();
-					refreshInternal(context, handler);
+					refreshInternal(context, handler, message);
 				}
 			};
 			context.getApplicationContext().bindService(new Intent(context, GeoChatTransceiverService.class), geochatServiceConnection, Context.BIND_AUTO_CREATE);
 		} else {
-			refreshInternal(context, handler);	
+			refreshInternal(context, handler, message);	
 		}
 	}
 	
-	private static void refreshInternal(final Context context, final Handler handler) {
+	private static void refreshInternal(final Context context, final Handler handler, final int message) {
 		geochatService.resync();
 		
-		final Toast toast = Toast.makeText(context, context.getResources().getString(R.string.refreshing), Toast.LENGTH_LONG);
+		final Toast toast = Toast.makeText(context, context.getResources().getString(message), Toast.LENGTH_LONG);
 		handler.post(new Runnable() {
 			public void run() {
 				toast.show();
@@ -140,6 +162,16 @@ public class Actions {
 		context.startActivity(new Intent().setClass(context, clazz));
 	}
 	
-	private Actions() { }	
+	private static void confirm(Context context, int title, int message, DialogInterface.OnClickListener action) {
+		new AlertDialog.Builder(context)
+        .setIcon(android.R.drawable.ic_dialog_alert)
+        .setTitle(title)
+        .setMessage(message)
+        .setPositiveButton(android.R.string.yes, action)
+        .setNegativeButton(android.R.string.no, null)
+        .show();
+	}
+	
+	private Actions() { }
 
 }
