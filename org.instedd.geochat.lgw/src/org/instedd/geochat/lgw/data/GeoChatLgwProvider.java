@@ -255,7 +255,7 @@ public class GeoChatLgwProvider extends ContentProvider {
         	break;
         case OUTGOING_NOT_SENDING:
         	qb.setTables(OUTGOING_TABLE_NAME);
-        	qb.appendWhere(OutgoingMessages.SENDING + " = 0");
+        	qb.appendWhere(OutgoingMessages.SENDING + " = 0 AND (" + OutgoingMessages.TRIES + " IS NULL OR " + OutgoingMessages.TRIES + " < 3)");
         	if (TextUtils.isEmpty(sortOrder)) {
                 orderBy = Messages.DEFAULT_SORT_ORDER;
             }
