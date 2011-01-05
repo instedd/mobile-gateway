@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 
 public class OutgoingMessagesActivity extends ListActivity implements OnItemLongClickListener {
 	
+	final Handler handler = new Handler();
 	Cursor cursor;
 	int position;
 	
@@ -53,7 +55,8 @@ public class OutgoingMessagesActivity extends ListActivity implements OnItemLong
     
     @Override
 	protected Dialog onCreateDialog(int id) {
-		final CharSequence[] items = { 
+		final CharSequence[] items = {
+				getResources().getString(R.string.try_resend),
 				getResources().getString(R.string.delete),
 		};
 		
@@ -65,7 +68,11 @@ public class OutgoingMessagesActivity extends ListActivity implements OnItemLong
 			public void onClick(DialogInterface dialog, int which) {
 				int id = cursor.getInt(cursor.getColumnIndex(Messages._ID));
 				switch(which) {
-				case 0:
+				case 0: // resend
+					new GeoChatLgwData(OutgoingMessagesActivity.this).resetOutgoingMessageTries(id);
+					Actions.refresh(OutgoingMessagesActivity.this, handler);
+					break;
+				case 1: // delete 
 					new GeoChatLgwData(OutgoingMessagesActivity.this).deleteOutgoingMessage(id);
 					break;
 				}
