@@ -252,6 +252,8 @@ public class Transceiver {
 								data.log(log.toString().trim(), throwable);
 							}
 						}
+					} else {
+						Connectivity.reEnableWifi(context);
 					}
 				} finally {
 					if (hasConnectivity) { 
