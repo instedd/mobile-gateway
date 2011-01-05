@@ -12,7 +12,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -109,7 +108,7 @@ public class Actions {
 		startActivity(context, LoginActivity.class);
 	}
 	
-	public static synchronized void refresh(final Context context, final Uri data, final Handler handler) {
+	public static synchronized void refresh(final Context context, final Handler handler) {
 		if (geochatService == null) {
 			geochatServiceConnection = new ServiceConnection() {
 				public void onServiceDisconnected(ComponentName className) {
@@ -117,16 +116,16 @@ public class Actions {
 				}
 				public void onServiceConnected(ComponentName className, IBinder service) {
 					geochatService = ((GeoChatTransceiverService.LocalBinder)service).getService();
-					refreshInternal(context, data, handler);
+					refreshInternal(context, handler);
 				}
 			};
 			context.getApplicationContext().bindService(new Intent(context, GeoChatTransceiverService.class), geochatServiceConnection, Context.BIND_AUTO_CREATE);
 		} else {
-			refreshInternal(context, data, handler);	
+			refreshInternal(context, handler);	
 		}
 	}
 	
-	private static void refreshInternal(final Context context, final Uri data, final Handler handler) {
+	private static void refreshInternal(final Context context, final Handler handler) {
 		geochatService.resync();
 		
 		final Toast toast = Toast.makeText(context, context.getResources().getString(R.string.refreshing), Toast.LENGTH_LONG);

@@ -28,6 +28,11 @@ public class GeoChatLgwData {
 		BEING_SENT.put(OutgoingMessages.SENDING, 1);
 	}
 	
+	private final static ContentValues TRIES_ZERO = new ContentValues();
+	static {
+		TRIES_ZERO.put(OutgoingMessages.TRIES, 0);
+	}
+	
 	private final ContentResolver content;
 	private final Object notSendingLock = new Object();	
 
@@ -45,6 +50,10 @@ public class GeoChatLgwData {
 	
 	public int deleteIncomingMessage(int id) {
 		return content.delete(Uris.incomingMessage(id), null, null);
+	}
+	
+	public int resetOutgoingMessageTries(int id) {
+		return content.update(Uris.outgoingMessage(id), TRIES_ZERO, null, null);
 	}
 	
 	public int markOutgoingMessageAsNotBeingSent(String guid) {

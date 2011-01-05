@@ -288,12 +288,19 @@ public class GeoChatLgwProvider extends ContentProvider {
         case OUTGOING:
         	count = db.update(OUTGOING_TABLE_NAME, values, (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
         	break;
-        case OUTGOING_GUID:
+        case OUTGOING_ID: {
+        	String msgId = uri.getPathSegments().get(1);
+        	count = db.update(OUTGOING_TABLE_NAME, values, Messages._ID + "= " + msgId
+                    + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
+        	break;
+        }
+        case OUTGOING_GUID: {
         	String msgId = uri.getPathSegments().get(2);
             msgId = msgId.replace("'", "''");
         	count = db.update(OUTGOING_TABLE_NAME, values, Messages.GUID + "= '" + msgId + "'"
                     + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
         	break;
+        }
         case OUTGOING_NOT_SENDING:
             count = db.update(OUTGOING_TABLE_NAME, values, OutgoingMessages.SENDING + "= 0"
                     + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);

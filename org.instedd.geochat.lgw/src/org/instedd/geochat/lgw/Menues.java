@@ -19,7 +19,7 @@ public class Menues {
 	public static void executeAction(Context context, Handler handler, int menuItemId, Uri data) {
 		switch(menuItemId) {
 		case Menues.REFRESH:
-			Actions.refresh(context, data, handler);
+			Actions.refresh(context, handler);
 			break;
 		case Menues.SETTINGS:
 			Actions.settings(context);

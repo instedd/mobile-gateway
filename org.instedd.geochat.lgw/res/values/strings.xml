@@ -41,6 +41,7 @@
     <string name="send_activity_log_description">All your activity log will be sent to InSTEDD. Are you sure?</string>
     <string name="some_messages_could_not_be_sent">Some messages could not be sent</string>
     <string name="some_messages_could_not_be_sent_description">Maybe you ran out of credit?</string>
+    <string name="try_resend">Try resend</string>
     <string-array name="refresh_rate_entries">
     	<item>1 minute</item>
     	<item>5 minutes</item>

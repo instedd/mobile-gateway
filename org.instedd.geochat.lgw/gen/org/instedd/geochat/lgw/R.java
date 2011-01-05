@@ -89,5 +89,6 @@ public final class R {
         public static final int stop=0x7f050009;
         public static final int this_telephone_number_colon=0x7f050003;
         public static final int transceiving=0x7f05000a;
+        public static final int try_resend=0x7f050029;
     }
 }
