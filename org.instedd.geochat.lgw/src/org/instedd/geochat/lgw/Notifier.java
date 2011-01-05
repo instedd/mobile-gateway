@@ -37,8 +37,8 @@ public class Notifier {
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
 		
 		Resources r = context.getResources();
-		String title = r.getString(R.string.some_messages_could_not_be_sent);
-		String content = r.getString(R.string.some_messages_could_not_be_sent_description);
+		String title = r.getString(R.string.some_messages_not_sent);
+		String content = r.getString(R.string.some_messages_not_sent_description);
 		
 		notification.setLatestEventInfo(context, title, content, PendingIntent.getActivity(context, 0, getViewMessagesIntent(), 0));
 		man.notify(MESSAGES_COULD_NOT_BE_SENT, notification);
