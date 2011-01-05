@@ -56,13 +56,8 @@ public class Transceiver {
 			default:
 				if (msg != null) {
 					msg.tries++;
-					if (msg.tries >= 3) {
-						data.log(context.getResources().getString(R.string.message_could_not_be_sent_tries_deleting, msg.text, msg.to, msg.tries));
-						data.deleteOutgoingMessage(guid);
-					} else {
-						data.log(context.getResources().getString(R.string.message_could_not_be_sent_tries, msg.text, msg.to, msg.tries));
-						data.markOutgoingMessageAsNotBeingSent(guid, msg.tries);
-					}
+					data.log(context.getResources().getString(R.string.message_could_not_be_sent_tries, msg.text, msg.to, msg.tries));
+					data.markOutgoingMessageAsNotBeingSent(guid, msg.tries);
 				}
 				notify.someMessagesCouldNotBeSent();
 				break;
