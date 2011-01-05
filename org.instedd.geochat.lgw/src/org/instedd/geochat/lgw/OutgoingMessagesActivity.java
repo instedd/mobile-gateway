@@ -56,7 +56,7 @@ public class OutgoingMessagesActivity extends ListActivity implements OnItemLong
     @Override
 	protected Dialog onCreateDialog(int id) {
 		final CharSequence[] items = {
-				getResources().getString(R.string.try_resend),
+				getResources().getString(R.string.retry),
 				getResources().getString(R.string.delete),
 		};
 		
@@ -68,9 +68,9 @@ public class OutgoingMessagesActivity extends ListActivity implements OnItemLong
 			public void onClick(DialogInterface dialog, int which) {
 				int id = cursor.getInt(cursor.getColumnIndex(Messages._ID));
 				switch(which) {
-				case 0: // resend
+				case 0: // retry
 					new GeoChatLgwData(OutgoingMessagesActivity.this).resetOutgoingMessageTries(id);
-					Actions.refresh(OutgoingMessagesActivity.this, handler);
+					Actions.refresh(OutgoingMessagesActivity.this, handler, R.string.retrying);
 					break;
 				case 1: // delete 
 					new GeoChatLgwData(OutgoingMessagesActivity.this).deleteOutgoingMessage(id);
