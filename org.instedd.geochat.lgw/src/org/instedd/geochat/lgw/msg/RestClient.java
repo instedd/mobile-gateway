@@ -13,7 +13,13 @@ import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
@@ -42,8 +48,15 @@ public class RestClient implements IRestClient {
 		HttpConnectionParams.setSoTimeout(params, 30 * 1000);
 		
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-		        
-		return new NuntiumHttpClient(context, params);
+		
+	    SchemeRegistry registry = new SchemeRegistry();
+        registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+        // Register for port 443 our SSLSocketFactory with our keystore
+        // to the ConnectionManager
+        registry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+        ThreadSafeClientConnManager conman = new ThreadSafeClientConnManager(params, registry);
+	    
+		return new DefaultHttpClient(conman, params);
 	}
 	
 	@Override
