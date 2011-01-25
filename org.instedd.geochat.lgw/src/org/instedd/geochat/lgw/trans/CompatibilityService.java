@@ -8,11 +8,12 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.util.Log;
 
-@SuppressWarnings("unchecked")
 public abstract class CompatibilityService extends Service {
 	
+	@SuppressWarnings("rawtypes")
 	private static final Class[] mStartForegroundSignature = new Class[] {
 	    int.class, Notification.class};
+	@SuppressWarnings("rawtypes")
 	private static final Class[] mStopForegroundSignature = new Class[] {
 	    boolean.class};
 
