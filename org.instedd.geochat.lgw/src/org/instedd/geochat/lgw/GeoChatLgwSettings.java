@@ -13,6 +13,7 @@ public class GeoChatLgwSettings {
 	
 	public final static String NAME = "name";
 	public final static String PASSWORD = "password";
+	public final static String COUNTRY_CODE = "country_code";
 	public final static String NUMBER = "number";
 	public final static String ENDPOINT_URL = "endpointUrl";
 	public final static String REFRESH_RATE = "refreshRate";
@@ -36,12 +37,13 @@ public class GeoChatLgwSettings {
 		return openRead().getString(NUMBER, null);
 	}
 	
-	public void setCredentials(String endpointUrl, String name, String password, String number) {
+	public void setCredentials(String endpointUrl, String name, String password, String number, String countryCode) {
 		Editor editor = openWrite();
 		editor.putString(ENDPOINT_URL, endpointUrl);
 		editor.putString(NAME, name);
 		editor.putString(PASSWORD, password);
 		editor.putString(NUMBER, number);
+		editor.putString(COUNTRY_CODE, countryCode);
 		editor.commit();
 	}
 	
@@ -76,7 +78,11 @@ public class GeoChatLgwSettings {
 	}
 
 	public QstClient newQstClient() {
-		return new QstClient(getEndpointUrl(), getName(), getPassword(), new RestClient(context));
+		return new QstClient(getEndpointUrl(), getName(), getPassword(), new RestClient(context), getCountryCode());
+	}
+
+	public String getCountryCode() {
+		return openRead().getString(COUNTRY_CODE, null);
 	}
 
 }
