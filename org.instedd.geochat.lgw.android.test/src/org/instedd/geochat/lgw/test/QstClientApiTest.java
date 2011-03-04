@@ -15,7 +15,7 @@ public class QstClientApiTest extends TestCase {
 	
 	public void testCredentialsFalse() throws Exception {
 		MockRestClient restClient = new MockRestClient("");
-		QstClient client = new QstClient("http://example.com", "foo", "bar", restClient);
+		QstClient client = createQstClient(restClient, "123");
 		client.sendAddress("lala");
 		
 		assertEquals("foo", restClient.getUser());
@@ -34,7 +34,7 @@ public class QstClientApiTest extends TestCase {
 				"  </message>\n" + 
 				"</messages>");
 		
-		QstClient client = new QstClient("http://example.com", "foo", "bar", restClient);
+		QstClient client = createQstClient(restClient, "123");
 		Message[] messages = client.getMessages("lastone");
 		
 		assertEquals("foo", restClient.getUser());
@@ -57,20 +57,11 @@ public class QstClientApiTest extends TestCase {
 	}
 	
 	public void testSendMessages() throws Exception {
-		MockRestClient restClient = new MockRestClient("");
-		restClient.addResponseHeader("ETag", "etagg");
+		MockRestClient restClient = mockRestClient();
 		
-		QstClient client = new QstClient("http://example.com", "foo", "bar", restClient);
+		QstClient client = createQstClient(restClient, "123");
 		
-		Message[] messages = new Message[2];
-		for (int i = 0; i < messages.length; i++) {
-			messages[i] = new Message();
-			messages[i].guid = String.valueOf(i);
-			messages[i].from = "from" + i;
-			messages[i].to = "to" + i;
-			messages[i].text = "text" + i;
-			messages[i].when = System.currentTimeMillis() + i;	
-		}
+		Message[] messages = stubMessages(2);
 		
 		String lastMessageId = client.sendMessages(messages);
 		
@@ -96,12 +87,128 @@ public class QstClientApiTest extends TestCase {
 			assertEquals(messages[i].text, actualMessages[i].text);
 		}
 	}
+
+	private Message[] stubMessages(int howMany) {
+		Message[] messages = new Message[howMany];
+		for (int i = 0; i < messages.length; i++) {
+			messages[i] = new Message();
+			messages[i].guid = String.valueOf(i);
+			messages[i].from = "123" + i;
+			messages[i].to = "to" + i;
+			messages[i].text = "text" + i;
+			messages[i].when = System.currentTimeMillis() + i;	
+		}
+		return messages;
+	}
+	
+	public void testNormalizationWithNullCountryCode() throws Exception {
+		MockRestClient restClient = mockRestClient();
+		
+		QstClient client = createQstClient(restClient, null);
+		
+		Message[] messages = stubMessages(10);
+		
+		messages[0].from = "+98765";
+		messages[1].from = "+123456";
+		messages[2].from = "+0123456";
+		messages[3].from = "+0456";
+		messages[4].from = "+00456";
+		messages[5].from = "0123456";
+		messages[6].from = "0456";
+		messages[7].from = "00456";
+		messages[8].from = "123456";
+		messages[9].from = "456";
+		
+		client.sendMessages(messages);
+		
+		String data = restClient.getPostData();
+		
+		MessageHandler handler = new MessageHandler();
+		Xml.parse(new ByteArrayInputStream(data.getBytes()), Encoding.UTF_8, handler);
+		
+		Message[] actualMessages = handler.getMessages();
+		
+		assertAfterSendInvariants(messages, actualMessages);
+		
+		assertEquals("98765", actualMessages[0].from);
+		assertEquals("123456", actualMessages[1].from);
+		assertEquals("123456", actualMessages[2].from);
+		assertEquals("456", actualMessages[3].from);
+		assertEquals("0456", actualMessages[4].from);
+		assertEquals("123456", actualMessages[5].from);
+		assertEquals("456", actualMessages[6].from);
+		assertEquals("0456", actualMessages[7].from);
+		assertEquals("123456", actualMessages[8].from);
+		assertEquals("456", actualMessages[9].from);
+	}
+	
+	public void testFromNormalization()throws Exception {
+		MockRestClient restClient = mockRestClient();
+		
+		QstClient client = createQstClient(restClient, "123");
+		
+		Message[] messages = stubMessages(10);
+		
+		messages[0].from = "+98765";
+		messages[1].from = "+123456";
+		messages[2].from = "+0123456";
+		messages[3].from = "+0456";
+		messages[4].from = "+00456";
+		messages[5].from = "0123456";
+		messages[6].from = "0456";
+		messages[7].from = "00456";
+		messages[8].from = "123456";
+		messages[9].from = "456";
+		
+		client.sendMessages(messages);
+		
+		String data = restClient.getPostData();
+		
+		MessageHandler handler = new MessageHandler();
+		Xml.parse(new ByteArrayInputStream(data.getBytes()), Encoding.UTF_8, handler);
+		
+		Message[] actualMessages = handler.getMessages();
+		
+		assertAfterSendInvariants(messages, actualMessages);
+		
+		assertEquals("12398765", actualMessages[0].from);
+		assertEquals("123456", actualMessages[1].from);
+		assertEquals("123456", actualMessages[2].from);
+		assertEquals("123456", actualMessages[3].from);
+		assertEquals("0456", actualMessages[4].from);
+		assertEquals("123456", actualMessages[5].from);
+		assertEquals("123456", actualMessages[6].from);
+		assertEquals("0456", actualMessages[7].from);
+		assertEquals("123456", actualMessages[8].from);
+		assertEquals("123456", actualMessages[9].from);
+	}
+
+	private void assertAfterSendInvariants(Message[] messages,
+			Message[] actualMessages) {
+		assertEquals(messages.length, actualMessages.length);
+		for (int i = 0; i < messages.length; i++) {
+			assertEquals(messages[i].guid, actualMessages[i].guid);
+			assertEquals(messages[i].to, actualMessages[i].to);
+			assertEquals(messages[i].text, actualMessages[i].text);
+		}
+	}
+
+	private QstClient createQstClient(MockRestClient restClient, String countryCode) {
+		QstClient client = new QstClient("http://example.com", "foo", "bar", restClient, countryCode);
+		return client;
+	}
+
+	private MockRestClient mockRestClient() {
+		MockRestClient restClient = new MockRestClient("");
+		restClient.addResponseHeader("ETag", "etagg");
+		return restClient;
+	}
 	
 	public void testGetLastSentMessageId() throws Exception {
 		MockRestClient restClient = new MockRestClient("");
 		restClient.addResponseHeader("ETag", "123");
 		
-		QstClient client = new QstClient("http://example.com", "foo", "bar", restClient);
+		QstClient client = createQstClient(restClient, "123");
 		String lastId = client.getLastSentMessageId();
 		assertEquals("123", lastId);
 		

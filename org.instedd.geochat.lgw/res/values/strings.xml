@@ -3,6 +3,7 @@
     <string name="app_name">Nuntium Local Gateway</string>
     <string name="name_colon">Name:</string>
     <string name="password_colon">Password:</string>
+	<string name="country_code">Country code:</string>
     <string name="this_telephone_number_colon">This telephone number:</string>
     <string name="start">Start</string>
     <string name="invalid_credentials">Incorrect name/password</string>

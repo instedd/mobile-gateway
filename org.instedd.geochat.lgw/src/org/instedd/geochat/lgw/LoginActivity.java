@@ -41,16 +41,19 @@ public final static String EXTRA_WRONG_CREDENTIALS = "WrongCredentials";
 	    String existingName = settings.getName();
 	    String existingPassword = settings.getPassword();
 	    String existingNumber = settings.getNumber();
+	    String existingCountryCode = settings.getCountryCode();
 	    
 	    final EditText uiEndpointUrl = (EditText) findViewById(R.id.endpoint_url);
 	    final EditText uiName = (EditText) findViewById(R.id.name);
 	    final EditText uiPassword = (EditText) findViewById(R.id.password);
+	    final EditText uiCountryCode = (EditText) findViewById(R.id.country_code);
 	    final EditText uiNumber = (EditText) findViewById(R.id.number);
 	    final Button uiStart = (Button) findViewById(R.id.start_button); 
 	    
 	    uiEndpointUrl.setText(existingEndpointUrl);
 	    uiName.setText(existingName);
 	    uiPassword.setText(existingPassword);
+	    uiCountryCode.setText(existingCountryCode);
 	    
 	    if (existingNumber == null) {
 	        TelephonyManager telman = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -75,9 +78,13 @@ public final static String EXTRA_WRONG_CREDENTIALS = "WrongCredentials";
 						String endpointUrl = uiEndpointUrl.getText().toString();
 						String name = uiName.getText().toString();
 						String password = uiPassword.getText().toString();
+						
+						String countryCodeValue = uiCountryCode.getText().toString().trim();
+						
+						String countryCode = countryCodeValue.equals("") ? null : countryCodeValue;
 						String number = uiNumber.getText().toString();
 						
-						settings.setCredentials(endpointUrl, name, password, number);
+						settings.setCredentials(endpointUrl, name, password, number, countryCode);
 						
 						try {
 							QstClient client = settings.newQstClient();

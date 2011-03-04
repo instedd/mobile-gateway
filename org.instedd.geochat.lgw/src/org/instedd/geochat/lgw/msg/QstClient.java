@@ -33,11 +33,13 @@ public class QstClient {
 	
 	private final IRestClient client;
 	private final String httpBase;
+	private final String countryCode;
 
-	public QstClient(String httpBase, String name, String password, IRestClient restClient) {
+	public QstClient(String httpBase, String name, String password, IRestClient restClient, String countryCode) {
 		this.httpBase = httpBase;
 		this.client = restClient;
 		this.client.setAuth(name, password);
+		this.countryCode = countryCode;
 	}
 	
 	public IRestClient getRestClient() {
@@ -73,7 +75,7 @@ public class QstClient {
 				
 				serializer.startTag("", "message");				
 				serializer.attribute("", "id", msg.guid);
-				serializer.attribute("", "from", addProtocol(msg.from));
+				serializer.attribute("", "from", addProtocol(normalize(msg.from)));
 				serializer.attribute("", "to", addProtocol(msg.to));
 				serializer.attribute("", "when", DATE_FORMAT.format(new Date(msg.when)));
 				serializer.startTag("", "text");
@@ -98,6 +100,21 @@ public class QstClient {
 			throw new QstClientException(e);
 		}
 		return null;
+	}
+
+	private String normalize(String from) {
+		String normalized = from;
+		
+		if (from.startsWith("+"))
+			normalized = from.substring(1);
+		
+		if (normalized.startsWith("0"))
+			normalized = normalized.substring(1);
+		
+		if (countryCode != null && !normalized.startsWith("0") && !normalized.startsWith(countryCode))
+			normalized = countryCode + normalized;
+		
+		return normalized;
 	}
 
 	public Message[] getMessages(String lastReceivedMessageId) throws QstClientException {
