@@ -103,6 +103,8 @@ public class QstClient {
 	}
 
 	private String normalize(String from) {
+		if (from == null) return null;
+		
 		String normalized = from;
 		
 		if (from.startsWith("+"))
