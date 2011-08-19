@@ -46,7 +46,7 @@ public class QstClient {
 		return client;
 	}
 
-	public void sendAddress(String address) throws QstClientException {
+	public void sendAddress(String address) throws QstClientException, WrongHostException {
 		try {
 			HttpResponse response = this.client.get(httpBase + "/setaddress?address=" + encode(address));
 			try {
@@ -56,10 +56,12 @@ public class QstClient {
 			}
 		} catch (IOException e) {
 			throw new QstClientException(e);
+		} catch (IllegalArgumentException e) {
+			throw new WrongHostException(e);
 		}
 	}
 	
-	public String sendMessages(Message[] messages) throws QstClientException {
+	public String sendMessages(Message[] messages) throws QstClientException, WrongHostException {
 		if (messages == null || messages.length == 0)
 			return null;
 		
@@ -96,6 +98,8 @@ public class QstClient {
 			} finally {
 				close(response);
 			}
+		} catch (IllegalArgumentException e) {
+			throw new WrongHostException(e);
 		} catch (Exception e) {
 			throw new QstClientException(e);
 		}
@@ -144,7 +148,7 @@ public class QstClient {
 		}
 	}
 	
-	public String getLastSentMessageId() throws QstClientException {
+	public String getLastSentMessageId() throws QstClientException, WrongHostException {
 		try {
 			HttpResponse response = this.client.head(httpBase + "/incoming");
 			try {
@@ -158,6 +162,8 @@ public class QstClient {
 			}
 		} catch (IOException e) {
 			throw new QstClientException(e);
+		} catch (IllegalStateException e) {
+			throw new WrongHostException(e);
 		}
 		return null;
 	}

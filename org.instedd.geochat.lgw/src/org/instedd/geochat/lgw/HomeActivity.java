@@ -32,7 +32,7 @@ public class HomeActivity extends TabActivity {
 	                      res.getDrawable(R.drawable.ic_tab_messages))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
-	
+
 	    intent = new Intent().setClass(this, OutgoingMessagesActivity.class);
 	    spec = tabHost.newTabSpec("outgoing").setIndicator(res.getString(R.string.MTs),
 	                      res.getDrawable(R.drawable.ic_tab_messages))
@@ -49,7 +49,6 @@ public class HomeActivity extends TabActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
 		getApplicationContext().startService(new Intent().setClass(this, GeoChatTransceiverService.class));
 	}
 	

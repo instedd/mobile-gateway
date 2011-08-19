@@ -14,6 +14,8 @@ public class Menues {
 	public final static int RETRY_ALL_OUTGOING_MESSAGES = 5;
 	public final static int DELETE_ALL_OUTGOING_MESSAGES = 6;
 	public final static int DELETE_ALL_INCOMING_MESSAGES = 7;
+	public final static int START = 8;
+	public final static int RESET_CONFIGURATION = 9;
 	
 	public static void executeAction(Context context, Handler handler, int menuItemId) {
 		executeAction(context, handler, menuItemId, null);
@@ -30,8 +32,12 @@ public class Menues {
 		case SEND_ACTIVITY_LOG:
 			Actions.sendActivityLog(context, handler);
 			break;
+		case START:
+			Actions.accessHomeActivity(context);
+			break;
 		case STOP:
 			Actions.stop(context);
+			Actions.accesStartSessionActivity(context);
 			break;
 		case RETRY_ALL_OUTGOING_MESSAGES:
 			Actions.retryAllOutgoingMessages(context, handler);
@@ -41,6 +47,9 @@ public class Menues {
 			break;
 		case DELETE_ALL_INCOMING_MESSAGES:
 			Actions.deleteAllIncomingMessages(context);
+			break;
+		case RESET_CONFIGURATION:
+			Actions.resetSettings(context);
 			break;
 		}
 	}
@@ -55,6 +64,10 @@ public class Menues {
 	
 	public static void sendActivityLog(Menu menu) {
 		menu.add(0, SEND_ACTIVITY_LOG, 0, R.string.send_activity_log).setIcon(android.R.drawable.ic_menu_send);
+	}
+	
+	public static void start(Menu menu) {
+		menu.add(0, START, 0, R.string.start).setIcon(android.R.drawable.ic_media_play);
 	}
 	
 	public static void stop(Menu menu) {
@@ -73,4 +86,8 @@ public class Menues {
 		menu.add(0, DELETE_ALL_INCOMING_MESSAGES, 0, R.string.delete_all).setIcon(android.R.drawable.ic_menu_delete);
 	}
 
+	public static void resetConfiguration(Menu menu) {
+		menu.add(0, RESET_CONFIGURATION, 0, R.string.reset_configuration).setIcon(R.drawable.ic_menu_refresh);
+	}
+	
 }

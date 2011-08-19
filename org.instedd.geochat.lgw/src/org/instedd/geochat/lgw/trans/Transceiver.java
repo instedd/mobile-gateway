@@ -3,13 +3,14 @@ package org.instedd.geochat.lgw.trans;
 import java.util.ArrayList;
 
 import org.instedd.geochat.lgw.Connectivity;
-import org.instedd.geochat.lgw.GeoChatLgwSettings;
+import org.instedd.geochat.lgw.Settings;
 import org.instedd.geochat.lgw.Notifier;
 import org.instedd.geochat.lgw.R;
 import org.instedd.geochat.lgw.data.GeoChatLgwData;
 import org.instedd.geochat.lgw.msg.Message;
 import org.instedd.geochat.lgw.msg.QstClient;
 import org.instedd.geochat.lgw.msg.QstClientException;
+import org.instedd.geochat.lgw.msg.WrongHostException;
 
 import android.app.Activity;
 import android.app.PendingIntent;
@@ -78,7 +79,7 @@ public class Transceiver {
 	        
 	        Object[] pdus = (Object[]) extras.get("pdus");
 	        for (int i = 0; i < pdus.length; i++)
-	            data.createIncomingMessage(SmsMessage.createFromPdu((byte[]) pdus[i]), settings.getNumber());
+	            data.createIncomingMessage(SmsMessage.createFromPdu((byte[]) pdus[i]), settings.storedTelephoneNumber());
 	        
 	        resync();
 		}
@@ -88,7 +89,7 @@ public class Transceiver {
 	final Handler handler;
 	final Notifier notify;
 	final GeoChatLgwData data;
-	final GeoChatLgwSettings settings;
+	final Settings settings;
 	QstClient client;
 	SyncThread syncThread;
 	boolean connectivityChanged;
@@ -101,13 +102,13 @@ public class Transceiver {
 		this.context = context;
 		this.handler = handler;
 		this.notify = new Notifier(context);
-		this.settings = new GeoChatLgwSettings(context);
+		this.settings = new Settings(context);
 		this.data = new GeoChatLgwData(context);
 		recreateQstClient();		
 	}
 	
 	public void recreateQstClient() {
-		this.client = settings.newQstClient();
+		this.client = settings.qstClient();
 	}
 
 	public void start() {
@@ -188,60 +189,92 @@ public class Transceiver {
 					notify.startTranscieving();
 					hasConnectivity = Connectivity.hasConnectivity(context);
 					resync = false;
-					
+
 					if (hasConnectivity) {
 						StringBuilder log = new StringBuilder();
-						
+
 						try {
 							// 0. Send address
 							if (firstRun) {
-								String number = settings.getNumber();
+								String number = settings
+										.storedTelephoneNumber();
 								try {
 									client.sendAddress(number);
-									log.append(r.getString(R.string.sent_your_number, number)).append("\n");
+									log.append(
+											r.getString(
+													R.string.sent_your_number,
+													number)).append("\n");
 								} catch (QstClientException e) {
-									log.append(r.getString(R.string.couldnt_send_your_number, e.getMessage())).append("\n");
+									log.append(
+											r.getString(
+													R.string.couldnt_send_your_number,
+													e.getMessage())).append(
+											"\n");
+								} catch (WrongHostException e) {
+									log.append(
+											r.getString(
+													R.string.couldnt_send_your_number,
+													R.string.fix_host)).append(
+											"\n");
 								}
 								firstRun = false;
 							}
-							
+
 							// 1.a. Get incoming messages
 							Message[] incoming = data.getIncomingMessages();
-							
+
 							// 1.b. Send them to the application
 							String receivedId = client.sendMessages(incoming);
 							if (incoming != null) {
-								for(Message msg : incoming) {
-									log.append(r.getString(R.string.sent_message_to_application, msg.text, msg.from)).append("\n");
+								for (Message msg : incoming) {
+									log.append(
+											r.getString(
+													R.string.sent_message_to_application,
+													msg.text, msg.from))
+											.append("\n");
 								}
 							}
-							
+
 							// 1.c. Delete previous incoming messages
 							if (receivedId != null)
 								data.deleteIncomingMessageUpTo(receivedId);
-							
-							if (resync)	continue;
-							
-							// 2. Send pending messages (those that were sent at least once and failed)
-							Message[] pending = data.getOutgoingMessagesNotBeingSentAndMarkAsBeingSent();
+
+							if (resync)
+								continue;
+
+							// 2. Send pending messages (those that were sent at
+							// least once and failed)
+							Message[] pending = data
+									.getOutgoingMessagesNotBeingSentAndMarkAsBeingSent();
 							sendMessages(pending);
-							
-							if (resync)	continue;
-							
+
+							if (resync)
+								continue;
+
 							// 3.a. Get outgoing messages
-							Message[] outgoing = client.getMessages(settings.getLastReceivedMessageId());
-							
+							Message[] outgoing = client.getMessages(settings
+									.storedLastReceivedMessageId());
+
 							// 3.b. Persist them and mark them as being sent
-							String lastReceivedMessageId = data.createOutgoingMessagesAsBeingSent(outgoing);
-							
+							String lastReceivedMessageId = data
+									.createOutgoingMessagesAsBeingSent(outgoing);
+
 							// 3.c. Send them via phone
 							sendMessages(outgoing);
-							
+
 							// 3.d. Remember last id
 							if (lastReceivedMessageId != null)
-								settings.setLastReceivedMessageId(lastReceivedMessageId);
+								settings.saveLastReceivedMessageId(lastReceivedMessageId);
+						} catch (WrongHostException e) {
+							log.append(
+									r.getString(
+											R.string.fatal_error,
+											R.string.fix_host)).append(
+									"\n");
 						} catch (Throwable t) {
-							log.append(r.getString(R.string.fatal_error, t.getMessage())).append("\n");
+							log.append(
+									r.getString(R.string.fatal_error,
+											t.getMessage())).append("\n");
 							throwable = t;
 						} finally {
 							if (!TextUtils.isEmpty(log)) {
@@ -264,7 +297,7 @@ public class Transceiver {
 				// Wait 1 minutes
 				try {
 					synchronized (sleepLock) {
-						sleepLock.wait(settings.getRefreshRateInMilliseconds());
+						sleepLock.wait(settings.storedRefreshRateInMilliseconds());
 					}
 				} catch (InterruptedException e) {
 				}

@@ -1,6 +1,6 @@
 package org.instedd.geochat.lgw.trans;
 
-import org.instedd.geochat.lgw.GeoChatLgwSettings;
+import org.instedd.geochat.lgw.Settings;
 import org.instedd.geochat.lgw.Notifier;
 import org.instedd.geochat.lgw.R;
 
@@ -49,7 +49,7 @@ public class GeoChatTransceiverService extends CompatibilityService implements O
 		this.displayForegroundNotification();
 		
 		// Listen for preference changes to resync when that happens
-		this.getSharedPreferences(GeoChatLgwSettings.SHARED_PREFS_NAME, 0)
+		this.getSharedPreferences(Settings.SHARED_PREFS_NAME, 0)
 			.registerOnSharedPreferenceChangeListener(this);
 		
 		// Listen for network changes
@@ -68,7 +68,7 @@ public class GeoChatTransceiverService extends CompatibilityService implements O
 		stopTransceiving();
 		
 		// Unregister preferences listener
-		this.getSharedPreferences(GeoChatLgwSettings.SHARED_PREFS_NAME, 0)
+		this.getSharedPreferences(Settings.SHARED_PREFS_NAME, 0)
 			.unregisterOnSharedPreferenceChangeListener(this);
 		
 		// Unregister the network changes receiver
@@ -86,7 +86,7 @@ public class GeoChatTransceiverService extends CompatibilityService implements O
 	
 	private void displayForegroundNotification() {
 		String title = getResources().getString(R.string.app_name);
-		String content = getResources().getString(R.string.signed_in_as_name, new GeoChatLgwSettings(this).getName());
+		String content = getResources().getString(R.string.signed_in_as_name, new Settings(this).storedUserName());
 		Notification notification = new Notification(R.drawable.ic_stat_geochat, null, System.currentTimeMillis());
 		notification.setLatestEventInfo(this, title, content, PendingIntent.getActivity(this, 0, Notifier.getHomeIntent(this), 0));
 		startForegroundCompat(Notifier.SERVICE, notification);
@@ -103,10 +103,10 @@ public class GeoChatTransceiverService extends CompatibilityService implements O
 	
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		if (GeoChatLgwSettings.ENDPOINT_URL.equals(key)) {
+		if (Settings.ENDPOINT_URL.equals(key)) {
 			transceiver.recreateQstClient();
 			transceiver.resync();
-		} else if (GeoChatLgwSettings.REFRESH_RATE.equals(key)) {
+		} else if (Settings.REFRESH_RATE.equals(key)) {
 			transceiver.resync();
 		}
 	}
