@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.instedd.geochat.lgw.data.GeoChatLgwData;
 import org.instedd.geochat.lgw.data.GeoChatLgw.Logs;
+import org.instedd.geochat.lgw.msg.NuntiumTicket;
 import org.instedd.geochat.lgw.trans.GeoChatTransceiverService;
 
 import android.app.AlertDialog;
@@ -27,13 +28,34 @@ public class Actions {
 	private static GeoChatTransceiverService geochatService;
 	private static ServiceConnection geochatServiceConnection;
 	
-	public static void home(Context context) {
+	public static void accessHomeActivity(Context context) {
 		context.startActivity(new Intent().setClass(context, HomeActivity.class)
 				.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
 	}
 	
+	private static void startActivity(Context context, Class<?> clazz) {
+		context.startActivity(new Intent().setClass(context, clazz));
+	}
+	
+	public static void accesStartSessionActivity(Context context) {
+		startActivity(context, StartSessionActivity.class);
+	}
+	
+	public static void startAutomaticConfiguration(Context context) {
+		startActivity(context, AskForTicketActivity.class);
+	}
+	
+	public static void accessWaitingForTicketActivity(Context context, NuntiumTicket ticket) {
+		context.startActivity(new Intent().setClass(context, WaitingForChannelActivity.class)
+				.putExtra("ticket", ticket));
+	}
+	
 	public static void settings(Context context) {
-		startActivity(context, GeoChatLgwPreferences.class);
+		startActivity(context, LGWPreferenceActivity.class);
+	}
+	
+	public static void resetSettings(Context context) {
+		((LGWPreferenceActivity) context).settings().resetAdvancedConfiguration();
 	}
 	
 	public static void sendActivityLog(final Context context, final Handler handler) {
@@ -121,9 +143,7 @@ public class Actions {
 			geochatService = null;
 			geochatServiceConnection = null;
 		}
-		
 		context.getApplicationContext().stopService(new Intent().setClass(context, GeoChatTransceiverService.class));
-		startActivity(context, LoginActivity.class);
 	}
 	
 	public static synchronized void refresh(final Context context, final Handler handler) {
@@ -143,7 +163,7 @@ public class Actions {
 			};
 			context.getApplicationContext().bindService(new Intent(context, GeoChatTransceiverService.class), geochatServiceConnection, Context.BIND_AUTO_CREATE);
 		} else {
-			refreshInternal(context, handler, message);	
+			refreshInternal(context, handler, message);
 		}
 	}
 	
@@ -158,10 +178,6 @@ public class Actions {
 		});
 	}
 	
-	private static void startActivity(Context context, Class<?> clazz) {
-		context.startActivity(new Intent().setClass(context, clazz));
-	}
-	
 	private static void confirm(Context context, int title, int message, DialogInterface.OnClickListener action) {
 		new AlertDialog.Builder(context)
         .setIcon(android.R.drawable.ic_dialog_alert)
@@ -171,7 +187,5 @@ public class Actions {
         .setNegativeButton(android.R.string.no, null)
         .show();
 	}
-	
-	private Actions() { }
 
 }

@@ -30,7 +30,6 @@ public class MockHttpResponse implements HttpResponse {
 	}
 
 	public Locale getLocale() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

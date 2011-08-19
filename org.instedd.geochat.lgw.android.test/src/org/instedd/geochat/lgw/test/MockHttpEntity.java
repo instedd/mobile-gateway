@@ -24,38 +24,30 @@ public class MockHttpEntity implements HttpEntity {
 	}
 
 	public Header getContentEncoding() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public long getContentLength() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	public Header getContentType() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public boolean isChunked() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean isRepeatable() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean isStreaming() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public void writeTo(OutputStream outstream) throws IOException {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

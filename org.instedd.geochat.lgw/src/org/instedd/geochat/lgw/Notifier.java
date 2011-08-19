@@ -23,11 +23,11 @@ public class Notifier {
 	}
 	
 	public void stopTransceiving() {
-		setForegroundNotificationContent(R.drawable.ic_stat_geochat, R.string.signed_in_as_name, new GeoChatLgwSettings(context).getName());
+		setForegroundNotificationContent(R.drawable.ic_stat_geochat, R.string.signed_in_as_name, new Settings(context).storedUserName());
 	}
 	
 	public void offline() {
-		setForegroundNotificationContent(R.drawable.ic_stat_geochat_offline, R.string.signed_in_as_name_offline, new GeoChatLgwSettings(context).getName());
+		setForegroundNotificationContent(R.drawable.ic_stat_geochat_offline, R.string.signed_in_as_name_offline, new Settings(context).storedUserName());
 	}
 	
 	public void someMessagesCouldNotBeSent() {

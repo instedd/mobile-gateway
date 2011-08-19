@@ -12,16 +12,16 @@ import android.text.format.DateFormat;
 public class ExternalLog {
 	
 	private IRestClient client;
-	private GeoChatLgwSettings settings;
+	private Settings settings;
 	
 	public ExternalLog(Context context) {
 		this.client = new RestClient(context);
-		this.settings = new GeoChatLgwSettings(context);
+		this.settings = new Settings(context);
 	}
 	
 	public void send(String message) throws IOException {
-		String url = settings.getEndpointUrl();
-		String channel = settings.getName();
+		String url = settings.storedEndpointUrl();
+		String channel = settings.storedUserName();
 		String guid = UUID.randomUUID().toString();
 		
 		message = "URL: " + url + "\n" + message;

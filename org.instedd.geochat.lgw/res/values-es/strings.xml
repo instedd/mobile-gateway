@@ -1,66 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Nuntium Local Gateway</string>
-    <string name="name_colon">Nombre:</string>
-    <string name="password_colon">Clave:</string>
-    <string name="this_telephone_number_colon">Tu número de teléfono:</string>
-    <string name="start">Iniciar</string>
-    <string name="invalid_credentials">Nombre/clave incorrectos</string>
-    <string name="cannot_start">No se puede iniciar</string>
-    <string name="cannot_start_error">No se puede iniciar: %s</string>
-    <string name="starting">Iniciando...</string>
-    <string name="stop">Detener</string>
-    <string name="transceiving">Trabajando...</string>
-    <string name="signed_in_as_name">Conectado como %s</string>
-    <string name="signed_in_as_name_offline">Conectado como %s (sin conexión)</string>
-    <string name="MTs">MTs</string>
-    <string name="MOs">MOs</string>
-    <string name="geochat_lgw_settings">Ajustes de Nuntium Local Gateway</string>
-    <string name="endpoint_url_colon">URL:</string>
-    <string name="settings">Ajustes</string>
-    <string name="activity">Actividad</string>
-    <string name="sending">Enviando...</string>
-    <string name="message_could_not_be_sent_tries">El mensaje \'%1$s\' no se pudo enviar a %2$s (intento #%3$s).</string>
-    <string name="message_could_not_be_sent_no_service">El mensaje \'%1$s\' no se pudo enviar a %2$s: no hay señal.</string>
-    <string name="message_could_not_be_sent_radio_off">El mensaje \'%1$s\' no se pudo enviar a %2$s: la radio está apagada.</string>
-    <string name="sent_your_number">Enviado tu número: %s.</string>
-    <string name="couldnt_send_your_number">No se pudo enviar tu número: %s.</string>
-    <string name="sent_message_to_application">Enviado \'%1$s\' a la aplicación por %2$s.</string>
-    <string name="sent_message_to_phone">Enviado \'%1$s\' a %2$s.</string>
-    <string name="fatal_error">Error fatal: %s.</string>
-    <string name="refresh_rate">Intervalo de actualización</string>
-    <string name="refresh">Actualizar</string>
-    <string name="refreshing">Actualizando...</string>
-    <string name="delete">Eliminar</string>
-    <string name="delete_all">Eliminar todos</string>
-    <string name="MT">MT</string>
-    <string name="MO">MO</string>
-    <string name="send_activity_log">Enviar el log de actividades</string>
-    <string name="sending_activity_log">Enviando el log de actividades...</string>
-    <string name="could_not_send_activity_log">No se pudo enviar el log de actividades</string>
-    <string name="activity_log_sent">El log de actividades ha sido enviado</string>
-    <string name="send_activity_log_description">Su log de actividades será enviado a InSTEDD. Está seguro?</string>
-    <string name="some_messages_not_sent">Algunos mensajes no enviados</string>
-    <string name="some_messages_not_sent_description">Quizás no tenga crédito disponible?</string>
-    <string name="retry">Reintentar</string>
-    <string name="retry_all">Reintentar todos</string>
-    <string name="retrying_all">Reintentando todos...</string>
-    <string name="retrying">Reintentando...</string>
-    <string name="are_you_sure">Está seguro?</string>
-    <string-array name="refresh_rate_entries">
-    	<item>1 minuto</item>
-    	<item>5 minutos</item>
-    	<item>10 minutos</item>
-    	<item>15 minutos</item>
-    	<item>30 minutos</item>
-    	<item>1 hora</item>
-    </string-array>
-    <string-array name="refresh_rate_entry_values">
-    	<item>1</item>
-    	<item>5</item>
-    	<item>10</item>
-    	<item>15</item>
-    	<item>30</item>
-    	<item>60</item>
-    </string-array>
+	<string name="app_name">Nuntium Local Gateway</string>
+	<string name="name">Nombre</string>
+	<string name="password">Clave</string>
+	<string name="your_telephone_number">Tu número de teléfono</string>
+	<string name="start">Iniciar</string>
+	<string name="invalid_credentials">Nombre/clave incorrectos</string>
+	<string name="cannot_start">No se puede iniciar</string>
+	<string name="cannot_start_error">No se puede iniciar: %s</string>
+	<string name="starting">Iniciando...</string>
+	<string name="stop">Detener</string>
+	<string name="transceiving">Trabajando...</string>
+	<string name="signed_in_as_name">Conectado como %s</string>
+	<string name="signed_in_as_name_offline">Conectado como %s (sin conexión)</string>
+	<string name="MTs">MTs</string>
+	<string name="MOs">MOs</string>
+	<string name="geochat_lgw_settings">Ajustes de Nuntium Local Gateway</string>
+	<string name="endpoint_url">URL destino</string>
+	<string name="settings">Ajustes</string>
+	<string name="activity">Actividad</string>
+	<string name="sending">Enviando...</string>
+	<string name="message_could_not_be_sent_tries">El mensaje \'%1$s\' no se pudo enviar a %2$s (intento #%3$s).</string>
+	<string name="message_could_not_be_sent_no_service">El mensaje \'%1$s\' no se pudo enviar a %2$s: no hay señal.</string>
+	<string name="message_could_not_be_sent_radio_off">El mensaje \'%1$s\' no se pudo enviar a %2$s: la radio está apagada.</string>
+	<string name="sent_your_number">Enviado tu número: %s.</string>
+	<string name="couldnt_send_your_number">No se pudo enviar tu número: %s.</string>
+	<string name="sent_message_to_application">Enviado \'%1$s\' a la aplicación por %2$s.</string>
+	<string name="sent_message_to_phone">Enviado \'%1$s\' a %2$s.</string>
+	<string name="fatal_error">Error fatal: %s.</string>
+	<string name="refresh_rate">Intervalo de actualización</string>
+	<string name="refresh">Actualizar</string>
+	<string name="refreshing">Actualizando...</string>
+	<string name="delete">Eliminar</string>
+	<string name="delete_all">Eliminar todos</string>
+	<string name="MT">MT</string>
+	<string name="MO">MO</string>
+	<string name="send_activity_log">Enviar el log de actividades</string>
+	<string name="sending_activity_log">Enviando el log de actividades...</string>
+	<string name="could_not_send_activity_log">No se pudo enviar el log de actividades</string>
+	<string name="activity_log_sent">El log de actividades ha sido enviado</string>
+	<string name="send_activity_log_description">Su log de actividades será enviado a InSTEDD. Está seguro?</string>
+	<string name="some_messages_not_sent">Algunos mensajes no enviados</string>
+	<string name="some_messages_not_sent_description">Quizás no tenga crédito disponible?</string>
+	<string name="retry">Reintentar</string>
+	<string name="retry_all">Reintentar todos</string>
+	<string name="retrying_all">Reintentando todos...</string>
+	<string name="retrying">Reintentando...</string>
+	<string name="are_you_sure">Está seguro?</string>
+	<string-array name="refresh_rate_entries">
+		<item>1 minuto</item>
+		<item>5 minutos</item>
+		<item>10 minutos</item>
+		<item>15 minutos</item>
+		<item>30 minutos</item>
+		<item>1 hora</item>
+	</string-array>
+	<string-array name="refresh_rate_entry_values">
+		<item>1</item>
+		<item>5</item>
+		<item>10</item>
+		<item>15</item>
+		<item>30</item>
+		<item>60</item>
+	</string-array>
+	<string name="use_settings_to_change_current_connection">Use las preferencias para cambiar la conexión actual...</string>
+	<string name="advanced">Avanzadas</string>
+	<string name="internet_connection_error">Error accediendo al servidor: %s.</string>
+	<string name="internet_connection_error_title">Error de Conexión</string>
+	<string name="next">Continuar</string>
+	<string name="country">País</string>
+	<string name="enter_the_code_in_the_application">Ingrese el siguiente código en la aplicación:</string>
+	<string name="waiting_for_input_in_application">Esperando el ingreso en la aplicación...</string>
+	<string name="cancel">Cancelar</string>
+	<string name="reset_configuration">Reiniciar Configuración</string>
+	<string name="fix_host">La URL especificada es inválida, por favor corríjala en la configuración o corra nuevamente el asistente de configuración al resetear la configuración desde el menú.</string>
+	<string name="nuntium_configuration_wizard_welcome">Este es el asistente de configuración del Local Gateway. Por favor complete la información que se pide a continuación y toque el botón Continuar.</string>
+	<string name="success">Éxito!</string>
 </resources>
