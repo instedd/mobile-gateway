@@ -40,14 +40,14 @@ public class LGWPreferenceActivity extends PreferenceActivity implements
 		addPreferencesFromResource(R.layout.settings);
 
 		initializeCountryValues();
+		
+		setPopUpValues();
 
 		PreferenceManager.setDefaultValues(this, R.layout.settings, false);
 		getPreferenceManager().setSharedPreferencesName(
 				Settings.SHARED_PREFS_NAME);
 		getPreferenceManager().getSharedPreferences()
-				.registerOnSharedPreferenceChangeListener(this);
-
-		setPopUpValues();
+				.registerOnSharedPreferenceChangeListener(this);		
 	}
 
 	private void initializeCountryValues() {
