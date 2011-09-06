@@ -74,7 +74,6 @@ public class LGWPreferenceActivity extends PreferenceActivity implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 		updatePreferenceSummaries();
-		setPopUpValues();
 	}
 
 	private void updatePreferenceSummaries() {
@@ -165,19 +164,19 @@ public class LGWPreferenceActivity extends PreferenceActivity implements
 	}
 
 	private String storedTelephoneNumber() {
-		return String.valueOf(settings.storedTelephoneNumber());
+		return settings.storedTelephoneNumber();
 	}
 
 	private String storedEndpointUrl() {
-		return String.valueOf(settings.storedEndpointUrl());
+		return settings.storedEndpointUrl();
 	}
 
 	private String storedUserName() {
-		return String.valueOf(settings.storedUserName());
+		return settings.storedUserName();
 	}
 
 	private String storedPassword() {
-		return String.valueOf(settings.storedPassword());
+		return settings.storedPassword();
 	}
 
 	private String storedRefreshRate() {
@@ -185,7 +184,7 @@ public class LGWPreferenceActivity extends PreferenceActivity implements
 	}
 
 	private String storedCountryCode() {
-		return String.valueOf(settings.storedCountryCode());
+		return settings.storedCountryCode();
 	}
 
 	private void updateListPreferenceSummary(String storedValue,
