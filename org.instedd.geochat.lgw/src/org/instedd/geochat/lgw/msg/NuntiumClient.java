@@ -185,7 +185,11 @@ public class NuntiumClient {
 		Iterator<?> keysIterator = jsonObject.keys();
 		while (keysIterator.hasNext()) {
 			String key = (String) keysIterator.next();
-			map.put(key, (String) jsonObject.get(key));
+			if (jsonObject.isNull(key)) {
+				map.put(key, null);
+			} else {
+				map.put(key, (String) jsonObject.get(key));
+			}
 		}
 		return map;
 	}
