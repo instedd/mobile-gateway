@@ -156,6 +156,8 @@ public class AskForTicketActivity extends Activity {
 			progressDialog.setMessage(message);
 			progressDialog.setCancelable(false);
 			return progressDialog;
+		} else if (Connectivity.isConnectivityException(exception)) {
+			return Connectivity.showNoConnectionDialog(this);
 		} else {
 			String message = getResources().getString(
 					R.string.cannot_start_error, exception.getMessage());
