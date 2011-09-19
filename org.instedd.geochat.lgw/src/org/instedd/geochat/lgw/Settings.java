@@ -28,7 +28,7 @@ public class Settings {
 
 	public Settings(Context context) {
 		this.context = context;
-	}
+	}	
 
 	public String storedUserName() {
 		return openRead().getString(NAME, null);
@@ -133,6 +133,8 @@ public class Settings {
 	}
 
 	public boolean areIncomplete() {
+		checkBackwardCompatibleSettings();
+		
 		return isEndpointUrlUnset() || isUserNameUnset() || isPasswordUnset()
 				|| isTelephoneNumberUnset() || isCountryCodeUnset();
 	}
@@ -187,5 +189,35 @@ public class Settings {
 
 	public void resetAdvancedConfiguration() {
 		saveCredentials(defaultEndpointUrl(), "", "");
+	}
+	
+	private void checkBackwardCompatibleSettings() {
+		String oldName = openRead().getString("name", null);
+		if (oldName != null) {
+			String oldPassword = openRead().getString("password", null);
+			
+			Editor editor = openWrite();
+			editor.putString(NAME, oldName);
+			editor.putString(PASSWORD, oldPassword);
+			editor.remove("name");
+			editor.remove("password");
+			editor.commit();
+		}
+		
+		String oldCountryCode = openRead().getString("country_code", null);
+		if (oldCountryCode != null) {
+			Editor editor = openWrite();
+			editor.putString(COUNTRY_CODE, oldCountryCode);
+			editor.remove("country_code");
+			editor.commit();
+		}
+		
+		String oldTelephoneNumber = openRead().getString("number", null);
+		if (oldTelephoneNumber != null) {
+			Editor editor = openWrite();
+			editor.putString(NUMBER, oldTelephoneNumber);
+			editor.remove("number");
+			editor.commit();
+		}
 	}
 }
