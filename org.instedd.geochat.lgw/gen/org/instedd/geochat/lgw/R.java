@@ -82,6 +82,7 @@ public final class R {
         public static final int message_could_not_be_sent_tries=0x7f040014;
         public static final int name=0x7f040001;
         public static final int next=0x7f040033;
+        public static final int no_connection=0x7f04003c;
         public static final int nuntium_configuration_wizard_welcome=0x7f04003a;
         public static final int password=0x7f040002;
         public static final int refresh=0x7f04001f;

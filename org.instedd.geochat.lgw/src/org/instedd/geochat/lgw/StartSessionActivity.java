@@ -32,7 +32,7 @@ public class StartSessionActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.start_session);
-
+		
 		if (settings.areIncomplete()) {
 			Actions.startAutomaticConfiguration(this);
 		}
@@ -53,6 +53,10 @@ public class StartSessionActivity extends Activity {
 	public void onRestart() {
 		super.onRestart();
 		Actions.stop(this);
+		
+		if (settings.areIncomplete()) {
+			Actions.startAutomaticConfiguration(this);
+		}
 	}
 
 	@Override
@@ -79,21 +83,26 @@ public class StartSessionActivity extends Activity {
 			progressDialog.setCancelable(false);
 			return progressDialog;
 		} else {
-			String message;
-			if (id == DIALOG_WRONG_CREDENTIALS) {
-				message = getResources()
-						.getString(R.string.invalid_credentials);
+			if (Connectivity.isConnectivityException(exception)) {
+				return Connectivity.showNoConnectionDialog(this);
 			} else {
-				message = getResources().getString(R.string.cannot_start_error,
-						exception.getMessage());
+				String message;
+				if (id == DIALOG_WRONG_CREDENTIALS) {
+					message = getResources()
+							.getString(R.string.invalid_credentials);
+				} else {
+					message = getResources().getString(R.string.cannot_start_error,
+							exception.getMessage());
+				}
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setMessage(message).setTitle(R.string.cannot_start)
+						.setCancelable(true)
+						.setNeutralButton(android.R.string.ok, null);
+				return builder.create();
 			}
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(message).setTitle(R.string.cannot_start)
-					.setCancelable(true)
-					.setNeutralButton(android.R.string.ok, null);
-			return builder.create();
 		}
 	}
+	
 	private class LoginTask extends AsyncTask<String, Integer, Integer> {
 
 		protected void onPreExecute() {

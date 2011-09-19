@@ -76,4 +76,5 @@
 	<string name="fix_host">La URL especificada es inválida, por favor corríjala en la configuración o corra nuevamente el asistente de configuración al resetear la configuración desde el menú.</string>
 	<string name="nuntium_configuration_wizard_welcome">Este es el asistente de configuración del Local Gateway. Por favor complete la información que se pide a continuación y toque el botón Continuar.</string>
 	<string name="success">Éxito!</string>
+	<string name="no_connection">No parece haber conexión a internet. Asegurate de tener conexión y reabre esta aplicación.</string>
 </resources>
