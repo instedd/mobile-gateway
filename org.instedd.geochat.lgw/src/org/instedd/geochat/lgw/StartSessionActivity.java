@@ -53,10 +53,6 @@ public class StartSessionActivity extends Activity {
 	public void onRestart() {
 		super.onRestart();
 		Actions.stop(this);
-		
-		if (settings.areIncomplete()) {
-			Actions.startAutomaticConfiguration(this);
-		}
 	}
 
 	@Override
