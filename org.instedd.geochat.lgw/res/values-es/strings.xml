@@ -13,8 +13,8 @@
 	<string name="transceiving">Trabajando...</string>
 	<string name="signed_in_as_name">Conectado como %s</string>
 	<string name="signed_in_as_name_offline">Conectado como %s (sin conexión)</string>
-	<string name="MTs">MTs</string>
-	<string name="MOs">MOs</string>
+	<string name="MTs">Salientes</string>
+	<string name="MOs">Entrantes</string>
 	<string name="geochat_lgw_settings">Ajustes de Nuntium Local Gateway</string>
 	<string name="endpoint_url">URL destino</string>
 	<string name="settings">Ajustes</string>
@@ -63,7 +63,6 @@
 		<item>30</item>
 		<item>60</item>
 	</string-array>
-	<string name="use_settings_to_change_current_connection">Use las preferencias para cambiar la conexión actual...</string>
 	<string name="advanced">Avanzadas</string>
 	<string name="internet_connection_error">Error accediendo al servidor: %s.</string>
 	<string name="internet_connection_error_title">Error de Conexión</string>

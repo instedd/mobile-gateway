@@ -13,8 +13,8 @@
 	<string name="transceiving">Transceiving...</string>
 	<string name="signed_in_as_name">Connected as %s</string>
 	<string name="signed_in_as_name_offline">Connected as %s (offline)</string>
-	<string name="MTs">MTs</string>
-	<string name="MOs">MOs</string>
+	<string name="MTs">Outgoing</string>
+	<string name="MOs">Incoming</string>
 	<string name="geochat_lgw_settings">Nuntium Local Gateway settings</string>
 	<string name="endpoint_url">Endpoint URL</string>
 	<string name="settings">Settings</string>
@@ -65,7 +65,6 @@
 		<item>30</item>
 		<item>60</item>
 	</string-array>
-	<string name="use_settings_to_change_current_connection">Use settings to change current connection...</string>
 	<string name="advanced">Advanced</string>
 	<string name="next">Next</string>
 	<string name="country">Country</string>
