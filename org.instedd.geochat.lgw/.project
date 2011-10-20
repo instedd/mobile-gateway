@@ -30,4 +30,36 @@
 		<nature>com.android.ide.eclipse.adt.AndroidNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>res/drawable-hdpi/ic_tab_activity.xml</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/res/drawable-mdpi/ic_tab_activity.xml</locationURI>
+		</link>
+		<link>
+			<name>res/drawable-hdpi/ic_tab_incoming.xml</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/res/drawable-mdpi/ic_tab_incoming.xml</locationURI>
+		</link>
+		<link>
+			<name>res/drawable-hdpi/ic_tab_outgoing.xml</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/res/drawable-mdpi/ic_tab_outgoing.xml</locationURI>
+		</link>
+		<link>
+			<name>res/drawable-ldpi/ic_tab_activity.xml</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/res/drawable-mdpi/ic_tab_activity.xml</locationURI>
+		</link>
+		<link>
+			<name>res/drawable-ldpi/ic_tab_incoming.xml</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/res/drawable-mdpi/ic_tab_incoming.xml</locationURI>
+		</link>
+		<link>
+			<name>res/drawable-ldpi/ic_tab_outgoing.xml</name>
+			<type>1</type>
+			<locationURI>PROJECT_LOC/res/drawable-mdpi/ic_tab_outgoing.xml</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

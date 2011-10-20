@@ -15,16 +15,23 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int ic_menu_refresh=0x7f020000;
-        public static final int ic_menu_signout=0x7f020001;
-        public static final int ic_stat_geochat=0x7f020002;
-        public static final int ic_stat_geochat_offline=0x7f020003;
-        public static final int ic_stat_geochat_sync=0x7f020004;
-        public static final int ic_tab_messages=0x7f020005;
-        public static final int ic_tab_messages_grey=0x7f020006;
-        public static final int ic_tab_messages_white=0x7f020007;
-        public static final int icon=0x7f020008;
-        public static final int stat_sys_warning=0x7f020009;
+        public static final int ic_launcher_local_gateway=0x7f020000;
+        public static final int ic_market_local_gateway=0x7f020001;
+        public static final int ic_menu_refresh=0x7f020002;
+        public static final int ic_menu_start=0x7f020003;
+        public static final int ic_menu_stop=0x7f020004;
+        public static final int ic_stat_connected=0x7f020005;
+        public static final int ic_stat_error=0x7f020006;
+        public static final int ic_stat_sync=0x7f020007;
+        public static final int ic_tab_activity=0x7f020008;
+        public static final int ic_tab_activity_selected=0x7f020009;
+        public static final int ic_tab_activity_unselected=0x7f02000a;
+        public static final int ic_tab_incoming=0x7f02000b;
+        public static final int ic_tab_incoming_selected=0x7f02000c;
+        public static final int ic_tab_incoming_unselected=0x7f02000d;
+        public static final int ic_tab_outgoing=0x7f02000e;
+        public static final int ic_tab_outgoing_selected=0x7f02000f;
+        public static final int ic_tab_outgoing_unselected=0x7f020010;
     }
     public static final class id {
         public static final int cancel_button=0x7f06000c;

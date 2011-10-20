@@ -29,19 +29,19 @@ public class HomeActivity extends TabActivity {
 	    
 	    intent = new Intent().setClass(this, LogsActivity.class);
 	    spec = tabHost.newTabSpec("logs").setIndicator(res.getString(R.string.activity),
-	                      res.getDrawable(R.drawable.ic_tab_messages))
+	                      res.getDrawable(R.drawable.ic_tab_activity))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 
 	    intent = new Intent().setClass(this, OutgoingMessagesActivity.class);
 	    spec = tabHost.newTabSpec("outgoing").setIndicator(res.getString(R.string.MTs),
-	                      res.getDrawable(R.drawable.ic_tab_messages))
+	                      res.getDrawable(R.drawable.ic_tab_outgoing))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 	    
 	    intent = new Intent().setClass(this, IncomingMessagesActivity.class);
 	    spec = tabHost.newTabSpec("incoming").setIndicator(res.getString(R.string.MOs),
-	                      res.getDrawable(R.drawable.ic_tab_messages))
+	                      res.getDrawable(R.drawable.ic_tab_incoming))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 	}

@@ -87,7 +87,7 @@ public class GeoChatTransceiverService extends CompatibilityService implements O
 	private void displayForegroundNotification() {
 		String title = getResources().getString(R.string.app_name);
 		String content = getResources().getString(R.string.signed_in_as_name, new Settings(this).storedUserName());
-		Notification notification = new Notification(R.drawable.ic_stat_geochat, null, System.currentTimeMillis());
+		Notification notification = new Notification(R.drawable.ic_stat_connected, null, System.currentTimeMillis());
 		notification.setLatestEventInfo(this, title, content, PendingIntent.getActivity(this, 0, Notifier.getHomeIntent(this), 0));
 		startForegroundCompat(Notifier.SERVICE, notification);
 	}

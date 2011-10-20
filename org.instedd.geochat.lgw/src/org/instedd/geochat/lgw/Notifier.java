@@ -19,20 +19,20 @@ public class Notifier {
 	}
 	
 	public void startTranscieving() {
-		setForegroundNotificationContent(R.drawable.ic_stat_geochat_sync, R.string.transceiving);
+		setForegroundNotificationContent(R.drawable.ic_stat_sync, R.string.transceiving);
 	}
 	
 	public void stopTransceiving() {
-		setForegroundNotificationContent(R.drawable.ic_stat_geochat, R.string.signed_in_as_name, new Settings(context).storedUserName());
+		setForegroundNotificationContent(R.drawable.ic_stat_connected, R.string.signed_in_as_name, new Settings(context).storedUserName());
 	}
 	
 	public void offline() {
-		setForegroundNotificationContent(R.drawable.ic_stat_geochat_offline, R.string.signed_in_as_name_offline, new Settings(context).storedUserName());
+		setForegroundNotificationContent(R.drawable.ic_stat_error, R.string.signed_in_as_name_offline, new Settings(context).storedUserName());
 	}
 	
 	public void someMessagesCouldNotBeSent() {
 		NotificationManager man = getNotificationManager();
-		Notification notification = new Notification(R.drawable.ic_stat_geochat_offline, null, System.currentTimeMillis());
+		Notification notification = new Notification(R.drawable.ic_stat_error, null, System.currentTimeMillis());
 		notification.defaults |= Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS;
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
 		
