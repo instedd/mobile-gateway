@@ -71,7 +71,7 @@ public class Menues {
 	}
 	
 	public static void stop(Menu menu) {
-		menu.add(0, STOP, 0, R.string.stop).setIcon(R.drawable.ic_menu_signout);
+		menu.add(0, STOP, 0, R.string.stop).setIcon(R.drawable.ic_menu_stop);
 	}
 	
 	public static void retryAllOutgoingMessages(Menu menu) {
