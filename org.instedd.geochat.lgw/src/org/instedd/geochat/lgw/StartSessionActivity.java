@@ -15,7 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-public class StartSessionActivity extends Activity {
+public class StartSessionActivity extends Activity implements WithSettings {
 
 	private final static int DIALOG_LOGGING_IN = 1;
 	private final static int DIALOG_WRONG_CREDENTIALS = 2;
@@ -27,6 +27,10 @@ public class StartSessionActivity extends Activity {
 	private Exception exception;
 	private Settings settings = new Settings(this);
 
+	public Settings settings() {
+		return settings;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -59,6 +63,7 @@ public class StartSessionActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		Menues.start(menu);
 		Menues.settings(menu);
+		Menues.resetConfiguration(menu);
 		return true;
 	}
 

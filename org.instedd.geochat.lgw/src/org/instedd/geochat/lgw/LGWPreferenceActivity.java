@@ -17,7 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class LGWPreferenceActivity extends PreferenceActivity implements
-		OnSharedPreferenceChangeListener {
+		OnSharedPreferenceChangeListener, WithSettings {
 
 	private Settings settings;
 	private final static int ERROR_DIALOG = 1;

@@ -11,6 +11,8 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 public class WaitingForChannelActivity extends Activity {
@@ -20,7 +22,8 @@ public class WaitingForChannelActivity extends Activity {
 	private final static int DIALOG_UNKNOWN_ERROR = 1;
 	private final static int DIALOG_WELCOME = 2;
 	private NuntiumTicket nuntiumTicket;
-
+	private Boolean cancelled = false;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,6 +35,13 @@ public class WaitingForChannelActivity extends Activity {
 		((TextView) findViewById(R.id.ticketCode))
 				.setText(nuntiumTicket.code());
 
+		findViewById(R.id.cancel_button).setOnClickListener(
+				new OnClickListener() {
+					public void onClick(View v) {
+						cancelled = true;
+					}
+				});
+		
 		new KeepAliveTicketTask().execute();
 	}
 
@@ -76,13 +86,16 @@ public class WaitingForChannelActivity extends Activity {
 
 		protected Integer doInBackground(String... params) {
 			try {
-				while (nuntiumTicket.status().equals("pending")) {
+				while (nuntiumTicket.status().equals("pending")&& !cancelled) {
 					nuntiumTicket = settings.nuntiumClient().askForUpdateAbout(
 							nuntiumTicket);
 					try {
 						Thread.sleep(2000);
 					} catch (InterruptedException e) {
 					}
+				}
+				if (cancelled) {
+					return 2;
 				}
 				return 0;
 			} catch (NuntiumClientException e) {
@@ -97,6 +110,9 @@ public class WaitingForChannelActivity extends Activity {
 
 		protected void onPostExecute(Integer result) {
 			switch (result) {
+			case 2:
+				Actions.startAutomaticConfiguration(WaitingForChannelActivity.this);
+				break;
 			case 1:
 				showDialog(DIALOG_UNKNOWN_ERROR);
 				break;
