@@ -1,0 +1,54 @@
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:title="@string/geochat_lgw_settings"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	>
+
+	<EditTextPreference
+		android:title="@string/your_telephone_number"
+		android:key="telephoneNumber"
+		android:id="@+id/number"
+		android:dialogTitle="@string/your_telephone_number"
+		android:inputType="phone"
+		/>
+	<ListPreference
+		android:title="@string/country"
+		android:key="countryCode"
+		android:id="@+id/country"
+		android:dialogTitle="@string/country"
+		/>
+	<ListPreference
+		android:title="@string/refresh_rate"
+		android:key="refreshRate"
+		android:id="@+id/refreshRate"
+		android:entries="@array/refresh_rate_entries"
+		android:entryValues="@array/refresh_rate_entry_values"
+		/>
+
+	<PreferenceCategory
+		android:title="@string/advanced"
+		>
+		
+		<EditTextPreference
+			android:title="@string/endpoint_url"
+			android:key="endpointUrl"
+			android:id="@+id/endpoint_url"
+			android:dialogTitle="@string/endpoint_url"
+			/>
+		<EditTextPreference
+			android:title="@string/name"
+			android:key="userName"
+			android:id="@+id/name"
+			android:dialogTitle="@string/name"
+			/>
+		<EditTextPreference
+			android:title="@string/password"
+			android:key="userPassword"
+			android:id="@+id/password"
+			android:dialogTitle="@string/password"
+			android:password="true"
+			/>
+			
+		</PreferenceCategory>
+</PreferenceScreen>

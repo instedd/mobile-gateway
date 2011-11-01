@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Nuntium Local Gateway</string>
+	<string name="name">Name</string>
+	<string name="password">Password</string>
+	<string name="your_telephone_number">Your telephone number</string>
+	<string name="start">Start</string>
+	<string name="invalid_credentials">Incorrect name/password</string>
+	<string name="cannot_start">Cannot start</string>
+	<string name="cannot_start_error">Cannot start: %s</string>
+	<string name="starting">Starting...</string>
+	<string name="stop">Stop</string>
+	<string name="transceiving">Transceiving...</string>
+	<string name="signed_in_as_name">Connected as %s</string>
+	<string name="signed_in_as_name_offline">Connected as %s (offline)</string>
+	<string name="MTs">Outgoing</string>
+	<string name="MOs">Incoming</string>
+	<string name="geochat_lgw_settings">Nuntium Local Gateway settings</string>
+	<string name="endpoint_url">Endpoint URL</string>
+	<string name="settings">Settings</string>
+	<string name="activity">Activity</string>
+	<string name="sending">Sending...</string>
+	<string name="message_could_not_be_sent_tries">The message \'%1$s\' could not be sent to %2$s (try #%3$s) </string>
+	<string name="message_could_not_be_sent_no_service">The message \'%1$s\' could not be sent to %2$s: there is no service.</string>
+	<string name="message_could_not_be_sent_radio_off">The message \'%1$s\' could not be sent to %2$s: the radio is off.</string>
+	<string name="sent_your_number">Sent your number: %s.</string>
+	<string name="couldnt_send_your_number">Couldn\'t send your number: %s.</string>
+	<string name="sent_message_to_application">Sent \'%1$s\' to application from %2$s.</string>
+	<string name="sent_message_to_phone">Sent \'%1$s\' to %2$s.</string>
+	<string name="fatal_error">Fatal error: %s.</string>
+	<string name="internet_connection_error">Error accessing server: %s.</string>
+	<string name="internet_connection_error_title">Connection Error</string>
+	<string name="refresh_rate">Refresh rate</string>
+	<string name="refresh">Refresh</string>
+	<string name="refreshing">Refreshing...</string>
+	<string name="delete">Delete</string>
+	<string name="delete_all">Delete all</string>
+	<string name="MT">MT</string>
+	<string name="MO">MO</string>
+	<string name="send_activity_log">Send activity log</string>
+	<string name="sending_activity_log">Sending activity log...</string>
+	<string name="could_not_send_activity_log">Could not send activity log</string>
+	<string name="activity_log_sent">Activity log sent</string>
+	<string name="send_activity_log_description">All your activity log will be sent to InSTEDD. Are you sure?</string>
+	<string name="some_messages_not_sent">Some messages not sent</string>
+	<string name="some_messages_not_sent_description">Maybe you ran out of credit?</string>
+	<string name="retry">Retry</string>
+	<string name="retry_all">Retry all</string>
+	<string name="retrying_all">Retrying all...</string>
+	<string name="retrying">Retrying...</string>
+	<string name="are_you_sure">Are you sure?</string>
+	<string-array name="refresh_rate_entries">
+		<item>1 minute</item>
+		<item>5 minutes</item>
+		<item>10 minutes</item>
+		<item>15 minutes</item>
+		<item>30 minutes</item>
+		<item>1 hour</item>
+	</string-array>
+	<string-array name="refresh_rate_entry_values">
+		<item>1</item>
+		<item>5</item>
+		<item>10</item>
+		<item>15</item>
+		<item>30</item>
+		<item>60</item>
+	</string-array>
+	<string name="advanced">Advanced</string>
+	<string name="next">Next</string>
+	<string name="country">Country</string>
+	<string name="enter_the_code_in_the_application">Enter the following code in the application:</string>
+	<string name="waiting_for_input_in_application">Waiting for input in application...</string>
+	<string name="cancel">Cancel</string>
+	<string name="reset_configuration">Reset Configuration</string>
+	<string name="fix_host">The Endpoint URL specified is invalid, please change it in settings or run the configuration wizard again by resetting the configuration from the menu.</string>
+	<string name="nuntium_configuration_wizard_welcome">This is the Local Gateway Configuration Wizard. Please complete the information below and touch the Next button.</string>
+	<string name="success">Success!</string>
+	<string name="no_connection">There seems to be no network connection. Please ensure that you have internet access and re-open this application.</string>
+</resources>

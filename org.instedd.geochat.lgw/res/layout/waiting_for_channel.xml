@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+   	android:layout_width="fill_parent"
+   	android:layout_height="fill_parent" 
+   	>
+	<TextView
+		android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	style="@android:style/TextAppearance.Large"
+    	android:text="@string/enter_the_code_in_the_application"
+    	android:layout_alignParentTop="true"
+    	/>
+    <TextView
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:id="@+id/ticketCode"
+    	android:layout_centerInParent="true"
+    	android:textSize="75sp"
+    	android:textStyle="bold"
+    	android:typeface="serif"
+      	/>
+    <TextView
+   		android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	style="@android:style/TextAppearance.Medium"
+    	android:text="@string/waiting_for_input_in_application"
+    	android:layout_above="@+id/cancel_button"
+    	android:id="@+id/labelWaitingFor"
+    	/>
+    <Button
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:id="@+id/cancel_button"
+    	android:text="@string/cancel"
+    	android:layout_alignParentBottom="true"
+    	android:textSize="25sp"
+	   	android:textStyle="italic"
+    	android:typeface="serif"
+	   	/>
+</RelativeLayout>

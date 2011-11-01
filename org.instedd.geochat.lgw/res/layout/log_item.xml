@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingTop="5dp"
+    android:paddingBottom="10dp"
+    >
+	<TextView
+	   android:layout_width="wrap_content"
+	   android:layout_height="wrap_content"
+	   style="@android:style/TextAppearance.Large"
+	   android:id="@+id/message" />
+	<TextView
+	   android:layout_width="wrap_content"
+	   android:layout_height="wrap_content"
+	   style="@android:style/TextAppearance.Small"
+	   android:id="@+id/date" />
+</LinearLayout>
