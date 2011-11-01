@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">Instedd Mobile Gateway</string>
+	<string name="app_name">Nuntium Local Gateway</string>
 	<string name="name">Nombre</string>
 	<string name="password">Clave</string>
 	<string name="your_telephone_number">Tu número de teléfono</string>

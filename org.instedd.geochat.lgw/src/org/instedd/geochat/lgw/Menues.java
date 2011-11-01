@@ -67,7 +67,7 @@ public class Menues {
 	}
 	
 	public static void start(Menu menu) {
-		menu.add(0, START, 0, R.string.start).setIcon(android.R.drawable.ic_media_play);
+		menu.add(0, START, 0, R.string.start).setIcon(R.drawable.ic_menu_start);
 	}
 	
 	public static void stop(Menu menu) {
