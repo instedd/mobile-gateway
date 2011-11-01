@@ -32,8 +32,9 @@ public class WaitingForChannelActivity extends Activity {
 		Bundle bundle = getIntent().getExtras();
 		nuntiumTicket = (NuntiumTicket) bundle.get("ticket");
 
-		((TextView) findViewById(R.id.ticketCode)).setText(nuntiumTicket.code());
-		
+		((TextView) findViewById(R.id.ticketCode))
+				.setText(nuntiumTicket.code());
+
 		task = new KeepAliveTicketTask();
 		task.execute();
 		
@@ -113,6 +114,9 @@ public class WaitingForChannelActivity extends Activity {
 
 		protected void onPostExecute(Integer result) {
 			switch (result) {
+			case 2:
+				Actions.startAutomaticConfiguration(WaitingForChannelActivity.this);
+				break;
 			case 1:
 				showDialog(DIALOG_UNKNOWN_ERROR);
 				break;
