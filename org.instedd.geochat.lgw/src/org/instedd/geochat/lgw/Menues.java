@@ -50,6 +50,7 @@ public class Menues {
 			break;
 		case RESET_CONFIGURATION:
 			Actions.resetSettings(context);
+			Actions.startAutomaticConfiguration(context);
 			break;
 		}
 	}

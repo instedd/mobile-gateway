@@ -55,7 +55,7 @@ public class Actions {
 	}
 	
 	public static void resetSettings(Context context) {
-		((LGWPreferenceActivity) context).settings().resetAdvancedConfiguration();
+		((WithSettings) context).settings().resetAdvancedConfiguration();
 	}
 	
 	public static void sendActivityLog(final Context context, final Handler handler) {
