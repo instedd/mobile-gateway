@@ -169,7 +169,7 @@ public class Settings {
 			if (countries[i].getPhonePrefix().equals(storedCountryCode))
 				return i;
 		}
-		return 0;
+		return -1;
 	}
 
 	public void saveCountryCodeAtIndex(int position)

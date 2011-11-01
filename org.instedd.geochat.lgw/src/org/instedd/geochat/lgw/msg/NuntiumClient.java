@@ -61,10 +61,11 @@ public class NuntiumClient {
 
 			for (int index = 0; index < jsonArray.length(); index++) {
 				countries[index] = new Country(
-						(String) ((JSONObject) jsonArray.get(index))
-								.get("name"),
-						(String) ((JSONObject) jsonArray.get(index))
-								.get("phone_prefix"));
+						(String) ((JSONObject) jsonArray.get(index)).get("name"),
+						(String) ((JSONObject) jsonArray.get(index)).get("phone_prefix"),
+						(String) ((JSONObject) jsonArray.get(index)).get("iso2"),
+						(String) ((JSONObject) jsonArray.get(index)).get("iso3")
+						);
 			}
 		} catch (JSONException e) {
 			countries = null;
