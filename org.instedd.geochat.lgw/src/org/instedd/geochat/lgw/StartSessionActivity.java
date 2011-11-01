@@ -43,6 +43,15 @@ public class StartSessionActivity extends Activity implements WithSettings {
 
 		setOnClickCallback();
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		if (settings.areIncomplete()) {
+			Actions.startAutomaticConfiguration(this);
+		}
+	}
 
 	private void setOnClickCallback() {
 		findViewById(R.id.start_button).setOnClickListener(

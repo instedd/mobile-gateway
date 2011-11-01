@@ -11,6 +11,7 @@ import org.instedd.geochat.lgw.msg.WrongHostException;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.text.TextUtils;
 
 public class Settings {
 
@@ -140,24 +141,23 @@ public class Settings {
 	}
 
 	private boolean isCountryCodeUnset() {
-		return storedCountryCode() == null || storedCountryCode().length() == 0;
+		return TextUtils.isEmpty(storedCountryCode());
 	}
 
 	private boolean isTelephoneNumberUnset() {
-		return storedTelephoneNumber() == null
-				|| storedTelephoneNumber().length() == 0;
+		return TextUtils.isEmpty(storedTelephoneNumber());
 	}
 
 	private boolean isPasswordUnset() {
-		return storedPassword() == null || storedPassword().length() == 0;
+		return TextUtils.isEmpty(storedPassword());
 	}
 
 	private boolean isUserNameUnset() {
-		return storedUserName() == null || storedUserName().length() == 0;
+		return TextUtils.isEmpty(storedUserName());
 	}
 
 	private boolean isEndpointUrlUnset() {
-		return storedEndpointUrl() == null || storedEndpointUrl().length() == 0;
+		return TextUtils.isEmpty(storedEndpointUrl());
 	}
 
 	public int storedCountryCodeIndex() throws NuntiumClientException,
