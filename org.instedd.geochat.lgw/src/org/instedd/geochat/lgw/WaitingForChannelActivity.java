@@ -11,6 +11,8 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class WaitingForChannelActivity extends Activity {
@@ -20,6 +22,7 @@ public class WaitingForChannelActivity extends Activity {
 	private final static int DIALOG_UNKNOWN_ERROR = 1;
 	private final static int DIALOG_WELCOME = 2;
 	private NuntiumTicket nuntiumTicket;
+	private KeepAliveTicketTask task;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -29,10 +32,23 @@ public class WaitingForChannelActivity extends Activity {
 		Bundle bundle = getIntent().getExtras();
 		nuntiumTicket = (NuntiumTicket) bundle.get("ticket");
 
-		((TextView) findViewById(R.id.ticketCode))
-				.setText(nuntiumTicket.code());
+		((TextView) findViewById(R.id.ticketCode)).setText(nuntiumTicket.code());
+		
+		task = new KeepAliveTicketTask();
+		task.execute();
+		
+		handleCancelButton();
+	}
 
-		new KeepAliveTicketTask().execute();
+	private void handleCancelButton() {
+		Button button = (Button) findViewById(R.id.cancel_button);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				task.cancel(true);
+				finish();
+			}
+		});
 	}
 
 	@Override

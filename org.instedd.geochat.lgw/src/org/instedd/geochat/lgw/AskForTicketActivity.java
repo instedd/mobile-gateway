@@ -1,5 +1,6 @@
 package org.instedd.geochat.lgw;
 
+import org.instedd.geochat.lgw.msg.Country;
 import org.instedd.geochat.lgw.msg.NuntiumClientException;
 import org.instedd.geochat.lgw.msg.NuntiumTicket;
 import org.instedd.geochat.lgw.msg.WrongHostException;
@@ -13,6 +14,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.telephony.TelephonyManager;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +26,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 public class AskForTicketActivity extends Activity {
 
@@ -39,20 +44,35 @@ public class AskForTicketActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
 		setContentView(R.layout.ask_for_ticket);
-
+		
+		handleStartButtonEnablement();
 		initializeTelephoneNumber();
-
 		initializeCountriesWidget();
+		
+		findViewById(R.id.start_button).setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				new AskTicketTask().execute();
+			}
+		});
+	}
 
-		findViewById(R.id.start_button).setOnClickListener(
-				new OnClickListener() {
-					public void onClick(View v) {
-						new AskTicketTask().execute();
-
-					}
-				});
+	private void handleStartButtonEnablement() {
+		final View start = findViewById(R.id.start_button);
+		final TextView text = (TextView) findViewById(R.id.number);
+		text.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+			@Override
+			public void afterTextChanged(Editable s) {
+				start.setEnabled(TextUtils.getTrimmedLength(text.getText()) != 0);
+			}
+		});
 	}
 
 	private void initializeTelephoneNumber() {
@@ -115,8 +135,10 @@ public class AskForTicketActivity extends Activity {
 	}
 
 	private void setStoredCountry() throws NuntiumClientException, WrongHostException {
-		countrySpinner().setSelection(settings
-				.storedCountryCodeIndex());
+		int index = settings.storedCountryCodeIndex();
+		if (index >= 0) {
+			countrySpinner().setSelection(index);
+		}
 	}
 
 	private Spinner countrySpinner() {
@@ -130,6 +152,30 @@ public class AskForTicketActivity extends Activity {
 
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		countrySpinner().setAdapter(adapter);
+		
+		String iso2 = getUserCountryIsoName();
+		if (iso2 != null) {
+			int index = findCountryIndex(iso2);
+			if (index >= 0) {
+				countrySpinner().setSelection(index);
+			}
+		}
+	}
+	
+	private String getUserCountryIsoName() {
+		TelephonyManager manager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+		return manager.getNetworkCountryIso();
+	}
+	
+	private int findCountryIndex(String iso2) throws NuntiumClientException, WrongHostException {
+		Country[] countries = settings.nuntiumClient().countries();
+		for(int i = 0; i < countries.length; i++) {
+			Country country = countries[i];
+			if (iso2.equalsIgnoreCase(country.getIso2()) || iso2.equalsIgnoreCase(country.getIso3())) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	@Override
