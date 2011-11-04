@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceActivity;
@@ -37,17 +38,19 @@ public class LGWPreferenceActivity extends PreferenceActivity implements
 	}
 
 	private void initializePreferenceValues() {
+		getPreferenceManager().setSharedPreferencesName(Settings.SHARED_PREFS_NAME);
 		addPreferencesFromResource(R.layout.settings);
 
 		initializeCountryValues();
 		
-		setPopUpValues();
+		setPreferenceValues();
 
 		PreferenceManager.setDefaultValues(this, R.layout.settings, false);
-		getPreferenceManager().setSharedPreferencesName(
-				Settings.SHARED_PREFS_NAME);
+
 		getPreferenceManager().getSharedPreferences()
-				.registerOnSharedPreferenceChangeListener(this);		
+				.registerOnSharedPreferenceChangeListener(this);
+
+		addPlusToOutgoingPreference().setDefaultValue(true);
 	}
 
 	private void initializeCountryValues() {
@@ -85,13 +88,15 @@ public class LGWPreferenceActivity extends PreferenceActivity implements
 		updateTelephoneNumberSummary();
 	}
 
-	public void setPopUpValues() {
+	public void setPreferenceValues() {
 		setRefreshRatePopUpValue();
 		setEndpointUrlPopUpValue();
 		setUserNamePopUpValue();
 		setPasswordPopUpValue();
 		setCountryCodePopUpValue();
 		setTelephoneNumberPopUpValue();
+		addPlusToOutgoingPreference().setDefaultValue(true);
+		addPlusToOutgoingPreference().setChecked(settings.storedAddPlusToOutgoing());
 	}
 
 	private void updateNameSummary() {
@@ -145,6 +150,10 @@ public class LGWPreferenceActivity extends PreferenceActivity implements
 
 	private EditTextPreference endpointUrlPreference() {
 		return (EditTextPreference) findPreference(Settings.ENDPOINT_URL);
+	}
+	
+	private CheckBoxPreference addPlusToOutgoingPreference() {
+		return (CheckBoxPreference) findPreference (Settings.ADD_PLUS_TO_OUTGOING);
 	}
 
 	private EditTextPreference userNamePreference() {

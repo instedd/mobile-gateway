@@ -153,6 +153,7 @@ public class Transceiver {
 	void sendMessage(Message message) {
 		SmsManager sms = SmsManager.getDefault();
 		ArrayList<String> parts = sms.divideMessage(message.text);
+		
 		for (int i = 0; i < parts.size(); i++) {
 			Intent intent = new Intent(SMS_SENT_ACTION).putExtra(INTENT_EXTRA_GUID, message.guid);
 			sms.sendTextMessage(message.to, null, parts.get(i), 

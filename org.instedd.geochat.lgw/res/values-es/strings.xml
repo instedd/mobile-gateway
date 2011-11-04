@@ -76,4 +76,5 @@
 	<string name="nuntium_configuration_wizard_welcome">Este es el asistente de configuración del Local Gateway. Por favor complete la información que se pide a continuación y toque el botón Continuar.</string>
 	<string name="success">Éxito!</string>
 	<string name="no_connection">No parece haber conexión a internet. Asegurate de tener conexión y reabre esta aplicación.</string>
+	<string name="add_plus_to_outgoing">Añadir + a sms enviados?</string>
 </resources>

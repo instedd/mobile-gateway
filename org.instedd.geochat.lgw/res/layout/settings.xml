@@ -25,6 +25,11 @@
 		android:entries="@array/refresh_rate_entries"
 		android:entryValues="@array/refresh_rate_entry_values"
 		/>
+	<CheckBoxPreference
+		android:title="@string/add_plus_to_outgoing"
+		android:key="addPlusToOutgoing"
+		android:id="@+id/addPlusToOutgoing"
+		/>
 
 	<PreferenceCategory
 		android:title="@string/advanced"
