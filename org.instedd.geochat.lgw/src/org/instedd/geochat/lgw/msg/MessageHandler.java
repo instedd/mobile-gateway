@@ -1,5 +1,6 @@
 package org.instedd.geochat.lgw.msg;
 
+import org.instedd.geochat.lgw.ISettings;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -17,6 +18,11 @@ public class MessageHandler extends DefaultHandler {
 	private int messagesCount;
 	private Message message;
 	private StringBuilder text;
+	private final ISettings settings;
+
+	public MessageHandler(ISettings settings) {
+		this.settings = settings;
+	}
 	
 	public Message[] getMessages() {
 		if (messages == null)
@@ -39,7 +45,7 @@ public class MessageHandler extends DefaultHandler {
 				message = new Message();
 				message.guid = attributes.getValue("id");
 				message.from = removeProtocol(attributes.getValue("from"));
-				message.to = removeProtocol(attributes.getValue("to"));
+				message.to = addPlusIfMust(removeProtocol(attributes.getValue("to")));
 				inMessage = true;
 				tagName = NONE;
 			}
@@ -85,5 +91,14 @@ public class MessageHandler extends DefaultHandler {
 		}
 		return address;
 	}
+	
+	private String addPlusIfMust(String address) {
+		if (settings.storedAddPlusToOutgoing() && !address.startsWith("+")) {
+			return "+" + address;
+		}
+		return address;
+	}
+	
+	
 
 }

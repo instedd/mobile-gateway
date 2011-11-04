@@ -13,7 +13,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 
-public class Settings {
+public class Settings implements ISettings {
 
 	public final static String SHARED_PREFS_NAME = "org.instedd.geochat.lgw.settings";
 	public final static String REFRESH_RATE = "refreshRate";
@@ -23,6 +23,7 @@ public class Settings {
 	public final static String COUNTRY_CODE = "countryCode";
 	public final static String NUMBER = "telephoneNumber";
 	public final static String LAST_RECEIVED_MESSAGE_ID = "lastSentMessageId";
+	public final static String ADD_PLUS_TO_OUTGOING = "addPlusToOutgoing";
 
 	private final Context context;
 	private NuntiumClient nuntiumClient;
@@ -45,6 +46,10 @@ public class Settings {
 
 	public String storedLastReceivedMessageId() {
 		return openRead().getString(LAST_RECEIVED_MESSAGE_ID, null);
+	}
+	
+	public Boolean storedAddPlusToOutgoing() {
+		return openRead().getBoolean(ADD_PLUS_TO_OUTGOING, true);
 	}
 
 	public String storedEndpointUrl() {
@@ -104,7 +109,7 @@ public class Settings {
 
 	public QstClient qstClient() {
 		return new QstClient(storedEndpointUrl(), storedUserName(),
-				storedPassword(), restClient(), storedCountryCode());
+				storedPassword(), restClient(), storedCountryCode(), this);
 	}
 
 	public NuntiumClient nuntiumClient() {

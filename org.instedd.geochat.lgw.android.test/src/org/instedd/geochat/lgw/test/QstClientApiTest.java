@@ -15,7 +15,7 @@ public class QstClientApiTest extends TestCase {
 	
 	public void testCredentialsFalse() throws Exception {
 		MockRestClient restClient = new MockRestClient("");
-		QstClient client = createQstClient(restClient, "123");
+		QstClient client = createQstClient(restClient, "123", new MockSettings(false));
 		client.sendAddress("lala");
 		
 		assertEquals("foo", restClient.getUser());
@@ -34,7 +34,7 @@ public class QstClientApiTest extends TestCase {
 				"  </message>\n" + 
 				"</messages>");
 		
-		QstClient client = createQstClient(restClient, "123");
+		QstClient client = createQstClient(restClient, "123", new MockSettings(false));
 		Message[] messages = client.getMessages("lastone");
 		
 		assertEquals("foo", restClient.getUser());
@@ -59,7 +59,7 @@ public class QstClientApiTest extends TestCase {
 	public void testSendMessages() throws Exception {
 		MockRestClient restClient = mockRestClient();
 		
-		QstClient client = createQstClient(restClient, "123");
+		QstClient client = createQstClient(restClient, "123", new MockSettings(false));
 		
 		Message[] messages = stubMessages(2);
 		
@@ -74,7 +74,7 @@ public class QstClientApiTest extends TestCase {
 		assertEquals("application/xml", restClient.getPostContentType());
 		String data = restClient.getPostData();
 		
-		MessageHandler handler = new MessageHandler();
+		MessageHandler handler = new MessageHandler(new MockSettings(false));
 		Xml.parse(new ByteArrayInputStream(data.getBytes()), Encoding.UTF_8, handler);
 		
 		Message[] actualMessages = handler.getMessages();
@@ -104,7 +104,7 @@ public class QstClientApiTest extends TestCase {
 	public void testNormalizationWithNullCountryCode() throws Exception {
 		MockRestClient restClient = mockRestClient();
 		
-		QstClient client = createQstClient(restClient, null);
+		QstClient client = createQstClient(restClient, null, new MockSettings(false));
 		
 		Message[] messages = stubMessages(10);
 		
@@ -123,7 +123,7 @@ public class QstClientApiTest extends TestCase {
 		
 		String data = restClient.getPostData();
 		
-		MessageHandler handler = new MessageHandler();
+		MessageHandler handler = new MessageHandler(new MockSettings(false));
 		Xml.parse(new ByteArrayInputStream(data.getBytes()), Encoding.UTF_8, handler);
 		
 		Message[] actualMessages = handler.getMessages();
@@ -145,7 +145,7 @@ public class QstClientApiTest extends TestCase {
 	public void testFromNormalization()throws Exception {
 		MockRestClient restClient = mockRestClient();
 		
-		QstClient client = createQstClient(restClient, "123");
+		QstClient client = createQstClient(restClient, "123", new MockSettings(false));
 		
 		Message[] messages = stubMessages(10);
 		
@@ -164,7 +164,7 @@ public class QstClientApiTest extends TestCase {
 		
 		String data = restClient.getPostData();
 		
-		MessageHandler handler = new MessageHandler();
+		MessageHandler handler = new MessageHandler(new MockSettings(false));
 		Xml.parse(new ByteArrayInputStream(data.getBytes()), Encoding.UTF_8, handler);
 		
 		Message[] actualMessages = handler.getMessages();
@@ -193,8 +193,8 @@ public class QstClientApiTest extends TestCase {
 		}
 	}
 
-	private QstClient createQstClient(MockRestClient restClient, String countryCode) {
-		QstClient client = new QstClient("http://example.com", "foo", "bar", restClient, countryCode);
+	private QstClient createQstClient(MockRestClient restClient, String countryCode, MockSettings settings) {
+		QstClient client = new QstClient("http://example.com", "foo", "bar", restClient, countryCode, settings);
 		return client;
 	}
 
@@ -208,7 +208,7 @@ public class QstClientApiTest extends TestCase {
 		MockRestClient restClient = new MockRestClient("");
 		restClient.addResponseHeader("ETag", "123");
 		
-		QstClient client = createQstClient(restClient, "123");
+		QstClient client = createQstClient(restClient, "123", new MockSettings(false));
 		String lastId = client.getLastSentMessageId();
 		assertEquals("123", lastId);
 		

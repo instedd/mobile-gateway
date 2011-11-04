@@ -16,6 +16,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.instedd.geochat.lgw.ISettings;
 import org.instedd.geochat.lgw.UnauthorizedException;
 import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlSerializer;
@@ -34,12 +35,14 @@ public class QstClient {
 	private final IRestClient client;
 	private final String httpBase;
 	private final String countryCode;
+	private final ISettings settings;
 
-	public QstClient(String httpBase, String name, String password, IRestClient restClient, String countryCode) {
+	public QstClient(String httpBase, String name, String password, IRestClient restClient, String countryCode, ISettings settings) {
 		this.httpBase = httpBase;
 		this.client = restClient;
 		this.client.setAuth(name, password);
 		this.countryCode = countryCode;
+		this.settings = settings;
 	}
 	
 	public IRestClient getRestClient() {
@@ -135,7 +138,7 @@ public class QstClient {
 			
 			InputStream content = response.getEntity().getContent();
 			try {
-				MessageHandler handler = new MessageHandler();
+				MessageHandler handler = new MessageHandler(settings);
 				Xml.parse(content, Encoding.UTF_8, handler);
 				return handler.getMessages();
 			} finally {
