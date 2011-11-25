@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">Nuntium Local Gateway</string>
+	<string name="app_name">Local Gateway</string>
 	<string name="name">Nombre</string>
 	<string name="password">Clave</string>
 	<string name="your_telephone_number">Tu número de teléfono</string>
@@ -15,7 +15,7 @@
 	<string name="signed_in_as_name_offline">Conectado como %s (sin conexión)</string>
 	<string name="MTs">Salientes</string>
 	<string name="MOs">Entrantes</string>
-	<string name="geochat_lgw_settings">Ajustes de Nuntium Local Gateway</string>
+	<string name="geochat_lgw_settings">Ajustes de Local Gateway</string>
 	<string name="endpoint_url">URL destino</string>
 	<string name="settings">Ajustes</string>
 	<string name="activity">Actividad</string>
