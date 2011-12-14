@@ -21,10 +21,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -32,6 +34,8 @@ public class AskForTicketActivity extends Activity {
 
 	private final static int DIALOG_GETTING_TICKET = 1;
 	private final static int DIALOG_UNKNOWN_ERROR = 2;
+	
+	private TextView countryCodeTextView;
 
 	private Handler handler = new Handler();
 	private ProgressDialog progressDialog;
@@ -56,6 +60,8 @@ public class AskForTicketActivity extends Activity {
 				new AskTicketTask().execute();
 			}
 		});
+		
+		countryCodeTextView = (TextView)findViewById(R.id.country_code_text_view);
 	}
 
 	private void handleStartButtonEnablement() {
@@ -121,13 +127,16 @@ public class AskForTicketActivity extends Activity {
 							View view, int position, long id) {
 						try {
 							settings.saveCountryCodeAtIndex(position);
+							
+							Country country = settings.nuntiumClient().countries()[position];
+							countryCodeTextView.setText("+" + country.getPhonePrefix());
 						} catch (NuntiumClientException e) {
 							handle(e);
 						} catch (WrongHostException e) {
 							handle(e.withMessage(getResources().getString(R.string.fix_host)));
 						}
 					}
-
+					
 					@Override
 					public void onNothingSelected(AdapterView<?> parent) {
 					}
@@ -140,17 +149,29 @@ public class AskForTicketActivity extends Activity {
 			countrySpinner().setSelection(index);
 		}
 	}
+	
+	private int getDrawableId(Country country) {
+		int id;
+		
+		// Try iso2
+		String iso2 = country.getIso2().toLowerCase();
+		id = getResources().getIdentifier(iso2 , "drawable", getPackageName());
+		
+		// Try iso3
+		if (id == 0) {
+			String iso3 = country.getIso3().toLowerCase();
+			id = getResources().getIdentifier(iso3 , "drawable", getPackageName());
+		}
+		
+		return id;
+	}
 
 	private Spinner countrySpinner() {
 		return (Spinner) findViewById(R.id.country_code);
 	}
 
 	private void setUpPossibleCountries() throws NuntiumClientException, WrongHostException {
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, settings.nuntiumClient()
-						.countryNames());
-
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		CountryAdapter adapter = new CountryAdapter(settings.nuntiumClient().countries());
 		countrySpinner().setAdapter(adapter);
 		
 		String iso2 = getUserCountryIsoName();
@@ -256,6 +277,67 @@ public class AskForTicketActivity extends Activity {
 				dismissDialog(DIALOG_GETTING_TICKET);
 				Actions.accessWaitingForTicketActivity(AskForTicketActivity.this, ticket);
 				break;
+			}
+		}
+	}
+	
+	private class CountryAdapter extends BaseAdapter {
+		
+		private Country[] countries;
+		
+		public CountryAdapter(Country[] countries) {
+			this.countries = countries;
+		}
+
+		@Override
+		public int getCount() {
+			return countries.length;
+		}
+
+		@Override
+		public Object getItem(int arg0) {
+			return countries[arg0];
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if (convertView == null) {
+                convertView = getLayoutInflater().inflate(R.layout.country_item, null);
+            }
+			
+			fill(position, convertView);
+			
+			return convertView;
+		}
+
+		@Override
+		public View getDropDownView(int position, View convertView,
+				ViewGroup parent) {
+			convertView = getLayoutInflater().inflate(R.layout.country_dropdown_item, null);
+			
+			fill(position, convertView);
+			
+			return convertView;
+		}
+		
+		private void fill(int position, View view) {
+			Country country = countries[position];
+			
+			TextView countryName = (TextView)view.findViewById(R.id.country_name_text_view);
+			ImageView countryFlag = (ImageView)view.findViewById(R.id.country_flag_image_view);
+			
+			countryName.setText(country.getName());
+			
+			int flagId = getDrawableId(country);
+			if (flagId != 0) {
+				countryFlag.setImageResource(flagId);
+			} else {
+				countryFlag.setVisibility(View.INVISIBLE);
 			}
 		}
 	}

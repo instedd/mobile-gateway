@@ -77,4 +77,5 @@
 	<string name="success">Success!</string>
 	<string name="no_connection">There seems to be no network connection. Please ensure that you have internet access and re-open this application.</string>
 	<string name="add_plus_to_outgoing">Add + to outgoing sms?</string>
+	<string name="flag">Flag</string>
 </resources>
