@@ -77,4 +77,5 @@
 	<string name="success">Éxito!</string>
 	<string name="no_connection">No parece haber conexión a internet. Asegurate de tener conexión y reabre esta aplicación.</string>
 	<string name="add_plus_to_outgoing">Añadir + a sms enviados?</string>
+	<string name="flag">Bandera</string>
 </resources>
