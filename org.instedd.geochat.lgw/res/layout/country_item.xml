@@ -6,7 +6,7 @@
     <ImageView
         android:id="@+id/country_flag_image_view"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_marginRight="5dp"
         android:contentDescription="@string/flag" />
     <TextView 
@@ -15,5 +15,6 @@
 	    android:singleLine="true"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
+	    android:layout_gravity="center_vertical"
 	    android:ellipsize="marquee" />
 </LinearLayout>

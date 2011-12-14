@@ -9,18 +9,21 @@
 	<TextView
 		android:layout_width="wrap_content"
     	android:layout_height="wrap_content"
+    	android:layout_marginBottom="20dp"
     	style="@android:style/TextAppearance.Small"
    		android:text="@string/nuntium_configuration_wizard_welcome"
     	/>
 	<TextView
 		android:layout_width="wrap_content"
     	android:layout_height="wrap_content"
+    	android:layout_marginBottom="5dp"
     	style="@android:style/TextAppearance.Large"
    		android:text="@string/your_telephone_number"
     	/>
 	<LinearLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
+	    android:layout_marginBottom="10dp"
 	    android:orientation="horizontal"
 	    >
 	    <TextView
@@ -29,6 +32,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_marginRight="10dp"
 	        style="@android:style/TextAppearance.Large"
+	        android:textColor="?android:attr/textColorSecondary"
 	        />
 	    <EditText
     		android:layout_width="fill_parent"
@@ -41,6 +45,7 @@
     <TextView
     	android:layout_width="wrap_content"
     	android:layout_height="wrap_content"
+    	android:layout_marginBottom="5dp"
     	style="@android:style/TextAppearance.Large"
     	android:text="@string/country"
     	/>
@@ -48,6 +53,7 @@
         android:id="@+id/country_code"
        	android:layout_width="fill_parent"
        	android:layout_height="wrap_content"
+       	android:layout_marginBottom="20dp"
        	android:drawSelectorOnTop="true"
        	android:prompt="@string/country"
     	/>
@@ -57,6 +63,5 @@
     	android:id="@+id/start_button"
     	android:text="@string/next"
     	android:textSize="25sp"
-    	android:typeface="serif"
     	/>
 </LinearLayout>
