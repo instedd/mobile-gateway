@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,7 +27,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -321,6 +321,7 @@ public class AskForTicketActivity extends Activity {
 			if (convertView == null) {
 				convertView = getLayoutInflater().inflate(R.layout.country_dropdown_item, null);
 			}
+			
 			fill(position, convertView);
 			
 			return convertView;
@@ -330,15 +331,13 @@ public class AskForTicketActivity extends Activity {
 			Country country = countries[position];
 			
 			TextView countryName = (TextView)view.findViewById(R.id.country_name_text_view);
-			ImageView countryFlag = (ImageView)view.findViewById(R.id.country_flag_image_view);
 			
 			countryName.setText(country.getName());
 			
 			int flagId = getDrawableId(country);
 			if (flagId != 0) {
-				countryFlag.setImageResource(flagId);
-			} else {
-				countryFlag.setVisibility(View.INVISIBLE);
+				Drawable flag = getResources().getDrawable(getDrawableId(country));
+				countryName.setCompoundDrawablesWithIntrinsicBounds(flag, null, null, null);
 			}
 		}
 	}

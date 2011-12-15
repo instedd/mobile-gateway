@@ -284,24 +284,23 @@ public final class R {
         public static final int zw=0x7f02010a;
     }
     public static final class id {
-        public static final int addPlusToOutgoing=0x7f06000b;
-        public static final int cancel_button=0x7f060010;
-        public static final int country=0x7f060009;
+        public static final int addPlusToOutgoing=0x7f06000a;
+        public static final int cancel_button=0x7f06000f;
+        public static final int country=0x7f060008;
         public static final int country_code=0x7f060002;
         public static final int country_code_text_view=0x7f060000;
-        public static final int country_flag_image_view=0x7f060004;
-        public static final int country_name_text_view=0x7f060005;
-        public static final int date=0x7f060007;
-        public static final int endpoint_url=0x7f06000c;
-        public static final int labelWaitingFor=0x7f060011;
-        public static final int message=0x7f060006;
-        public static final int name=0x7f06000d;
+        public static final int country_name_text_view=0x7f060004;
+        public static final int date=0x7f060006;
+        public static final int endpoint_url=0x7f06000b;
+        public static final int labelWaitingFor=0x7f060010;
+        public static final int message=0x7f060005;
+        public static final int name=0x7f06000c;
         public static final int number=0x7f060001;
-        public static final int password=0x7f06000e;
-        public static final int refreshRate=0x7f06000a;
-        public static final int sending=0x7f060008;
+        public static final int password=0x7f06000d;
+        public static final int refreshRate=0x7f060009;
+        public static final int sending=0x7f060007;
         public static final int start_button=0x7f060003;
-        public static final int ticketCode=0x7f06000f;
+        public static final int ticketCode=0x7f06000e;
     }
     public static final class layout {
         public static final int ask_for_ticket=0x7f030000;

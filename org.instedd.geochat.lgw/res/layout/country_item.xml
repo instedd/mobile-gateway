@@ -1,20 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/country_name_text_view"
+	style="?android:attr/spinnerItemStyle"
+    android:singleLine="true"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
-    <ImageView
-        android:id="@+id/country_flag_image_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="5dp"
-        android:contentDescription="@string/flag" />
-    <TextView 
-	    android:id="@+id/country_name_text_view"
-		style="?android:attr/spinnerItemStyle"
-	    android:singleLine="true"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_gravity="center_vertical"
-	    android:ellipsize="marquee" />
-</LinearLayout>
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:drawablePadding="5dp"
+    android:ellipsize="marquee" />
