@@ -13,8 +13,7 @@
 	    android:id="@+id/country_name_text_view"
 	    style="?android:attr/spinnerDropDownItemStyle"
 	    android:singleLine="true"
-	    android:layout_weight="1"
-	    android:layout_width="0dp"
+	    android:layout_width="fill_parent"
 	    android:layout_height="?android:attr/listPreferredItemHeight"
 	    android:ellipsize="marquee" />
 </LinearLayout>

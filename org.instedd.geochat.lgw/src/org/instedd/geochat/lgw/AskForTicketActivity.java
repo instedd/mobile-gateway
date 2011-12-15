@@ -318,8 +318,9 @@ public class AskForTicketActivity extends Activity {
 		@Override
 		public View getDropDownView(int position, View convertView,
 				ViewGroup parent) {
-			convertView = getLayoutInflater().inflate(R.layout.country_dropdown_item, null);
-			
+			if (convertView == null) {
+				convertView = getLayoutInflater().inflate(R.layout.country_dropdown_item, null);
+			}
 			fill(position, convertView);
 			
 			return convertView;
