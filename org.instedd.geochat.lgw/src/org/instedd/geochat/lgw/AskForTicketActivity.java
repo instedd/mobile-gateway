@@ -57,7 +57,12 @@ public class AskForTicketActivity extends Activity {
 		
 		findViewById(R.id.start_button).setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				new AskTicketTask().execute();
+				settings.saveTelephoneNumber(telephoneNumberWidget().getText().toString());
+				if (settings.areIncomplete()) {
+					new AskTicketTask().execute();
+				} else {
+					Actions.accesStartSessionActivity(AskForTicketActivity.this);
+				}
 			}
 		});
 		
@@ -252,7 +257,6 @@ public class AskForTicketActivity extends Activity {
 
 		protected void onPreExecute() {
 			showDialog(DIALOG_GETTING_TICKET);
-			settings.saveTelephoneNumber(telephoneNumberWidget().getText().toString());
 		}
 
 		protected Integer doInBackground(String... params) {
