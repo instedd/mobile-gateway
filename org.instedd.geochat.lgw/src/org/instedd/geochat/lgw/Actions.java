@@ -7,6 +7,7 @@ import org.instedd.geochat.lgw.data.GeoChatLgw.Logs;
 import org.instedd.geochat.lgw.msg.NuntiumTicket;
 import org.instedd.geochat.lgw.trans.GeoChatTransceiverService;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -42,7 +43,11 @@ public class Actions {
 	}
 	
 	public static void startAutomaticConfiguration(Context context) {
-		startActivity(context, AskForTicketActivity.class);
+		context.startActivity(new Intent().setClass(context, AskForTicketActivity.class)
+				.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
+		if (context instanceof Activity) {
+			((Activity) context).finish();
+		}
 	}
 	
 	public static void accessWaitingForTicketActivity(Context context, NuntiumTicket ticket) {

@@ -39,9 +39,9 @@ public class StartSessionActivity extends Activity implements WithSettings {
 		
 		if (settings.areIncomplete()) {
 			Actions.startAutomaticConfiguration(this);
+		} else {
+			setOnClickCallback();
 		}
-
-		setOnClickCallback();
 	}
 	
 	@Override
