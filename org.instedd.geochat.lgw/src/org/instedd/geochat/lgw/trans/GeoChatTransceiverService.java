@@ -49,6 +49,7 @@ public class GeoChatTransceiverService extends CompatibilityService implements O
 		super.onCreate();
 		
 		this.transceiver = new Transceiver(this, handler);
+		acquireWakeLock();
 		
 		this.displayForegroundNotification();
 		
@@ -64,7 +65,6 @@ public class GeoChatTransceiverService extends CompatibilityService implements O
 	public void onStart(Intent intent, int startId) {
 		super.onStart(intent, startId);
 		
-		acquireWakeLock();
 		startTransceiving();
 	}
 	
