@@ -25,7 +25,7 @@ import android.util.Log;
 
 public class GeoChatLgwProvider extends ContentProvider {
 	
-	private static final String TAG = "GeoChatLgwProvider";
+	public static final String TAG = "GeoChatLgwProvider";
 	
 	private static final String DATABASE_NAME = "geochat_lgw.db";
     private static final int DATABASE_VERSION = 3;
