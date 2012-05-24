@@ -78,4 +78,6 @@
 	<string name="no_connection">There seems to be no network connection. Please ensure that you have internet access and re-open this application.</string>
 	<string name="add_plus_to_outgoing">Add + to outgoing sms?</string>
 	<string name="flag">Flag</string>
+	<string name="invalid_channel_name_password_combination">invalid channel name/password combination</string>
+	<string name="received_http_status_code">received HTTP status code: %s</string>
 </resources>

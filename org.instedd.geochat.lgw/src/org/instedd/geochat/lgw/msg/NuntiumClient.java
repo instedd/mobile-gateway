@@ -8,20 +8,25 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.apache.http.HttpResponse;
+import org.instedd.geochat.lgw.R;
 import org.instedd.geochat.lgw.UnauthorizedException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
+
 public class NuntiumClient {
 
-	private IRestClient restClient;
-	private String nuntiumUrl;
+	private final Context context;
+	private final IRestClient restClient;
+	private final String nuntiumUrl;
 	private Country[] countries;
 
-	public NuntiumClient(IRestClient client, String endpointUrl) {
-		restClient = client;
-		nuntiumUrl = endpointUrl;
+	public NuntiumClient(Context context, IRestClient client, String endpointUrl) {
+		this.context = context;
+		this.restClient = client;
+		this.nuntiumUrl = endpointUrl;
 	}
 
 	public String[] countryNames() throws NuntiumClientException, WrongHostException {
@@ -105,10 +110,9 @@ public class NuntiumClient {
 		case 304:
 			return;
 		case 401:
-			throw new UnauthorizedException();
+			throw new UnauthorizedException(context.getString(R.string.invalid_channel_name_password_combination));
 		default:
-			throw new NuntiumClientException("Received HTTP status code "
-					+ response.getStatusLine().getStatusCode());
+			throw new NuntiumClientException(context.getString(R.string.received_http_status_code, response.getStatusLine().getStatusCode()));
 		}
 	}
 

@@ -17,10 +17,12 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.instedd.geochat.lgw.ISettings;
+import org.instedd.geochat.lgw.R;
 import org.instedd.geochat.lgw.UnauthorizedException;
 import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlSerializer;
 
+import android.content.Context;
 import android.util.Xml;
 import android.util.Xml.Encoding;
 
@@ -32,12 +34,14 @@ public class QstClient {
 		DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));	
 	}
 	
+	private final Context context;
 	private final IRestClient client;
 	private final String httpBase;
 	private final String countryCode;
 	private final ISettings settings;
 
-	public QstClient(String httpBase, String name, String password, IRestClient restClient, String countryCode, ISettings settings) {
+	public QstClient(Context context, String httpBase, String name, String password, IRestClient restClient, String countryCode, ISettings settings) {
+		this.context = context;
 		this.httpBase = httpBase;
 		this.client = restClient;
 		this.client.setAuth(name, password);
@@ -177,9 +181,9 @@ public class QstClient {
 		case 304:
 			return;
 		case 401:
-			throw new UnauthorizedException();
+			throw new UnauthorizedException(context.getResources().getString(R.string.invalid_channel_name_password_combination));
 		default:
-			throw new QstClientException("Received HTTP status code " + response.getStatusLine().getStatusCode());
+			throw new QstClientException(context.getResources().getString(R.string.received_http_status_code, response.getStatusLine().getStatusCode()));
 		}
 	}
 	
