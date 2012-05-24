@@ -340,6 +340,7 @@ public final class R {
         public static final int geochat_lgw_settings=0x7f04000f;
         public static final int internet_connection_error=0x7f04001c;
         public static final int internet_connection_error_title=0x7f04001d;
+        public static final int invalid_channel_name_password_combination=0x7f04003e;
         public static final int invalid_credentials=0x7f040005;
         public static final int message_could_not_be_sent_no_service=0x7f040015;
         public static final int message_could_not_be_sent_radio_off=0x7f040016;
@@ -349,6 +350,7 @@ public final class R {
         public static final int no_connection=0x7f04003b;
         public static final int nuntium_configuration_wizard_welcome=0x7f040039;
         public static final int password=0x7f040002;
+        public static final int received_http_status_code=0x7f04003f;
         public static final int refresh=0x7f04001f;
         public static final int refresh_rate=0x7f04001e;
         public static final int refreshing=0x7f040020;

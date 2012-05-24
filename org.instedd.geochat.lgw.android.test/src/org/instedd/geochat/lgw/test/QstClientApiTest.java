@@ -194,7 +194,7 @@ public class QstClientApiTest extends TestCase {
 	}
 
 	private QstClient createQstClient(MockRestClient restClient, String countryCode, MockSettings settings) {
-		QstClient client = new QstClient("http://example.com", "foo", "bar", restClient, countryCode, settings);
+		QstClient client = new QstClient(null, "http://example.com", "foo", "bar", restClient, countryCode, settings);
 		return client;
 	}
 

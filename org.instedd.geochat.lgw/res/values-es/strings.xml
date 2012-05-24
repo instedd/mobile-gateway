@@ -78,4 +78,6 @@
 	<string name="no_connection">No parece haber conexión a internet. Asegurate de tener conexión y reabre esta aplicación.</string>
 	<string name="add_plus_to_outgoing">Añadir + a sms enviados?</string>
 	<string name="flag">Bandera</string>
+	<string name="invalid_channel_name_password_combination">la combinación de nombre de canal y Invalid channel name y clave es incorrecta</string>
+	<string name="received_http_status_code">se obtuvo el código de estado HTTP: %s</string>
 </resources>

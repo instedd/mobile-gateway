@@ -6,8 +6,8 @@ public class UnauthorizedException extends QstClientException {
 
 	private static final long serialVersionUID = 1L;
 	
-	public UnauthorizedException() {
-		super("");
+	public UnauthorizedException(String message) {
+		super(message);
 	}
 
 }

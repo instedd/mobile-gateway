@@ -108,13 +108,13 @@ public class Settings implements ISettings {
 	}
 
 	public QstClient qstClient() {
-		return new QstClient(storedEndpointUrl(), storedUserName(),
+		return new QstClient(context, storedEndpointUrl(), storedUserName(),
 				storedPassword(), restClient(), storedCountryCode(), this);
 	}
 
 	public NuntiumClient nuntiumClient() {
 		if (nuntiumClient == null) {
-			nuntiumClient = new NuntiumClient(restClient(),
+			nuntiumClient = new NuntiumClient(context, restClient(),
 					storedEndpointBaseUrl());
 		}
 
