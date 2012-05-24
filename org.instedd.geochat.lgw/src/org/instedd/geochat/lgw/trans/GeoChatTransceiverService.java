@@ -1,8 +1,9 @@
 package org.instedd.geochat.lgw.trans;
 
-import org.instedd.geochat.lgw.Settings;
 import org.instedd.geochat.lgw.Notifier;
 import org.instedd.geochat.lgw.R;
+import org.instedd.geochat.lgw.Settings;
+import org.instedd.geochat.lgw.data.GeoChatLgwProvider;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -16,6 +17,8 @@ import android.net.ConnectivityManager;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 
 public class GeoChatTransceiverService extends CompatibilityService implements OnSharedPreferenceChangeListener {
 	
@@ -38,6 +41,7 @@ public class GeoChatTransceiverService extends CompatibilityService implements O
 	final IBinder mBinder = new LocalBinder();
 	
 	Transceiver transceiver;
+	WakeLock wakeLock;
 	final Handler handler = new Handler();
 	
 	@Override
@@ -60,12 +64,14 @@ public class GeoChatTransceiverService extends CompatibilityService implements O
 	public void onStart(Intent intent, int startId) {
 		super.onStart(intent, startId);
 		
-		transceiver.start();
+		acquireWakeLock();
+		startTransceiving();
 	}
 	
 	@Override
 	public void onDestroy() {
 		stopTransceiving();
+		releaseWakeLock();
 		
 		// Unregister preferences listener
 		this.getSharedPreferences(Settings.SHARED_PREFS_NAME, 0)
@@ -77,7 +83,23 @@ public class GeoChatTransceiverService extends CompatibilityService implements O
 		super.onDestroy();
 	}
 	
-	public void stopTransceiving() {
+	private void acquireWakeLock() {
+		PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+		wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, GeoChatLgwProvider.TAG);
+		wakeLock.acquire();
+	}
+	
+	private void releaseWakeLock() {
+		if (wakeLock != null) {
+			wakeLock.release();
+		}
+	}
+	
+	private void startTransceiving() {
+		transceiver.start();
+	}
+	
+	private void stopTransceiving() {
 		transceiver.stop();
 		
 		// Remove foreground notification
