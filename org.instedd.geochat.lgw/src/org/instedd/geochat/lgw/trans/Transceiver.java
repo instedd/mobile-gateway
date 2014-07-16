@@ -78,8 +78,10 @@ public class Transceiver {
 	            return;
 	        
 	        Object[] pdus = (Object[]) extras.get("pdus");
+	        SmsMessage[] messages = new SmsMessage[pdus.length];
 	        for (int i = 0; i < pdus.length; i++)
-	            data.createIncomingMessage(SmsMessage.createFromPdu((byte[]) pdus[i]), settings.storedTelephoneNumber());
+	        	messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
+	        data.createIncomingMessage(messages, settings.storedTelephoneNumber());
 	        
 	        resync();
 		}
