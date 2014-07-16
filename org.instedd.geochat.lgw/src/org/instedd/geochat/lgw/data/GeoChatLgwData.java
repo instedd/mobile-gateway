@@ -89,15 +89,19 @@ public class GeoChatLgwData {
 		}
 	}
 	
-	public void createIncomingMessage(SmsMessage message, String toNumber) {
+	public void createIncomingMessage(SmsMessage[] message, String toNumber) {
 		String guid = UUID.randomUUID().toString();
-        String from = message.getOriginatingAddress();
+        String from = message[0].getOriginatingAddress();
         String to = toNumber;
-        String text = message.getMessageBody();
-        long when = message.getTimestampMillis();
+        long when = message[0].getTimestampMillis();
+        
+        StringBuilder textBuffer = new StringBuilder();
+        for (SmsMessage msg : message) {
+			textBuffer.append(msg.getMessageBody());
+		}
 		
 		content.insert(IncomingMessages.CONTENT_URI, 
-        		Message.toContentValues(guid, from, to, text, when));
+        		Message.toContentValues(guid, from, to, textBuffer.toString(), when));
 	}
 	
 	public Message[] getIncomingMessages() {
