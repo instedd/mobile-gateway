@@ -1,12 +1,8 @@
 package org.instedd.geochat.lgw.trans;
 
-import org.instedd.geochat.lgw.Notifier;
-import org.instedd.geochat.lgw.R;
-import org.instedd.geochat.lgw.Settings;
-import org.instedd.geochat.lgw.data.GeoChatLgwProvider;
-
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +16,12 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 
-public class GeoChatTransceiverService extends CompatibilityService implements OnSharedPreferenceChangeListener {
+import org.instedd.geochat.lgw.Notifier;
+import org.instedd.geochat.lgw.R;
+import org.instedd.geochat.lgw.Settings;
+import org.instedd.geochat.lgw.data.GeoChatLgwProvider;
+
+public class GeoChatTransceiverService extends Service implements OnSharedPreferenceChangeListener {
 	
 	public class LocalBinder extends Binder {
 		public GeoChatTransceiverService getService() {
@@ -103,7 +104,7 @@ public class GeoChatTransceiverService extends CompatibilityService implements O
 		transceiver.stop();
 		
 		// Remove foreground notification
-		stopForegroundCompat(Notifier.SERVICE);
+		stopForeground(true);
 	}
 	
 	private void displayForegroundNotification() {
@@ -111,7 +112,7 @@ public class GeoChatTransceiverService extends CompatibilityService implements O
 		String content = getResources().getString(R.string.signed_in_as_name, new Settings(this).storedUserName());
 		Notification notification = new Notification(R.drawable.ic_stat_connected, null, System.currentTimeMillis());
 		notification.setLatestEventInfo(this, title, content, PendingIntent.getActivity(this, 0, Notifier.getHomeIntent(this), 0));
-		startForegroundCompat(Notifier.SERVICE, notification);
+		startForeground(Notifier.SERVICE, notification);
 	}
 
 	@Override
