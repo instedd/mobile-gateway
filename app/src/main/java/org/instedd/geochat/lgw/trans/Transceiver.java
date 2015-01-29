@@ -155,14 +155,15 @@ public class Transceiver {
 	void sendMessage(Message message) {
 		SmsManager sms = SmsManager.getDefault();
 		ArrayList<String> parts = sms.divideMessage(message.text);
-		
+
+		ArrayList<PendingIntent> sentIntents = new ArrayList<PendingIntent>();
+		Intent intent = new Intent(SMS_SENT_ACTION).putExtra(INTENT_EXTRA_GUID, message.guid);
+
 		for (int i = 0; i < parts.size(); i++) {
-			Intent intent = new Intent(SMS_SENT_ACTION).putExtra(INTENT_EXTRA_GUID, message.guid);
-			sms.sendTextMessage(message.to, null, parts.get(i), 
-					PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_ONE_SHOT), 
-					null);
+			sentIntents.add(PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
 		}
-		
+		sms.sendMultipartTextMessage(message.to, null, parts, sentIntents, null);
+
 		synchronized (sendLock) {
 			try {
 				sendLock.wait(10000);
@@ -170,7 +171,7 @@ public class Transceiver {
 			}
 		}
 	}
-	
+
 	class SyncThread extends Thread {
 		
 		boolean firstRun = true;
