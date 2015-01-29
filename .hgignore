@@ -3,3 +3,6 @@ syntax: glob
 *.log
 *.orig
 bin/*
+build/*
+.gradle
+
