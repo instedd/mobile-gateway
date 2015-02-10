@@ -14,6 +14,7 @@ public class Message {
 	public String text;
 	public long when;
 	public int tries;
+	public int remainingParts;
 	
 	public static Message readFrom(Cursor c) {
 		// Check the projections in GeoChatLgw
@@ -26,6 +27,7 @@ public class Message {
 		// msg.sending = c.getInt(6);
 		if (c.getColumnCount() > 7) {
 			msg.tries = c.getInt(7);
+			msg.remainingParts = c.getInt(8);
 		}
 		return msg;
 	}

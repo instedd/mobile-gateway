@@ -28,7 +28,7 @@ public class GeoChatLgwProvider extends ContentProvider {
 	public static final String TAG = "GeoChatLgwProvider";
 	
 	private static final String DATABASE_NAME = "geochat_lgw.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     
     private static final String INCOMING_TABLE_NAME = "incoming";
     private static final String OUTGOING_TABLE_NAME = "outgoing";
@@ -77,7 +77,8 @@ public class GeoChatLgwProvider extends ContentProvider {
                     + Messages.TEXT + " TEXT,"
                     + Messages.WHEN + " INTEGER,"
                     + OutgoingMessages.SENDING + " INTEGER,"
-                    + OutgoingMessages.TRIES + " INTEGER"
+                    + OutgoingMessages.TRIES + " INTEGER,"
+                    + OutgoingMessages.REMAINING_PARTS + " INTEGER"
                     + ");");
             db.execSQL("CREATE TABLE " + LOGS_TABLE_NAME + " ("
                     + BaseColumns._ID + " INTEGER PRIMARY KEY,"

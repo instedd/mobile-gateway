@@ -37,9 +37,15 @@ public class Transceiver {
 			Message msg = data.getOutgoingMessage(guid);
 			switch(getResultCode()) {
 			case Activity.RESULT_OK:
-				data.deleteOutgoingMessage(guid);
 				if (msg != null) {
-					data.log(context.getResources().getString(R.string.sent_message_to_phone, msg.text, msg.to));
+					msg.remainingParts--;
+					if (msg.remainingParts <= 0) {
+						// Last part of the message was sent successfully
+						data.deleteOutgoingMessage(guid);
+						data.log(context.getResources().getString(R.string.sent_message_to_phone, msg.text, msg.to));
+					} else {
+						data.updateOutgoingMessageRemainingParts(guid, msg.remainingParts);
+					}
 				}
 				break;
 			case SmsManager.RESULT_ERROR_NO_SERVICE:
@@ -51,14 +57,15 @@ public class Transceiver {
 			case SmsManager.RESULT_ERROR_RADIO_OFF:
 				data.markOutgoingMessageAsNotBeingSent(guid);
 				if (msg != null) {
-					data.log(context.getResources().getString(R.string.message_could_not_be_sent_radio_off, msg.text, msg.to, msg.tries));
+					data.log(context.getResources().getString(R.string.message_could_not_be_sent_radio_off, msg.text, msg.to));
 				}
 				break;
 			default:
 				if (msg != null) {
 					msg.tries++;
-					data.log(context.getResources().getString(R.string.message_could_not_be_sent_tries, msg.text, msg.to, msg.tries));
-					data.markOutgoingMessageAsNotBeingSent(guid, msg.tries);
+					if (data.markOutgoingMessageAsNotBeingSent(guid, msg.tries) > 0) {
+						data.log(context.getResources().getString(R.string.message_could_not_be_sent_tries, msg.text, msg.to, msg.tries));
+					}
 				}
 				notify.someMessagesCouldNotBeSent();
 				break;
@@ -69,21 +76,21 @@ public class Transceiver {
 			}
 		}
 	};
-	
+
 	private BroadcastReceiver smsReceivedReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Bundle extras = intent.getExtras();
-	        if (extras == null)
-	            return;
-	        
-	        Object[] pdus = (Object[]) extras.get("pdus");
-	        SmsMessage[] messages = new SmsMessage[pdus.length];
-	        for (int i = 0; i < pdus.length; i++)
-	        	messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
-	        data.createIncomingMessage(messages, settings.storedTelephoneNumber());
-	        
-	        resync();
+			if (extras == null)
+				return;
+
+			Object[] pdus = (Object[]) extras.get("pdus");
+			SmsMessage[] messages = new SmsMessage[pdus.length];
+			for (int i = 0; i < pdus.length; i++)
+				messages[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
+			data.createIncomingMessage(messages, settings.storedTelephoneNumber());
+
+			resync();
 		}
 	};
 
@@ -160,9 +167,10 @@ public class Transceiver {
 		Intent intent = new Intent(SMS_SENT_ACTION).putExtra(INTENT_EXTRA_GUID, message.guid);
 
 		for (int i = 0; i < parts.size(); i++) {
-			sentIntents.add(PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_ONE_SHOT));
+			sentIntents.add(PendingIntent.getBroadcast(context, 0, intent, 0));
 		}
 		sms.sendMultipartTextMessage(message.to, null, parts, sentIntents, null);
+		data.updateOutgoingMessageRemainingParts(message.guid, parts.size());
 
 		synchronized (sendLock) {
 			try {
