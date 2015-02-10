@@ -2,6 +2,7 @@ package org.instedd.geochat.lgw.data;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import org.instedd.geochat.lgw.Uris;
@@ -10,6 +11,7 @@ import org.instedd.geochat.lgw.data.GeoChatLgw.Logs;
 import org.instedd.geochat.lgw.data.GeoChatLgw.OutgoingMessages;
 import org.instedd.geochat.lgw.msg.Message;
 
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -39,7 +41,19 @@ public class GeoChatLgwData {
 	public GeoChatLgwData(Context context) {
 		this.content = context.getContentResolver();		
 	}
-	
+
+	/**
+	 * Set the number of remaining parts to be sent on an outgoing message
+	 *
+	 * @param guid           message to update
+	 * @param remainingParts the number of remaining parts to send
+	 */
+	public int updateOutgoingMessageRemainingParts(String guid, int remainingParts) {
+		ContentValues updateValues = new ContentValues();
+		updateValues.put(OutgoingMessages.REMAINING_PARTS, remainingParts);
+		return content.update(Uris.outgoingMessage(guid), updateValues, null, null);
+	}
+
 	public int deleteOutgoingMessage(String guid) {
 		return content.delete(Uris.outgoingMessage(guid), null, null);
 	}
@@ -79,7 +93,7 @@ public class GeoChatLgwData {
 			ContentValues values = new ContentValues();
 			values.put(OutgoingMessages.SENDING, 0);
 			values.put(OutgoingMessages.TRIES, tries);
-			return content.update(Uris.outgoingMessage(guid), values, null, null);
+			return content.update(Uris.outgoingMessage(guid), values, OutgoingMessages.SENDING + " = 1", null);
 		}
 	}
 	
@@ -170,7 +184,7 @@ public class GeoChatLgwData {
 			c.close();
 		}
 	}
-	
+
 	public void log(String message) {
 		log(message, null);
 	}
