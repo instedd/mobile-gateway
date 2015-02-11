@@ -24,16 +24,20 @@ import android.os.Handler;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class Transceiver {
 	
 	private final static String SMS_SENT_ACTION = "org.instedd.geochat.lgw.SMS_SENT_ACTION";
 	private final static String INTENT_EXTRA_GUID = "org.instedd.geochat.lgw.Guid";
-	
+
+	private static final String TAG = "Transceiver";
+
 	private BroadcastReceiver smsSentReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String guid = intent.getExtras().getString(INTENT_EXTRA_GUID);
+			Log.d(TAG, "Received intent for " + guid + " with result " + getResultCode());
 			Message msg = data.getOutgoingMessage(guid);
 			switch(getResultCode()) {
 			case Activity.RESULT_OK:
