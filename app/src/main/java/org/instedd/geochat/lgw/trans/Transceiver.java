@@ -6,6 +6,7 @@ import org.instedd.geochat.lgw.Connectivity;
 import org.instedd.geochat.lgw.Settings;
 import org.instedd.geochat.lgw.Notifier;
 import org.instedd.geochat.lgw.R;
+import org.instedd.geochat.lgw.Uris;
 import org.instedd.geochat.lgw.data.GeoChatLgwData;
 import org.instedd.geochat.lgw.msg.Message;
 import org.instedd.geochat.lgw.msg.QstClient;
@@ -30,6 +31,7 @@ public class Transceiver {
 	
 	private final static String SMS_SENT_ACTION = "org.instedd.geochat.lgw.SMS_SENT_ACTION";
 	private final static String INTENT_EXTRA_GUID = "org.instedd.geochat.lgw.Guid";
+	private final static String INTENT_EXTRA_PART = "org.instedd.geochat.lgw.Part";
 
 	private static final String TAG = "Transceiver";
 
@@ -37,7 +39,8 @@ public class Transceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String guid = intent.getExtras().getString(INTENT_EXTRA_GUID);
-			Log.d(TAG, "Received intent for " + guid + " with result " + getResultCode());
+			int part = intent.getExtras().getInt(INTENT_EXTRA_PART);
+			Log.d(TAG, "Received SMS sent intent for " + guid + ", part " + part + " with result " + getResultCode());
 			Message msg = data.getOutgoingMessage(guid);
 			switch(getResultCode()) {
 			case Activity.RESULT_OK:
@@ -74,7 +77,7 @@ public class Transceiver {
 				notify.someMessagesCouldNotBeSent();
 				break;
 			}
-			
+
 			synchronized (sendLock) {
 				sendLock.notify();
 			}
@@ -128,8 +131,13 @@ public class Transceiver {
 		if (running) return;
 		
 		running = true;
-		
-		context.registerReceiver(smsSentReceiver, new IntentFilter(SMS_SENT_ACTION));
+
+		try {
+			context.registerReceiver(smsSentReceiver, new IntentFilter(SMS_SENT_ACTION, "*/*"));
+		} catch (IntentFilter.MalformedMimeTypeException e) {
+			// this should never happen
+			throw new RuntimeException("Failure to register BroadcastReceiver", e);
+		}
 		context.registerReceiver(smsReceivedReceiver, new IntentFilter("android.provider.Telephony.SMS_RECEIVED"));
 		
 		syncThread = new SyncThread();
@@ -168,10 +176,17 @@ public class Transceiver {
 		ArrayList<String> parts = sms.divideMessage(message.text);
 
 		ArrayList<PendingIntent> sentIntents = new ArrayList<PendingIntent>();
-		Intent intent = new Intent(SMS_SENT_ACTION).putExtra(INTENT_EXTRA_GUID, message.guid);
 
 		for (int i = 0; i < parts.size(); i++) {
-			sentIntents.add(PendingIntent.getBroadcast(context, 0, intent, 0));
+			// We use data + requestCode to be able to create different PendingIntents for each part
+			// of the SMS to be sent. Extras are ignored by filterEquals() so they don't uniquely
+			// identify an intent.
+			Intent intent = new Intent(SMS_SENT_ACTION);
+			intent.setData(Uris.outgoingMessage(message.guid));
+			intent.putExtra(INTENT_EXTRA_GUID, message.guid);
+			intent.putExtra(INTENT_EXTRA_PART, i);
+			PendingIntent pendingIntent = PendingIntent.getBroadcast(context, i, intent, PendingIntent.FLAG_ONE_SHOT);
+			sentIntents.add(pendingIntent);
 		}
 		sms.sendMultipartTextMessage(message.to, null, parts, sentIntents, null);
 		data.updateOutgoingMessageRemainingParts(message.guid, parts.size());
