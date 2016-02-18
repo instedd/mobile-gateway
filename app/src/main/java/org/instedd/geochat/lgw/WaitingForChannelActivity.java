@@ -96,6 +96,7 @@ public class WaitingForChannelActivity extends Activity {
 				while (nuntiumTicket.status().equals("pending")) {
 					nuntiumTicket = settings.nuntiumClient().askForUpdateAbout(
 							nuntiumTicket);
+					if (isCancelled()) break;
 					try {
 						Thread.sleep(2000);
 					} catch (InterruptedException e) {
