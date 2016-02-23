@@ -49,6 +49,14 @@ public class Transceiver {
 					if (msg.remainingParts <= 0) {
 						// Last part of the message was sent successfully
 						data.deleteOutgoingMessage(guid);
+
+						// Notify nuntium that the messages was successfully sent.
+						// We do it here. If it fails we don't retry, after all it's just a confirmation message
+						// and we don't want to drain the battery or network with just confirmation messages.
+						try {
+							client.setState(guid, "confirmed");
+						} catch(Exception e) {}
+
 						data.log(context.getResources().getString(R.string.sent_message_to_phone, msg.text, msg.to));
 					} else {
 						data.updateOutgoingMessageRemainingParts(guid, msg.remainingParts);

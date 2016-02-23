@@ -67,6 +67,21 @@ public class QstClient {
 			throw new WrongHostException(e);
 		}
 	}
+
+	public void setState(String guid, String state) throws QstClientException, WrongHostException {
+		try {
+			HttpResponse response = this.client.get(httpBase + "/set_state?guid=" + encode(guid) + "&state=" + encode(state));
+			try {
+				check(response);
+			} finally {
+				close(response);
+			}
+		} catch (IOException e) {
+			throw new QstClientException(e);
+		} catch (IllegalArgumentException e) {
+			throw new WrongHostException(e);
+		}
+	}
 	
 	public String sendMessages(Message[] messages) throws QstClientException, WrongHostException {
 		if (messages == null || messages.length == 0)
