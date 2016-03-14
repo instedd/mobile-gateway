@@ -79,14 +79,22 @@ public class RestClient implements IRestClient {
 	}
 	
 	public HttpResponse post(String url, String data, String contentType) throws IOException {
+		return post(url, data, contentType, null);
+	}
+
+	public HttpResponse post(String url, String data, String contentType, List<NameValuePair> headers) throws IOException {
 		HttpPost post = auth(new HttpPost(url));
-		
+
 		StringEntity entity = new StringEntity(data, "UTF-8");
 		entity.setContentType(contentType);
 
 		post.setEntity(entity);
 		post.getParams().setBooleanParameter(CoreProtocolPNames.USE_EXPECT_CONTINUE, false);
-		
+
+		if (headers != null)
+			for(NameValuePair header : headers)
+				post.addHeader(header.getName(), header.getValue());
+
 		return this.client.execute(post, new BasicHttpContext());
 	}
 	

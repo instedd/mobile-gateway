@@ -58,6 +58,19 @@ public class MockRestClient implements IRestClient {
 		resp.setHeaders(responseHeaders);
 		return resp;
 	}
+
+	public HttpResponse post(String url, String data, String contentType, List<NameValuePair> headers) throws IOException {
+		this.method = "post";
+		this.url = url;
+		this.postData = data;
+		this.postContentType = contentType;
+		this.getHeaders = headers;
+
+		MockHttpResponse resp = new MockHttpResponse(new ByteArrayInputStream(this.response.getBytes()));
+		resp.setHeaders(responseHeaders);
+		return resp;
+	}
+
 	
 	public HttpResponse put(String url, String data, String contentType) throws IOException {
 		this.method = "put";

@@ -15,6 +15,8 @@ public interface IRestClient {
 	HttpResponse get(String url, List<NameValuePair> headers) throws IOException;
 	
 	HttpResponse post(String url, String data, String contentType) throws IOException;
+
+	HttpResponse post(String url, String data, String contentType, List<NameValuePair> headers) throws IOException;
 	
 	HttpResponse put(String url, String data, String contentType) throws IOException;
 

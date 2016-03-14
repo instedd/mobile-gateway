@@ -131,6 +131,49 @@ public class GeoChatLgw {
 		};
 	}
 
+    public final static class Statuses implements BaseColumns {
+        // This class cannot be instantiated
+        private Statuses() {}
+
+        /**
+         * The content:// style URL for this table
+         */
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/status");
+
+        /**
+         * The MIME type of {@link #CONTENT_URI} providing a directory of outgoing statuses.
+         */
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.geochat.lgw.status";
+
+        /**
+         * The MIME type of a {@link #CONTENT_URI} sub-directory of a single status.
+         */
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.geochat.lgw.status";
+
+        /**
+         * The id of this message
+         * <P>Type: TEXT</P>
+         */
+        public static final String GUID = "_guid";
+
+        /**
+         * Was this message sent? If 1 then yes (confirmed), if 0 then no (failed).
+         * <P>Type: INTEGER</P>
+         */
+        public static final String SENT = "_sent";
+
+        /**
+         * The default sort order for this table
+         */
+        public static final String DEFAULT_SORT_ORDER = BaseColumns._ID;
+
+        public final static String[] PROJECTION = {
+                _ID,
+                GUID,
+                SENT
+        };
+    }
+
     public final static class Logs implements BaseColumns {
     	// This class cannot be instantiated
         private Logs() {}

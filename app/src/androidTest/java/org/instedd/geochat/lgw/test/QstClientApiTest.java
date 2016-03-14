@@ -35,7 +35,7 @@ public class QstClientApiTest extends TestCase {
 				"</messages>");
 		
 		QstClient client = createQstClient(restClient, "123", new MockSettings(false));
-		Message[] messages = client.getMessages("lastone");
+		Message[] messages = client.getMessages("lastone", null);
 		
 		assertEquals("foo", restClient.getUser());
 		assertEquals("bar", restClient.getPassword());

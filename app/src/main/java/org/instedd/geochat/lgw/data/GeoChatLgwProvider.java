@@ -7,6 +7,7 @@ import org.instedd.geochat.lgw.data.GeoChatLgw.IncomingMessages;
 import org.instedd.geochat.lgw.data.GeoChatLgw.Logs;
 import org.instedd.geochat.lgw.data.GeoChatLgw.Messages;
 import org.instedd.geochat.lgw.data.GeoChatLgw.OutgoingMessages;
+import org.instedd.geochat.lgw.data.GeoChatLgw.Statuses;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -21,18 +22,18 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
-import android.util.Log;
 
 public class GeoChatLgwProvider extends ContentProvider {
 	
 	public static final String TAG = "GeoChatLgwProvider";
 	
 	private static final String DATABASE_NAME = "geochat_lgw.db";
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     
     private static final String INCOMING_TABLE_NAME = "incoming";
     private static final String OUTGOING_TABLE_NAME = "outgoing";
     private static final String LOGS_TABLE_NAME = "logs";
+    private static final String STATUSES_TABLE_NAME = "statuses";
     
     private static HashMap<String, String> sIncomingProjectionMap;
     private static HashMap<String, String> sOutgoingProjectionMap;
@@ -47,6 +48,8 @@ public class GeoChatLgwProvider extends ContentProvider {
     public final static int LOGS = 7;
     public final static int LOGS_OLD = 8;
     public final static int INCOMING_ID = 9;
+    public final static int STATUS = 10;
+    public final static int STATUS_GUID = 11;
     
     public static final UriMatcher URI_MATCHER;
     
@@ -86,16 +89,22 @@ public class GeoChatLgwProvider extends ContentProvider {
                     + Logs.STACK_TRACE + " TEXT,"
                     + Logs.WHEN + " INTEGER"
                     + ");");
+            createStatuses(db);
+        }
+
+        private void createStatuses(SQLiteDatabase db) {
+            db.execSQL("CREATE TABLE " + STATUSES_TABLE_NAME + " ("
+                    + BaseColumns._ID + " INTEGER PRIMARY KEY,"
+                    + Statuses.GUID + " TEXT,"
+                    + Statuses.SENT + " INTEGER"
+                    + ");");
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-                    + newVersion + ", which will destroy all old data");
-            db.execSQL("DROP TABLE IF EXISTS " + INCOMING_TABLE_NAME);
-            db.execSQL("DROP TABLE IF EXISTS " + OUTGOING_TABLE_NAME);
-            db.execSQL("DROP TABLE IF EXISTS " + LOGS_TABLE_NAME);
-            onCreate(db);
+            if (oldVersion < 5) {
+                createStatuses(db);
+            }
         }
     }
 
@@ -138,6 +147,13 @@ public class GeoChatLgwProvider extends ContentProvider {
                     + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
             break;
         }
+        case STATUS_GUID: {
+            String msgId = uri.getPathSegments().get(2);
+            msgId = msgId.replace("'", "''");
+            count = db.delete(STATUSES_TABLE_NAME, Statuses.GUID + "='" + msgId + "'"
+                    + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
+            break;
+        }
         case LOGS_OLD: {
             count = db.delete(LOGS_TABLE_NAME, BaseColumns._ID + " <= (SELECT MAX(" + BaseColumns._ID + ") - 200 FROM " + LOGS_TABLE_NAME + ")"
                     + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
@@ -162,10 +178,13 @@ public class GeoChatLgwProvider extends ContentProvider {
         case OUTGOING:
         case OUTGOING_ID:
         case OUTGOING_GUID:
-            return IncomingMessages.CONTENT_TYPE;
+            return OutgoingMessages.CONTENT_TYPE;
         case LOGS:
         case LOGS_OLD:
             return Logs.CONTENT_TYPE;
+        case STATUS_GUID:
+        case STATUS:
+            return Statuses.CONTENT_TYPE;
         default:
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -200,6 +219,14 @@ public class GeoChatLgwProvider extends ContentProvider {
 	            return entryUri;
 			}
 			break;
+        case STATUS:
+            rowId = db.insert(STATUSES_TABLE_NAME, Statuses.GUID, values);
+            if (rowId > 0) {
+                Uri entryUri = ContentUris.withAppendedId(Statuses.CONTENT_URI, rowId);
+                getContext().getContentResolver().notifyChange(entryUri, null);
+                return entryUri;
+            }
+            break;
 		case LOGS:
 			rowId = db.insert(LOGS_TABLE_NAME, Messages.WHEN, values);
 			if (rowId > 0) {
@@ -267,6 +294,12 @@ public class GeoChatLgwProvider extends ContentProvider {
                 orderBy = Logs.DEFAULT_SORT_ORDER;
             }
         	break;
+        case STATUS:
+            qb.setTables(STATUSES_TABLE_NAME);
+            if (TextUtils.isEmpty(sortOrder)) {
+                orderBy = Statuses.DEFAULT_SORT_ORDER;
+            }
+            break;
         default:
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -325,6 +358,8 @@ public class GeoChatLgwProvider extends ContentProvider {
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "outgoing/not_sending", OUTGOING_NOT_SENDING);
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "logs", LOGS);
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "logs/old", LOGS_OLD);
+        URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "status", STATUS);
+        URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "status/guid/*", STATUS_GUID);
 
         for (int i = 0; i < 2; i++) {
         	Map<String, String> map;

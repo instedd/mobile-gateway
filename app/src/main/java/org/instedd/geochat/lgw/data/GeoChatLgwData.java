@@ -3,15 +3,17 @@ package org.instedd.geochat.lgw.data;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.instedd.geochat.lgw.Uris;
 import org.instedd.geochat.lgw.data.GeoChatLgw.IncomingMessages;
 import org.instedd.geochat.lgw.data.GeoChatLgw.Logs;
 import org.instedd.geochat.lgw.data.GeoChatLgw.OutgoingMessages;
+import org.instedd.geochat.lgw.data.GeoChatLgw.Statuses;
 import org.instedd.geochat.lgw.msg.Message;
+import org.instedd.geochat.lgw.msg.Status;
 
-import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -206,4 +208,47 @@ public class GeoChatLgwData {
 		content.delete(Uris.OldLogs, null, null);
 	}
 
+	public void markOutgoingMessageAsSent(String guid) {
+		ContentValues values = new ContentValues();
+		values.put(Statuses.GUID, guid);
+		values.put(Statuses.SENT, 1);
+		content.insert(Statuses.CONTENT_URI, values);
+	}
+
+	public Status getStatus() {
+		Cursor c = content.query(Statuses.CONTENT_URI, Statuses.PROJECTION, null, null, null);
+		try {
+			int count = c.getCount();
+			if (count == 0)
+				return null;
+
+			List<String> confirmed = new ArrayList<String>();
+			List<String> failed = new ArrayList<String>();
+
+			while(c.moveToNext()) {
+				String guid = c.getString(1);
+				int sent = c.getInt(2);
+				if (sent == 0) {
+					failed.add(guid);
+				} else {
+					confirmed.add(guid);
+				}
+			}
+
+			return new Status(confirmed, failed);
+		} finally {
+			c.close();
+		}
+	}
+
+	public void deleteStatus(Status status) {
+		if (status == null) return;
+
+		for(String guid : status.confirmed) {
+			content.delete(Uris.status(guid), null, null);
+		}
+		for(String guid : status.failed) {
+			content.delete(Uris.status(guid), null, null);
+		}
+	}
 }

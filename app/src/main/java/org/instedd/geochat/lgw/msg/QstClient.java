@@ -19,6 +19,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.instedd.geochat.lgw.ISettings;
 import org.instedd.geochat.lgw.R;
 import org.instedd.geochat.lgw.UnauthorizedException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xml.sax.SAXException;
 import org.xmlpull.v1.XmlSerializer;
 
@@ -145,14 +148,34 @@ public class QstClient {
 		return normalized;
 	}
 
-	public Message[] getMessages(String lastReceivedMessageId) throws QstClientException {
+	public Message[] getMessages(String lastReceivedMessageId, Status status) throws QstClientException {
 		try {
 			List<NameValuePair> headers = new ArrayList<NameValuePair>(1);
 			if (lastReceivedMessageId != null) {
 				headers.add(new BasicNameValuePair("If-None-Match", lastReceivedMessageId));
 			}
-			
-			HttpResponse response = this.client.get(httpBase + "/outgoing", headers);
+
+			String data;
+			if (status == null) {
+				data = "";
+			} else {
+				JSONArray confirmed = new JSONArray();
+				JSONArray failed = new JSONArray();
+
+				for(String guid : status.confirmed) {
+					confirmed.put(guid);
+				}
+				for(String guid : status.failed) {
+					failed.put(guid);
+				}
+
+				JSONObject obj = new JSONObject();
+				obj.put("confirmed", confirmed);
+				obj.put("failed", failed);
+				data = obj.toString();
+			}
+
+			HttpResponse response = this.client.post(httpBase + "/outgoing", data, "application/json", headers);
 			check(response);
 			
 			InputStream content = response.getEntity().getContent();
@@ -164,6 +187,8 @@ public class QstClient {
 				content.close();
 			}
 		} catch (IOException e) {
+			throw new QstClientException(e);
+		} catch (JSONException e) {
 			throw new QstClientException(e);
 		} catch (SAXException e) {
 			throw new QstClientException(e);

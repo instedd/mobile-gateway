@@ -11,6 +11,7 @@ import org.instedd.geochat.lgw.data.GeoChatLgwData;
 import org.instedd.geochat.lgw.msg.Message;
 import org.instedd.geochat.lgw.msg.QstClient;
 import org.instedd.geochat.lgw.msg.QstClientException;
+import org.instedd.geochat.lgw.msg.Status;
 import org.instedd.geochat.lgw.msg.WrongHostException;
 
 import android.app.Activity;
@@ -50,12 +51,8 @@ public class Transceiver {
 						// Last part of the message was sent successfully
 						data.deleteOutgoingMessage(guid);
 
-						// Notify nuntium that the messages was successfully sent.
-						// We do it here. If it fails we don't retry, after all it's just a confirmation message
-						// and we don't want to drain the battery or network with just confirmation messages.
-						try {
-							client.setState(guid, "confirmed");
-						} catch(Exception e) {}
+						// Mark it as successfully sent
+						data.markOutgoingMessageAsSent(guid);
 
 						data.log(context.getResources().getString(R.string.sent_message_to_phone, msg.text, msg.to));
 					} else {
@@ -290,15 +287,20 @@ public class Transceiver {
 							if (resync)
 								continue;
 
-							// 3.a. Get outgoing messages
-							Message[] outgoing = client.getMessages(settings
-									.storedLastReceivedMessageId());
+							Status status = data.getStatus();
 
-							// 3.b. Persist them and mark them as being sent
+							// 3.a. Get outgoing messages and send status (confirmed/failed)
+							Message[] outgoing = client.getMessages(settings
+									.storedLastReceivedMessageId(), status);
+
+							// 3.b Delete status
+							data.deleteStatus(status);
+
+							// 3.c. Persist them and mark them as being sent
 							String lastReceivedMessageId = data
 									.createOutgoingMessagesAsBeingSent(outgoing);
 
-							// 3.c. Send them via phone
+							// 3.d. Send them via phone
 							sendMessages(outgoing);
 
 							// 3.d. Remember last id
