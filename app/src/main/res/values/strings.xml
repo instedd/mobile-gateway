@@ -28,6 +28,7 @@
 	<string name="sent_message_to_application">Sent \'%1$s\' to application from %2$s.</string>
 	<string name="sent_message_to_phone">Sent \'%1$s\' to %2$s.</string>
 	<string name="fatal_error">Fatal error: %s.</string>
+	<string name="unexpected_fatal_error">Unexpected fatal error.</string>
 	<string name="internet_connection_error">Error accessing server: %s.</string>
 	<string name="internet_connection_error_title">Connection Error</string>
 	<string name="refresh_rate">Refresh rate</string>
@@ -80,4 +81,5 @@
 	<string name="flag">Flag</string>
 	<string name="invalid_channel_name_password_combination">invalid channel name/password combination</string>
 	<string name="received_http_status_code">received HTTP status code: %s</string>
+	<string name="qst_client_error">Error connecting to messaging server.</string>
 </resources>
