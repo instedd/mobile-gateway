@@ -28,7 +28,7 @@ public class GeoChatLgwProvider extends ContentProvider {
 	public static final String TAG = "GeoChatLgwProvider";
 	
 	private static final String DATABASE_NAME = "geochat_lgw.db";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
     
     private static final String INCOMING_TABLE_NAME = "incoming";
     private static final String OUTGOING_TABLE_NAME = "outgoing";
@@ -81,7 +81,8 @@ public class GeoChatLgwProvider extends ContentProvider {
                     + Messages.WHEN + " INTEGER,"
                     + OutgoingMessages.SENDING + " INTEGER,"
                     + OutgoingMessages.TRIES + " INTEGER,"
-                    + OutgoingMessages.REMAINING_PARTS + " INTEGER"
+                    + OutgoingMessages.REMAINING_PARTS + " INTEGER,"
+                    + OutgoingMessages.NEXT_TRY + " INTEGER"
                     + ");");
             db.execSQL("CREATE TABLE " + LOGS_TABLE_NAME + " ("
                     + BaseColumns._ID + " INTEGER PRIMARY KEY,"
@@ -105,6 +106,14 @@ public class GeoChatLgwProvider extends ContentProvider {
             if (oldVersion < 5) {
                 createStatuses(db);
             }
+            if (oldVersion < 6) {
+                addNextTryToOutgoing(db);
+            }
+        }
+
+        private void addNextTryToOutgoing(SQLiteDatabase db) {
+            db.execSQL("ALTER TABLE " + OUTGOING_TABLE_NAME + " ADD COLUMN "
+                + OutgoingMessages.NEXT_TRY + " INTEGER");
         }
     }
 
@@ -380,6 +389,7 @@ public class GeoChatLgwProvider extends ContentProvider {
         
         sOutgoingProjectionMap.put(OutgoingMessages.SENDING, OutgoingMessages.SENDING);
         sOutgoingProjectionMap.put(OutgoingMessages.TRIES, OutgoingMessages.TRIES);
+        sOutgoingProjectionMap.put(OutgoingMessages.NEXT_TRY, OutgoingMessages.NEXT_TRY);
         
         sLogsProjectionMap = new HashMap<String, String>();
         sLogsProjectionMap.put(Logs._ID, Logs._ID);
