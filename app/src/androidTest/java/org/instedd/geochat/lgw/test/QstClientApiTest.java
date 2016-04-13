@@ -39,7 +39,7 @@ public class QstClientApiTest extends TestCase {
 		
 		assertEquals("foo", restClient.getUser());
 		assertEquals("bar", restClient.getPassword());
-		assertEquals("get", restClient.getMethod());
+		assertEquals("post", restClient.getMethod());
 		assertEquals("http://example.com/outgoing", restClient.getUrl());
 		assertEquals("lastone", restClient.getGetHeader("If-None-Match"));
 		
