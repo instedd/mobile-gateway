@@ -4,6 +4,8 @@ android:
     - build-tools-21.1.2
     - android-18
     - extra
+    - addon-google_apis-google-18
+    - sys-img-armeabi-v7a-android-18
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
