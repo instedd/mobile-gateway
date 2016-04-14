@@ -82,7 +82,7 @@ public class GeoChatLgwProvider extends ContentProvider {
                     + OutgoingMessages.SENDING + " INTEGER,"
                     + OutgoingMessages.TRIES + " INTEGER,"
                     + OutgoingMessages.REMAINING_PARTS + " INTEGER,"
-                    + OutgoingMessages.NEXT_TRY + " INTEGER"
+                    + OutgoingMessages.RETRY_AT + " INTEGER"
                     + ");");
             db.execSQL("CREATE TABLE " + LOGS_TABLE_NAME + " ("
                     + BaseColumns._ID + " INTEGER PRIMARY KEY,"
@@ -113,7 +113,7 @@ public class GeoChatLgwProvider extends ContentProvider {
 
         private void addNextTryToOutgoing(SQLiteDatabase db) {
             db.execSQL("ALTER TABLE " + OUTGOING_TABLE_NAME + " ADD COLUMN "
-                + OutgoingMessages.NEXT_TRY + " INTEGER");
+                + OutgoingMessages.RETRY_AT + " INTEGER");
         }
     }
 
@@ -292,7 +292,7 @@ public class GeoChatLgwProvider extends ContentProvider {
         	break;
         case OUTGOING_NOT_SENDING:
         	qb.setTables(OUTGOING_TABLE_NAME);
-        	qb.appendWhere(OutgoingMessages.SENDING + " = 0 AND (" + OutgoingMessages.TRIES + " IS NULL OR " + OutgoingMessages.TRIES + " < 3)");
+        	qb.appendWhere(OutgoingMessages.SENDING + " = 0");
         	if (TextUtils.isEmpty(sortOrder)) {
                 orderBy = Messages.DEFAULT_SORT_ORDER;
             }
@@ -389,7 +389,7 @@ public class GeoChatLgwProvider extends ContentProvider {
         
         sOutgoingProjectionMap.put(OutgoingMessages.SENDING, OutgoingMessages.SENDING);
         sOutgoingProjectionMap.put(OutgoingMessages.TRIES, OutgoingMessages.TRIES);
-        sOutgoingProjectionMap.put(OutgoingMessages.NEXT_TRY, OutgoingMessages.NEXT_TRY);
+        sOutgoingProjectionMap.put(OutgoingMessages.RETRY_AT, OutgoingMessages.RETRY_AT);
         
         sLogsProjectionMap = new HashMap<String, String>();
         sLogsProjectionMap.put(Logs._ID, Logs._ID);

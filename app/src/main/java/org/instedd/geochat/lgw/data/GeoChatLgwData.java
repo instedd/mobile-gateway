@@ -35,6 +35,7 @@ public class GeoChatLgwData {
 	private final static ContentValues TRIES_ZERO = new ContentValues();
 	static {
 		TRIES_ZERO.put(OutgoingMessages.TRIES, 0);
+		TRIES_ZERO.put(OutgoingMessages.RETRY_AT, 0);
 	}
 	
 	private final ContentResolver content;
@@ -90,11 +91,12 @@ public class GeoChatLgwData {
 		}
 	}
 	
-	public int markOutgoingMessageAsNotBeingSent(String guid, int tries) {
+	public int markOutgoingMessageAsNotBeingSent(String guid, int tries, long retryAt) {
 		synchronized(notSendingLock) {
 			ContentValues values = new ContentValues();
 			values.put(OutgoingMessages.SENDING, 0);
 			values.put(OutgoingMessages.TRIES, tries);
+			values.put(OutgoingMessages.RETRY_AT, retryAt);
 			return content.update(Uris.outgoingMessage(guid), values, OutgoingMessages.SENDING + " = 1", null);
 		}
 	}
@@ -141,14 +143,19 @@ public class GeoChatLgwData {
 	}
 	
 	public Message[] getOutgoingMessagesNotBeingSentAndMarkAsBeingSent() {
+
+		final String retryAtFilter = "(" + OutgoingMessages.RETRY_AT + " IS NULL OR " + OutgoingMessages.RETRY_AT + " <= ?)";
+		final long currentTime = System.currentTimeMillis();
+		final String[] retryAtArgs = new String[] { String.valueOf(currentTime) };
+
 		synchronized(notSendingLock) {
-			Cursor c = content.query(Uris.OutgoingMessagesNotBeingSent, OutgoingMessages.PROJECTION, null, null, null);
+			Cursor c = content.query(Uris.OutgoingMessagesToBeSent, OutgoingMessages.PROJECTION, retryAtFilter, retryAtArgs, null);
 			try {
 				int count = c.getCount();
 				if (count == 0)
 					return null;
 				
-				content.update(Uris.OutgoingMessagesNotBeingSent, BEING_SENT, null, null);
+				content.update(Uris.OutgoingMessagesToBeSent, BEING_SENT, retryAtFilter, retryAtArgs);
 				
 				Message[] outgoing = new Message[count];
 				for (int i = 0; c.moveToNext(); i++) {

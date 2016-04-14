@@ -79,8 +79,8 @@ public class Transceiver {
 				break;
 			default:
 				if (msg != null) {
-					msg.tries++;
-					if (data.markOutgoingMessageAsNotBeingSent(guid, msg.tries) > 0) {
+					msg.incrementTries();
+					if (data.markOutgoingMessageAsNotBeingSent(guid, msg.tries, msg.retryAt) > 0) {
 						data.log(context.getResources().getString(R.string.message_could_not_be_sent_tries, msg.text, msg.to, msg.tries));
 					}
 				}
@@ -283,8 +283,8 @@ public class Transceiver {
 							if (resync)
 								continue;
 
-							// 2. Send pending messages (those that were sent at
-							// least once and failed)
+							// 2. Send pending messages to be sent (those that were sent at
+							// least once and failed, with retryAt less than current time)
 							Message[] pending = data
 									.getOutgoingMessagesNotBeingSentAndMarkAsBeingSent();
 							sendMessages(pending);
@@ -331,6 +331,11 @@ public class Transceiver {
 						} finally {
 							if (!TextUtils.isEmpty(log)) {
 								data.log(log.toString().trim(), throwable);
+								if (throwable != null) {
+									Log.e("transceiver", "Error in transceiver: " + log.toString().trim(), throwable);
+								} else {
+									Log.d("transceiver", log.toString().trim());
+								}
 							}
 						}
 					} else {
