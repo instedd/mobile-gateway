@@ -66,14 +66,15 @@ public class OutgoingMessagesActivity extends ListActivity implements OnItemLong
 		builder.setTitle(getResources().getString(R.string.MT));
 		builder.setItems(items, new OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				int id = cursor.getInt(cursor.getColumnIndex(Messages._ID));
 				switch(which) {
 				case 0: // retry
+					int id = cursor.getInt(cursor.getColumnIndex(Messages._ID));
 					new GeoChatLgwData(OutgoingMessagesActivity.this).resetOutgoingMessageTries(id);
 					Actions.refresh(OutgoingMessagesActivity.this, handler, R.string.retrying);
 					break;
-				case 1: // delete 
-					new GeoChatLgwData(OutgoingMessagesActivity.this).deleteOutgoingMessage(id);
+				case 1: // delete
+					String guid = cursor.getString(cursor.getColumnIndex(Messages.GUID));
+					new GeoChatLgwData(OutgoingMessagesActivity.this).deleteOutgoingMessageAndMarkAsFailed(guid);
 					break;
 				}
 			}

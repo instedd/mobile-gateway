@@ -61,8 +61,9 @@ public class GeoChatLgwData {
 		return content.delete(Uris.outgoingMessage(guid), null, null);
 	}
 	
-	public int deleteOutgoingMessage(int id) {
-		return content.delete(Uris.outgoingMessage(id), null, null);
+	public void deleteOutgoingMessageAndMarkAsFailed(String guid) {
+		markOutgoingMessageAsFailed(guid);
+		deleteOutgoingMessage(guid);
 	}
 	
 	public int deleteAllOutgoingMessages() {
@@ -82,8 +83,7 @@ public class GeoChatLgwData {
 		int count = c.getCount();
 		for (int i = 0; c.moveToNext(); i++) {
 			String guid = c.getString(0);
-			markOutgoingMessageAsFailed(guid);
-			deleteOutgoingMessage(guid);
+			deleteOutgoingMessageAndMarkAsFailed(guid);
 		}
 
 		return count;
