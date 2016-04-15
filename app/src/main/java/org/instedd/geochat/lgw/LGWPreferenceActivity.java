@@ -81,6 +81,8 @@ public class LGWPreferenceActivity extends PreferenceActivity implements
 
 	private void updatePreferenceSummaries() {
 		updateRefreshRateSummary();
+		updatetMaxMessageAgeSummary();
+		updateWaitBetweenMessagesSummary();
 		updateEndpointUrlSummary();
 		updateNameSummary();
 		// The password is not shown in summary
@@ -95,6 +97,8 @@ public class LGWPreferenceActivity extends PreferenceActivity implements
 		setPasswordPopUpValue();
 		setCountryCodePopUpValue();
 		setTelephoneNumberPopUpValue();
+		setMaxMessageAgeValue();
+		setWaitBetweenMessagesValue();
 		addPlusToOutgoingPreference().setDefaultValue(true);
 		addPlusToOutgoingPreference().setChecked(settings.storedAddPlusToOutgoing());
 	}
@@ -120,8 +124,26 @@ public class LGWPreferenceActivity extends PreferenceActivity implements
 				refreshRatePreference());
 	}
 
+	private void updatetMaxMessageAgeSummary() {
+		updateListPreferenceSummary(String.valueOf(settings.storedMaxMessageAgeInDays()),
+				maxMessageAgePreference());
+	}
+
+	private void updateWaitBetweenMessagesSummary() {
+		updateListPreferenceSummary(String.valueOf(settings.storedWaitBetweenMessagesInSeconds()),
+				waitBetweenMessagesPreference());
+	}
+
 	private void setTelephoneNumberPopUpValue() {
 		telephoneNumberPreference().setText(storedTelephoneNumber());
+	}
+
+	private void setMaxMessageAgeValue() {
+		maxMessageAgePreference().setValue(String.valueOf(settings.storedMaxMessageAgeInDays()));
+	}
+
+	private void setWaitBetweenMessagesValue() {
+		waitBetweenMessagesPreference().setValue(String.valueOf(settings.storedWaitBetweenMessagesInSeconds()));
 	}
 
 	private void setEndpointUrlPopUpValue() {
@@ -166,6 +188,14 @@ public class LGWPreferenceActivity extends PreferenceActivity implements
 
 	private ListPreference refreshRatePreference() {
 		return (ListPreference) findPreference(Settings.REFRESH_RATE);
+	}
+
+	private ListPreference maxMessageAgePreference() {
+		return (ListPreference) findPreference(Settings.MAX_MESSAGE_AGE_IN_DAYS);
+	}
+
+	private ListPreference waitBetweenMessagesPreference() {
+		return (ListPreference) findPreference(Settings.WAIT_BETWEEN_MESSAGES_IN_SECONDS);
 	}
 
 	private ListPreference countryPreference() {
