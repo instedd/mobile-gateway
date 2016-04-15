@@ -18,13 +18,6 @@
 		android:id="@+id/country"
 		android:dialogTitle="@string/country"
 		/>
-	<ListPreference
-		android:title="@string/refresh_rate"
-		android:key="refreshRate"
-		android:id="@+id/refreshRate"
-		android:entries="@array/refresh_rate_entries"
-		android:entryValues="@array/refresh_rate_entry_values"
-		/>
 	<CheckBoxPreference
 		android:title="@string/add_plus_to_outgoing"
 		android:key="addPlusToOutgoing"
@@ -32,9 +25,8 @@
 		/>
 
 	<PreferenceCategory
-		android:title="@string/advanced"
+		android:title="@string/msg_server_settings"
 		>
-		
 		<EditTextPreference
 			android:title="@string/endpoint_url"
 			android:key="endpointUrl"
@@ -54,6 +46,32 @@
 			android:dialogTitle="@string/password"
 			android:password="true"
 			/>
-			
-		</PreferenceCategory>
+
+	</PreferenceCategory>
+
+	<PreferenceCategory
+		android:title="@string/advanced"
+		>
+		<ListPreference
+			android:title="@string/refresh_rate"
+			android:key="refreshRate"
+			android:id="@+id/refreshRate"
+			android:entries="@array/refresh_rate_entries"
+			android:entryValues="@array/refresh_rate_entry_values"
+			/>
+		<ListPreference
+			android:title="@string/max_message_age"
+			android:key="maxMessageAge"
+			android:id="@+id/maxMessageAge"
+			android:entries="@array/max_message_age_entries"
+			android:entryValues="@array/max_message_age_entry_values"
+			/>
+		<ListPreference
+			android:title="@string/wait_between_messages"
+			android:key="waitBetweenMessages"
+			android:id="@+id/waitBetweenMessages"
+			android:entries="@array/wait_between_messages_entries"
+			android:entryValues="@array/wait_between_messages_entry_values"
+			/>
+	</PreferenceCategory>
 </PreferenceScreen>

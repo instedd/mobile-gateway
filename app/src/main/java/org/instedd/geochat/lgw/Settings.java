@@ -24,6 +24,8 @@ public class Settings implements ISettings {
 	public final static String NUMBER = "telephoneNumber";
 	public final static String LAST_RECEIVED_MESSAGE_ID = "lastSentMessageId";
 	public final static String ADD_PLUS_TO_OUTGOING = "addPlusToOutgoing";
+	public final static String MAX_MESSAGE_AGE_IN_DAYS = "maxMessageAge";
+	public final static String WAIT_BETWEEN_MESSAGES_IN_SECONDS = "waitBetweenMessages";
 
 	private final Context context;
 	private NuntiumClient nuntiumClient;
@@ -71,6 +73,10 @@ public class Settings implements ISettings {
 	public String storedCountryCode() {
 		return openRead().getString(COUNTRY_CODE, null);
 	}
+
+	public int storedMaxMessageAgeInDays() { return Integer.parseInt(openRead().getString(MAX_MESSAGE_AGE_IN_DAYS, "7")); }
+
+	public int storedWaitBetweenMessagesInSeconds() { return Integer.parseInt(openRead().getString(WAIT_BETWEEN_MESSAGES_IN_SECONDS, "10")); }
 
 	public void saveLastReceivedMessageId(String id) {
 		Editor editor = openWrite();

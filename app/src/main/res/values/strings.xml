@@ -66,6 +66,42 @@
 		<item>30</item>
 		<item>60</item>
 	</string-array>
+	<string-array name="max_message_age_entries">
+		<item>1 day</item>
+		<item>3 days</item>
+		<item>5 days</item>
+		<item>7 days</item>
+		<item>15 days</item>
+		<item>30 days</item>
+		<item>60 days</item>
+	</string-array>
+	<string-array name="max_message_age_entry_values">
+		<item>1</item>
+		<item>3</item>
+		<item>5</item>
+		<item>7</item>
+		<item>15</item>
+		<item>30</item>
+		<item>60</item>
+	</string-array>
+	<string-array name="wait_between_messages_entries">
+		<item>10 seconds</item>
+		<item>15 seconds</item>
+		<item>20 seconds</item>
+		<item>30 seconds</item>
+		<item>45 seconds</item>
+		<item>1 minute</item>
+		<item>2 minutes</item>
+	</string-array>
+	<string-array name="wait_between_messages_entry_values">
+		<item>10</item>
+		<item>15</item>
+		<item>20</item>
+		<item>30</item>
+		<item>45</item>
+		<item>60</item>
+		<item>120</item>
+	</string-array>
 	<string name="advanced">Advanced</string>
 	<string name="next">Next</string>
 	<string name="country">Country</string>
@@ -84,4 +120,7 @@
 	<string name="qst_client_error">Error connecting to messaging server.</string>
 	<string name="confirm_reset_configuration">Are you sure you want to clear the current configuration? You will have to pair the gateway again with an application to continue sending and receiving messages.</string>
 	<string name="deleted_expired_messages">Discarded %1$s expired outgoing message(s) older than %2$s days</string>
+	<string name="max_message_age">Delete failed messages after</string>
+	<string name="wait_between_messages">Wait between sending messages</string>
+	<string name="msg_server_settings">Messages server</string>
 </resources>

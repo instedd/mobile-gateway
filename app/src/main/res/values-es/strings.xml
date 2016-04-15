@@ -64,6 +64,42 @@
 		<item>30</item>
 		<item>60</item>
 	</string-array>
+	<string-array name="max_message_age_entries">
+		<item>1 día</item>
+		<item>3 días</item>
+		<item>5 días</item>
+		<item>7 días</item>
+		<item>15 días</item>
+		<item>30 días</item>
+		<item>60 días</item>
+	</string-array>
+	<string-array name="max_message_age_entry_values">
+		<item>1</item>
+		<item>3</item>
+		<item>5</item>
+		<item>7</item>
+		<item>15</item>
+		<item>30</item>
+		<item>60</item>
+	</string-array>
+	<string-array name="wait_between_messages_entries">
+		<item>10 segundos</item>
+		<item>15 segundos</item>
+		<item>20 segundos</item>
+		<item>30 segundos</item>
+		<item>45 segundos</item>
+		<item>1 minuto</item>
+		<item>2 minutos</item>
+	</string-array>
+	<string-array name="wait_between_messages_entry_values">
+		<item>10</item>
+		<item>15</item>
+		<item>20</item>
+		<item>30</item>
+		<item>45</item>
+		<item>60</item>
+		<item>120</item>
+	</string-array>
 	<string name="advanced">Avanzadas</string>
 	<string name="internet_connection_error">Error accediendo al servidor: %s.</string>
 	<string name="internet_connection_error_title">Error de Conexión</string>
@@ -84,4 +120,7 @@
 	<string name="qst_client_error">Error conectando al servidor de mensajes</string>
 	<string name="confirm_reset_configuration">Está seguro de reiniciar la configuración? Será necesario volver a configurar el gateway para poder enviar y recibir mensajes.</string>
 	<string name="deleted_expired_messages">Se descartaron %1$s mensaje(s) no enviados por más de %2$s días</string>
+	<string name="max_message_age">Borrar mensajes fallidos después de</string>
+	<string name="wait_between_messages">Esperar entre mensajes</string>
+	<string name="msg_server_settings">Servidor de mensajes</string>
 </resources>
