@@ -77,8 +77,16 @@ public class GeoChatLgwData {
 		return content.delete(Uris.incomingMessage(id), null, null);
 	}
 
-	public int deleteExpiredOutgoingMessages() {
-		return content.delete(Uris.OutgoingMessagesExpired, null, null);
+	public int deleteExpiredOutgoingMessagesAndMarkAsFailed() {
+		Cursor c = content.query(Uris.OutgoingMessagesExpired, new String[] { GeoChatLgw.Messages.GUID }, null, null, null);
+		int count = c.getCount();
+		for (int i = 0; c.moveToNext(); i++) {
+			String guid = c.getString(0);
+			markOutgoingMessageAsFailed(guid);
+			deleteOutgoingMessage(guid);
+		}
+
+		return count;
 	}
 	
 	public int resetOutgoingMessageTries(int id) {
@@ -223,6 +231,13 @@ public class GeoChatLgwData {
 		ContentValues values = new ContentValues();
 		values.put(Statuses.GUID, guid);
 		values.put(Statuses.SENT, 1);
+		content.insert(Statuses.CONTENT_URI, values);
+	}
+
+	public void markOutgoingMessageAsFailed(String guid) {
+		ContentValues values = new ContentValues();
+		values.put(Statuses.GUID, guid);
+		values.put(Statuses.SENT, 0);
 		content.insert(Statuses.CONTENT_URI, values);
 	}
 
