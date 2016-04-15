@@ -80,4 +80,5 @@
 	<string name="flag">Bandera</string>
 	<string name="invalid_channel_name_password_combination">la combinación de nombre de canal y Invalid channel name y clave es incorrecta</string>
 	<string name="received_http_status_code">se obtuvo el código de estado HTTP: %s</string>
+	<string name="deleted_expired_messages">Se descartaron %1$s mensaje(s) no enviados por más de %2$s días</string>
 </resources>

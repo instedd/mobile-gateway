@@ -76,6 +76,10 @@ public class GeoChatLgwData {
 	public int deleteIncomingMessage(int id) {
 		return content.delete(Uris.incomingMessage(id), null, null);
 	}
+
+	public int deleteExpiredOutgoingMessages() {
+		return content.delete(Uris.OutgoingMessagesExpired, null, null);
+	}
 	
 	public int resetOutgoingMessageTries(int id) {
 		return content.update(Uris.outgoingMessage(id), TRIES_ZERO, null, null);

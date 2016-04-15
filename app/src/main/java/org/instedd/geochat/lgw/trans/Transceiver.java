@@ -278,7 +278,16 @@ public class Transceiver {
 							if (resync)
 								continue;
 
-							// 2. Send pending messages to be sent (those that were sent at
+							// 2.a. Delete messages over max age
+							int deletedCount = data.deleteExpiredOutgoingMessages();
+							if (deletedCount > 0) {
+								data.log(r.getString(R.string.deleted_expired_messages, deletedCount, Integer.valueOf(Message.MAX_AGE_IN_MINUTES / 60 / 24)));
+							}
+
+							if (resync)
+								continue;
+
+							// 2.b. Send pending messages to be sent (those that were sent at
 							// least once and failed, with retryAt less than current time)
 							Message[] pending = data
 									.getOutgoingMessagesNotBeingSentAndMarkAsBeingSent();

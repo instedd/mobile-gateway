@@ -80,4 +80,5 @@
 	<string name="flag">Flag</string>
 	<string name="invalid_channel_name_password_combination">invalid channel name/password combination</string>
 	<string name="received_http_status_code">received HTTP status code: %s</string>
+	<string name="deleted_expired_messages">Discarded %1$s expired outgoing message(s) older than %2$s days</string>
 </resources>
