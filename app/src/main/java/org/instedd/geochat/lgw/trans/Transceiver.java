@@ -283,8 +283,8 @@ public class Transceiver {
 							if (resync)
 								continue;
 
-							// 2.a. Delete messages over max age
-							int deletedCount = data.deleteExpiredOutgoingMessages();
+							// 2.a. Delete messages over max age and mark them as failed
+							int deletedCount = data.deleteExpiredOutgoingMessagesAndMarkAsFailed();
 							if (deletedCount > 0) {
 								data.log(r.getString(R.string.deleted_expired_messages, deletedCount, Integer.valueOf(Message.MAX_AGE_IN_MINUTES / 60 / 24)));
 							}

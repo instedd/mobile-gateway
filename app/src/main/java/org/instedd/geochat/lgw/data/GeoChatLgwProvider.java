@@ -316,6 +316,13 @@ public class GeoChatLgwProvider extends ContentProvider {
                 orderBy = Statuses.DEFAULT_SORT_ORDER;
             }
             break;
+		case OUTGOING_EXPIRED:
+			qb.setTables(OUTGOING_TABLE_NAME);
+			qb.appendWhere(Messages.WHEN + " < " + (System.currentTimeMillis() - Message.MAX_AGE_IN_MINUTES * 60 * 1000));
+			if (TextUtils.isEmpty(sortOrder)) {
+				orderBy = Messages.DEFAULT_SORT_ORDER;
+			}
+			break;
         default:
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
