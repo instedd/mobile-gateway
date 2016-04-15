@@ -8,6 +8,7 @@ import org.instedd.geochat.lgw.data.GeoChatLgw.Logs;
 import org.instedd.geochat.lgw.data.GeoChatLgw.Messages;
 import org.instedd.geochat.lgw.data.GeoChatLgw.OutgoingMessages;
 import org.instedd.geochat.lgw.data.GeoChatLgw.Statuses;
+import org.instedd.geochat.lgw.msg.Message;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -50,6 +51,7 @@ public class GeoChatLgwProvider extends ContentProvider {
     public final static int INCOMING_ID = 9;
     public final static int STATUS = 10;
     public final static int STATUS_GUID = 11;
+	public final static int OUTGOING_EXPIRED = 12;
     
     public static final UriMatcher URI_MATCHER;
     
@@ -168,6 +170,11 @@ public class GeoChatLgwProvider extends ContentProvider {
                     + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
             break;
         }
+		case OUTGOING_EXPIRED: {
+			count = db.delete(OUTGOING_TABLE_NAME, Messages.WHEN + " < " + (System.currentTimeMillis() - Message.MAX_AGE_IN_MINUTES * 60 * 1000)
+					+ (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
+			break;
+		}
         default:
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -365,6 +372,7 @@ public class GeoChatLgwProvider extends ContentProvider {
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "outgoing/#", OUTGOING_ID);
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "outgoing/guid/*", OUTGOING_GUID);
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "outgoing/not_sending", OUTGOING_NOT_SENDING);
+		URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "outgoing/expired", OUTGOING_EXPIRED);
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "logs", LOGS);
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "logs/old", LOGS_OLD);
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "status", STATUS);

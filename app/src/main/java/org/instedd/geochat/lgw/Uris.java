@@ -10,6 +10,7 @@ import android.net.Uri;
 public class Uris {
 	
 	public final static Uri OutgoingMessagesToBeSent = Uri.withAppendedPath(OutgoingMessages.CONTENT_URI, "not_sending");
+	public final static Uri OutgoingMessagesExpired = Uri.withAppendedPath(OutgoingMessages.CONTENT_URI, "expired");
 	public final static Uri OldLogs = Uri.withAppendedPath(Logs.CONTENT_URI, "old");
 
 	public static Uri outgoingMessage(int id) {
