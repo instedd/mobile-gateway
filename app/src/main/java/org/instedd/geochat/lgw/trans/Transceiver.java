@@ -1,14 +1,19 @@
 package org.instedd.geochat.lgw.trans;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
+import org.apache.http.conn.HttpHostConnectException;
 import org.instedd.geochat.lgw.Connectivity;
 import org.instedd.geochat.lgw.Settings;
 import org.instedd.geochat.lgw.Notifier;
 import org.instedd.geochat.lgw.R;
+import org.instedd.geochat.lgw.UnauthorizedException;
 import org.instedd.geochat.lgw.Uris;
 import org.instedd.geochat.lgw.data.GeoChatLgwData;
 import org.instedd.geochat.lgw.msg.Message;
+import org.instedd.geochat.lgw.msg.NuntiumClientException;
 import org.instedd.geochat.lgw.msg.QstClient;
 import org.instedd.geochat.lgw.msg.QstClientException;
 import org.instedd.geochat.lgw.msg.Status;
@@ -321,10 +326,16 @@ public class Transceiver {
 											R.string.fatal_error,
 											R.string.fix_host)).append(
 									"\n");
-						} catch (Throwable t) {
+						} catch(UnauthorizedException e) {
 							log.append(
 									r.getString(R.string.fatal_error,
-											t.getMessage())).append("\n");
+											e.getMessage())).append("\n");
+							throwable = e;
+						} catch (QstClientException e) {
+							log.append(r.getString(R.string.qst_client_error)).append("\n");
+							throwable = e;
+                        } catch (Throwable t) {
+							log.append(r.getString(R.string.unexpected_fatal_error)).append("\n");
 							throwable = t;
 						} finally {
 							if (!TextUtils.isEmpty(log)) {

@@ -28,6 +28,7 @@
 	<string name="sent_message_to_application">Enviado \'%1$s\' a la aplicación por %2$s.</string>
 	<string name="sent_message_to_phone">Enviado \'%1$s\' a %2$s.</string>
 	<string name="fatal_error">Error fatal: %s.</string>
+	<string name="unexpected_fatal_error">Error fatal no esperado.</string>
 	<string name="refresh_rate">Intervalo de actualización</string>
 	<string name="refresh">Actualizar</string>
 	<string name="refreshing">Actualizando&#8230;</string>
@@ -114,10 +115,11 @@
 	<string name="no_connection">No parece haber conexión a internet. Asegurate de tener conexión y reabre esta aplicación.</string>
 	<string name="add_plus_to_outgoing">Añadir + a sms enviados?</string>
 	<string name="flag">Bandera</string>
-	<string name="invalid_channel_name_password_combination">la combinación de nombre de canal y Invalid channel name y clave es incorrecta</string>
+	<string name="invalid_channel_name_password_combination">la combinación de nombre de canal y clave es incorrecta</string>
 	<string name="received_http_status_code">se obtuvo el código de estado HTTP: %s</string>
 	<string name="deleted_expired_messages">Se descartaron %1$s mensaje(s) no enviados por más de %2$s días</string>
 	<string name="max_message_age">Borrar mensajes fallidos después de</string>
 	<string name="wait_between_messages">Esperar entre mensajes</string>
 	<string name="msg_server_settings">Servidor de mensajes</string>
+	<string name="qst_client_error">Error conectando al servidor de mensajes</string>
 </resources>
