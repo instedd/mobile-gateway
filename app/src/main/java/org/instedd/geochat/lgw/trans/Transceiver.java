@@ -88,8 +88,12 @@ public class Transceiver {
 				break;
 			}
 
-			synchronized (sendLock) {
-				sendLock.notify();
+			// Only wake up sending thread if there is no wait between messages configured
+			int waitSeconds = settings.storedWaitBetweenMessagesInSeconds() * 1000;
+			if (waitSeconds == 0) {
+				synchronized (sendLock) {
+					sendLock.notify();
+				}
 			}
 		}
 	};
@@ -201,11 +205,15 @@ public class Transceiver {
 		sms.sendMultipartTextMessage(message.to, null, parts, sentIntents, null);
 		data.updateOutgoingMessageRemainingParts(message.guid, parts.size());
 
+		// If there is no wait between messages, still set a default 10s timeout
+		// The receiver will notify() this if wait is zero to ensure the sending is continuous
+		int waitSeconds = settings.storedWaitBetweenMessagesInSeconds() * 1000;
+		if (waitSeconds == 0) waitSeconds = 10 * 1000;
+
 		synchronized (sendLock) {
 			try {
-				sendLock.wait(settings.storedWaitBetweenMessagesInSeconds() * 1000);
-			} catch (InterruptedException e) {
-			}
+				sendLock.wait(waitSeconds);
+			} catch (InterruptedException e) { }
 		}
 	}
 
