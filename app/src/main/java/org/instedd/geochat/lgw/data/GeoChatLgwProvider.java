@@ -3,6 +3,7 @@ package org.instedd.geochat.lgw.data;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.instedd.geochat.lgw.Settings;
 import org.instedd.geochat.lgw.data.GeoChatLgw.IncomingMessages;
 import org.instedd.geochat.lgw.data.GeoChatLgw.Logs;
 import org.instedd.geochat.lgw.data.GeoChatLgw.Messages;
@@ -120,7 +121,15 @@ public class GeoChatLgwProvider extends ContentProvider {
     }
 
     private DatabaseHelper mOpenHelper;
-    
+
+	private Settings settings;
+
+	private Settings getSettings() {
+		if (this.settings == null) {
+			this.settings = new Settings(getContext());
+		} return this.settings;
+	}
+
     @Override
 	public int delete(Uri uri, String where, String[] whereArgs) {
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
@@ -171,7 +180,7 @@ public class GeoChatLgwProvider extends ContentProvider {
             break;
         }
 		case OUTGOING_EXPIRED: {
-			count = db.delete(OUTGOING_TABLE_NAME, Messages.WHEN + " < " + (System.currentTimeMillis() - Message.MAX_AGE_IN_MINUTES * 60 * 1000)
+			count = db.delete(OUTGOING_TABLE_NAME, Messages.WHEN + " < " + (System.currentTimeMillis() - getSettings().storedMaxMessageAgeInDays() * 24 * 60 * 60 * 1000)
 					+ (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
 			break;
 		}
@@ -318,7 +327,7 @@ public class GeoChatLgwProvider extends ContentProvider {
             break;
 		case OUTGOING_EXPIRED:
 			qb.setTables(OUTGOING_TABLE_NAME);
-			qb.appendWhere(Messages.WHEN + " < " + (System.currentTimeMillis() - Message.MAX_AGE_IN_MINUTES * 60 * 1000));
+			qb.appendWhere(Messages.WHEN + " < " + (System.currentTimeMillis() - getSettings().storedMaxMessageAgeInDays() * 24 * 60 * 60 * 1000));
 			if (TextUtils.isEmpty(sortOrder)) {
 				orderBy = Messages.DEFAULT_SORT_ORDER;
 			}

@@ -17,9 +17,8 @@ public class Message {
 	public int remainingParts;
 	public long retryAt;
 
-	public static int[] RETRIES_INTERVALS_IN_MINUTES = new int[] { 1, 1, 2, 5, 15, 30, 60, 180};
-	public static int MAX_AGE_IN_MINUTES = 7 * 24 * 60; // 7 days
-	
+	public static int[] RETRIES_INTERVALS_IN_MINUTES = new int[] { 1, 1, 2, 5, 15, 30, 60, 180, 360 };
+
 	public static Message readFrom(Cursor c) {
 		// Check the projections in GeoChatLgw
 		Message msg = new Message();
