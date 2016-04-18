@@ -76,7 +76,7 @@ public class Settings implements ISettings {
 
 	public int storedMaxMessageAgeInDays() { return Integer.parseInt(openRead().getString(MAX_MESSAGE_AGE_IN_DAYS, "7")); }
 
-	public int storedWaitBetweenMessagesInSeconds() { return Integer.parseInt(openRead().getString(WAIT_BETWEEN_MESSAGES_IN_SECONDS, "10")); }
+	public int storedWaitBetweenMessagesInSeconds() { return Integer.parseInt(openRead().getString(WAIT_BETWEEN_MESSAGES_IN_SECONDS, "0")); }
 
 	public void saveLastReceivedMessageId(String id) {
 		Editor editor = openWrite();
