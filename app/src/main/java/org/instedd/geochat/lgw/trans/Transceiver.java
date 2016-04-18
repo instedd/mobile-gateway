@@ -198,7 +198,7 @@ public class Transceiver {
 
 		synchronized (sendLock) {
 			try {
-				sendLock.wait(10000);
+				sendLock.wait(settings.storedWaitBetweenMessagesInSeconds() * 1000);
 			} catch (InterruptedException e) {
 			}
 		}
@@ -281,7 +281,7 @@ public class Transceiver {
 							// 2.a. Delete messages over max age and mark them as failed
 							int deletedCount = data.deleteExpiredOutgoingMessagesAndMarkAsFailed();
 							if (deletedCount > 0) {
-								data.log(r.getString(R.string.deleted_expired_messages, deletedCount, Integer.valueOf(Message.MAX_AGE_IN_MINUTES / 60 / 24)));
+								data.log(r.getString(R.string.deleted_expired_messages, deletedCount, Integer.valueOf(settings.storedMaxMessageAgeInDays())));
 							}
 
 							if (resync)
