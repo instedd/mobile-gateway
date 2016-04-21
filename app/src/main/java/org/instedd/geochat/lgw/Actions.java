@@ -183,7 +183,7 @@ public class Actions {
 		});
 	}
 	
-	private static void confirm(Context context, int title, int message, DialogInterface.OnClickListener action) {
+	public static void confirm(Context context, int title, int message, DialogInterface.OnClickListener action) {
 		new AlertDialog.Builder(context)
         .setIcon(android.R.drawable.ic_dialog_alert)
         .setTitle(title)

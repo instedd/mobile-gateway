@@ -126,4 +126,5 @@
 	<string name="wait_between_messages">Wait between sending messages</string>
 	<string name="msg_server_settings">Messages server</string>
 	<string name="qst_client_error">Error connecting to messaging server.</string>
+	<string name="confirm_reset_configuration">Are you sure you want to clear the current configuration? You will have to pair the gateway again with an application to continue sending and receiving messages.</string>
 </resources>
