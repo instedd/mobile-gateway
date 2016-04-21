@@ -80,4 +80,5 @@
 	<string name="flag">Flag</string>
 	<string name="invalid_channel_name_password_combination">invalid channel name/password combination</string>
 	<string name="received_http_status_code">received HTTP status code: %s</string>
+	<string name="confirm_reset_configuration">Are you sure you want to clear the current configuration? You will have to pair the gateway again with an application to continue sending and receiving messages.</string>
 </resources>

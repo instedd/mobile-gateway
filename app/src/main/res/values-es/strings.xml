@@ -80,4 +80,5 @@
 	<string name="flag">Bandera</string>
 	<string name="invalid_channel_name_password_combination">la combinación de nombre de canal y Invalid channel name y clave es incorrecta</string>
 	<string name="received_http_status_code">se obtuvo el código de estado HTTP: %s</string>
+	<string name="confirm_reset_configuration">Está seguro de reiniciar la configuración? Será necesario volver a configurar el gateway para poder enviar y recibir mensajes.</string>
 </resources>
