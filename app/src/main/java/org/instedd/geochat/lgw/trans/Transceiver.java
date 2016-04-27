@@ -79,8 +79,8 @@ public class Transceiver {
 				break;
 			default:
 				if (msg != null) {
-					msg.tries++;
-					if (data.markOutgoingMessageAsNotBeingSent(guid, msg.tries) > 0) {
+					msg.incrementTries();
+					if (data.markOutgoingMessageAsNotBeingSent(guid, msg.tries, msg.retryAt) > 0) {
 						data.log(context.getResources().getString(R.string.message_could_not_be_sent_tries, msg.text, msg.to, msg.tries));
 					}
 				}
@@ -88,8 +88,12 @@ public class Transceiver {
 				break;
 			}
 
-			synchronized (sendLock) {
-				sendLock.notify();
+			// Only wake up sending thread if there is no wait between messages configured
+			int waitSeconds = settings.storedWaitBetweenMessagesInSeconds() * 1000;
+			if (waitSeconds == 0) {
+				synchronized (sendLock) {
+					sendLock.notify();
+				}
 			}
 		}
 	};
@@ -201,11 +205,15 @@ public class Transceiver {
 		sms.sendMultipartTextMessage(message.to, null, parts, sentIntents, null);
 		data.updateOutgoingMessageRemainingParts(message.guid, parts.size());
 
+		// If there is no wait between messages, still set a default 10s timeout
+		// The receiver will notify() this if wait is zero to ensure the sending is continuous
+		int waitSeconds = settings.storedWaitBetweenMessagesInSeconds() * 1000;
+		if (waitSeconds == 0) waitSeconds = 10 * 1000;
+
 		synchronized (sendLock) {
 			try {
-				sendLock.wait(10000);
-			} catch (InterruptedException e) {
-			}
+				sendLock.wait(waitSeconds);
+			} catch (InterruptedException e) { }
 		}
 	}
 
@@ -283,8 +291,17 @@ public class Transceiver {
 							if (resync)
 								continue;
 
-							// 2. Send pending messages (those that were sent at
-							// least once and failed)
+							// 2.a. Delete messages over max age and mark them as failed
+							int deletedCount = data.deleteExpiredOutgoingMessagesAndMarkAsFailed();
+							if (deletedCount > 0) {
+								data.log(r.getString(R.string.deleted_expired_messages, deletedCount, Integer.valueOf(settings.storedMaxMessageAgeInDays())));
+							}
+
+							if (resync)
+								continue;
+
+							// 2.b. Send pending messages to be sent (those that were sent at
+							// least once and failed, with retryAt less than current time)
 							Message[] pending = data
 									.getOutgoingMessagesNotBeingSentAndMarkAsBeingSent();
 							sendMessages(pending);
@@ -331,6 +348,11 @@ public class Transceiver {
 						} finally {
 							if (!TextUtils.isEmpty(log)) {
 								data.log(log.toString().trim(), throwable);
+								if (throwable != null) {
+									Log.e("transceiver", "Error in transceiver: " + log.toString().trim(), throwable);
+								} else {
+									Log.d("transceiver", log.toString().trim());
+								}
 							}
 						}
 					} else {

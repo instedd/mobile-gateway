@@ -15,7 +15,10 @@ public class Message {
 	public long when;
 	public int tries;
 	public int remainingParts;
-	
+	public long retryAt;
+
+	public static int[] RETRIES_INTERVALS_IN_MINUTES = new int[] { 1, 1, 2, 5, 15, 30, 60, 180, 360 };
+
 	public static Message readFrom(Cursor c) {
 		// Check the projections in GeoChatLgw
 		Message msg = new Message();
@@ -28,6 +31,7 @@ public class Message {
 		if (c.getColumnCount() > 7) {
 			msg.tries = c.getInt(7);
 			msg.remainingParts = c.getInt(8);
+			msg.retryAt = c.getLong(9);
 		}
 		return msg;
 	}
@@ -46,6 +50,12 @@ public class Message {
 	
 	public ContentValues toContentValues() {
 		return toContentValues(guid, from, to, text, when);
+	}
+
+	public void incrementTries() {
+		this.tries++;
+		int intervalInMinutes = (this.tries >= RETRIES_INTERVALS_IN_MINUTES.length ? RETRIES_INTERVALS_IN_MINUTES[RETRIES_INTERVALS_IN_MINUTES.length-1] : RETRIES_INTERVALS_IN_MINUTES[this.tries]);
+		this.retryAt = System.currentTimeMillis() + intervalInMinutes * 60 * 1000;
 	}
 
 }

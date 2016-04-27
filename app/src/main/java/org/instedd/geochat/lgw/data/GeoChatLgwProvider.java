@@ -3,11 +3,13 @@ package org.instedd.geochat.lgw.data;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.instedd.geochat.lgw.Settings;
 import org.instedd.geochat.lgw.data.GeoChatLgw.IncomingMessages;
 import org.instedd.geochat.lgw.data.GeoChatLgw.Logs;
 import org.instedd.geochat.lgw.data.GeoChatLgw.Messages;
 import org.instedd.geochat.lgw.data.GeoChatLgw.OutgoingMessages;
 import org.instedd.geochat.lgw.data.GeoChatLgw.Statuses;
+import org.instedd.geochat.lgw.msg.Message;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -28,7 +30,7 @@ public class GeoChatLgwProvider extends ContentProvider {
 	public static final String TAG = "GeoChatLgwProvider";
 	
 	private static final String DATABASE_NAME = "geochat_lgw.db";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
     
     private static final String INCOMING_TABLE_NAME = "incoming";
     private static final String OUTGOING_TABLE_NAME = "outgoing";
@@ -50,6 +52,7 @@ public class GeoChatLgwProvider extends ContentProvider {
     public final static int INCOMING_ID = 9;
     public final static int STATUS = 10;
     public final static int STATUS_GUID = 11;
+	public final static int OUTGOING_EXPIRED = 12;
     
     public static final UriMatcher URI_MATCHER;
     
@@ -81,7 +84,8 @@ public class GeoChatLgwProvider extends ContentProvider {
                     + Messages.WHEN + " INTEGER,"
                     + OutgoingMessages.SENDING + " INTEGER,"
                     + OutgoingMessages.TRIES + " INTEGER,"
-                    + OutgoingMessages.REMAINING_PARTS + " INTEGER"
+                    + OutgoingMessages.REMAINING_PARTS + " INTEGER,"
+                    + OutgoingMessages.RETRY_AT + " INTEGER"
                     + ");");
             db.execSQL("CREATE TABLE " + LOGS_TABLE_NAME + " ("
                     + BaseColumns._ID + " INTEGER PRIMARY KEY,"
@@ -105,11 +109,27 @@ public class GeoChatLgwProvider extends ContentProvider {
             if (oldVersion < 5) {
                 createStatuses(db);
             }
+            if (oldVersion < 6) {
+                addNextTryToOutgoing(db);
+            }
+        }
+
+        private void addNextTryToOutgoing(SQLiteDatabase db) {
+            db.execSQL("ALTER TABLE " + OUTGOING_TABLE_NAME + " ADD COLUMN "
+                + OutgoingMessages.RETRY_AT + " INTEGER");
         }
     }
 
     private DatabaseHelper mOpenHelper;
-    
+
+	private Settings settings;
+
+	private Settings getSettings() {
+		if (this.settings == null) {
+			this.settings = new Settings(getContext());
+		} return this.settings;
+	}
+
     @Override
 	public int delete(Uri uri, String where, String[] whereArgs) {
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
@@ -159,6 +179,11 @@ public class GeoChatLgwProvider extends ContentProvider {
                     + (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
             break;
         }
+		case OUTGOING_EXPIRED: {
+			count = db.delete(OUTGOING_TABLE_NAME, Messages.WHEN + " < " + (System.currentTimeMillis() - getSettings().storedMaxMessageAgeInDays() * 24 * 60 * 60 * 1000)
+					+ (!TextUtils.isEmpty(where) ? " AND (" + where + ')' : ""), whereArgs);
+			break;
+		}
         default:
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -283,7 +308,7 @@ public class GeoChatLgwProvider extends ContentProvider {
         	break;
         case OUTGOING_NOT_SENDING:
         	qb.setTables(OUTGOING_TABLE_NAME);
-        	qb.appendWhere(OutgoingMessages.SENDING + " = 0 AND (" + OutgoingMessages.TRIES + " IS NULL OR " + OutgoingMessages.TRIES + " < 3)");
+        	qb.appendWhere(OutgoingMessages.SENDING + " = 0");
         	if (TextUtils.isEmpty(sortOrder)) {
                 orderBy = Messages.DEFAULT_SORT_ORDER;
             }
@@ -300,6 +325,13 @@ public class GeoChatLgwProvider extends ContentProvider {
                 orderBy = Statuses.DEFAULT_SORT_ORDER;
             }
             break;
+		case OUTGOING_EXPIRED:
+			qb.setTables(OUTGOING_TABLE_NAME);
+			qb.appendWhere(Messages.WHEN + " < " + (System.currentTimeMillis() - getSettings().storedMaxMessageAgeInDays() * 24 * 60 * 60 * 1000));
+			if (TextUtils.isEmpty(sortOrder)) {
+				orderBy = Messages.DEFAULT_SORT_ORDER;
+			}
+			break;
         default:
             throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -356,6 +388,7 @@ public class GeoChatLgwProvider extends ContentProvider {
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "outgoing/#", OUTGOING_ID);
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "outgoing/guid/*", OUTGOING_GUID);
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "outgoing/not_sending", OUTGOING_NOT_SENDING);
+		URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "outgoing/expired", OUTGOING_EXPIRED);
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "logs", LOGS);
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "logs/old", LOGS_OLD);
         URI_MATCHER.addURI(GeoChatLgw.AUTHORITY, "status", STATUS);
@@ -380,6 +413,7 @@ public class GeoChatLgwProvider extends ContentProvider {
         
         sOutgoingProjectionMap.put(OutgoingMessages.SENDING, OutgoingMessages.SENDING);
         sOutgoingProjectionMap.put(OutgoingMessages.TRIES, OutgoingMessages.TRIES);
+        sOutgoingProjectionMap.put(OutgoingMessages.RETRY_AT, OutgoingMessages.RETRY_AT);
         
         sLogsProjectionMap = new HashMap<String, String>();
         sLogsProjectionMap.put(Logs._ID, Logs._ID);

@@ -118,6 +118,8 @@ public class GeoChatLgw {
          */
         public static final String REMAINING_PARTS = "_remaining";
 
+        public static final String RETRY_AT = "_next_try";
+
         public final static String[] PROJECTION = {
     		_ID,
     		GUID,
@@ -127,7 +129,8 @@ public class GeoChatLgw {
     		WHEN,
     		SENDING,
 			TRIES,
-			REMAINING_PARTS
+			REMAINING_PARTS,
+			RETRY_AT
 		};
 	}
 
