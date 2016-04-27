@@ -1,8 +1,10 @@
 package org.instedd.geochat.lgw;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.Menu;
 
 public class Menues {
@@ -21,7 +23,7 @@ public class Menues {
 		executeAction(context, handler, menuItemId, null);
 	}
 	
-	public static void executeAction(Context context, Handler handler, int menuItemId, Uri data) {
+	public static void executeAction(final Context context, Handler handler, int menuItemId, Uri data) {
 		switch(menuItemId) {
 		case REFRESH:
 			Actions.refresh(context, handler);
@@ -49,8 +51,19 @@ public class Menues {
 			Actions.deleteAllIncomingMessages(context);
 			break;
 		case RESET_CONFIGURATION:
-			Actions.resetSettings(context);
-			Actions.startAutomaticConfiguration(context);
+			Settings s = new Settings(context);
+			if (!TextUtils.isEmpty(s.storedUserName())) {
+				Actions.confirm(context, R.string.reset_configuration, R.string.confirm_reset_configuration, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Actions.resetSettings(context);
+						Actions.startAutomaticConfiguration(context);
+					}
+				});
+			} else {
+				Actions.resetSettings(context);
+				Actions.startAutomaticConfiguration(context);
+			}
 			break;
 		}
 	}
