@@ -2,8 +2,10 @@ package org.instedd.geochat.lgw;
 
 import org.instedd.geochat.lgw.data.GeoChatLgw.Logs;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -11,6 +13,8 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
@@ -32,6 +36,31 @@ public class LogsActivity extends ListActivity {
                 new String[] { }, new int[] { });
         
         setListAdapter(adapter);
+
+		ListView lv = getListView();
+		lv.setLongClickable(true);
+
+		lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+				cursor.moveToPosition(i);
+				final String stackTrace = cursor.getString(cursor.getColumnIndex(Logs.STACK_TRACE));
+				if (stackTrace != null && !stackTrace.equals("")) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+					builder.setTitle("Error");
+					builder.setMessage(stackTrace);
+					builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialogInterface, int i) {
+							dialogInterface.dismiss();
+						}
+					});
+					builder.show();
+					return true;
+				}
+				return false;
+			}
+		});
     }
 	
 	private static class LogsCursorAdapter extends SimpleCursorAdapter {
