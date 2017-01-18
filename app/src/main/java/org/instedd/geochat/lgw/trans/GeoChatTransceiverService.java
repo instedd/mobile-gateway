@@ -129,7 +129,7 @@ public class GeoChatTransceiverService extends Service implements OnSharedPrefer
 		if (Settings.ENDPOINT_URL.equals(key)) {
 			transceiver.recreateQstClient();
 			transceiver.resync();
-		} else if (Settings.REFRESH_RATE.equals(key)) {
+		} else if (Settings.REFRESH_RATE_SECONDS.equals(key)) {
 			transceiver.resync();
 		}
 	}
