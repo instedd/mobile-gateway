@@ -120,7 +120,7 @@ public class LGWPreferenceActivity extends PreferenceActivity implements
 	}
 
 	private void updateRefreshRateSummary() {
-		updateListPreferenceSummary(storedRefreshRate(),
+		updateListPreferenceSummary(storedRefreshRateInSeconds(),
 				refreshRatePreference());
 	}
 
@@ -159,7 +159,7 @@ public class LGWPreferenceActivity extends PreferenceActivity implements
 	}
 
 	private void setRefreshRatePopUpValue() {
-		refreshRatePreference().setValue(storedRefreshRate());
+		refreshRatePreference().setValue(storedRefreshRateInSeconds());
 	}
 
 	private void setCountryCodePopUpValue() {
@@ -187,7 +187,7 @@ public class LGWPreferenceActivity extends PreferenceActivity implements
 	}
 
 	private ListPreference refreshRatePreference() {
-		return (ListPreference) findPreference(Settings.REFRESH_RATE);
+		return (ListPreference) findPreference(Settings.REFRESH_RATE_SECONDS);
 	}
 
 	private ListPreference maxMessageAgePreference() {
@@ -218,8 +218,8 @@ public class LGWPreferenceActivity extends PreferenceActivity implements
 		return settings.storedPassword();
 	}
 
-	private String storedRefreshRate() {
-		return String.valueOf(settings.storedRefreshRateInMinutes());
+	private String storedRefreshRateInSeconds() {
+		return String.valueOf(settings.storedRefreshRateInSeconds());
 	}
 
 	private String storedCountryCode() {

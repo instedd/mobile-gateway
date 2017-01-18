@@ -16,7 +16,7 @@ import android.text.TextUtils;
 public class Settings implements ISettings {
 
 	public final static String SHARED_PREFS_NAME = "org.instedd.geochat.lgw.settings";
-	public final static String REFRESH_RATE = "refreshRate";
+	public final static String REFRESH_RATE_SECONDS = "refreshRateSeconds";
 	public final static String ENDPOINT_URL = "endpointUrl";
 	public final static String NAME = "userName";
 	public final static String PASSWORD = "userPassword";
@@ -62,12 +62,12 @@ public class Settings implements ISettings {
 		return "http://nuntium.instedd.org/";
 	}
 
-	public int storedRefreshRateInMinutes() {
-		return Integer.parseInt(openRead().getString(REFRESH_RATE, "1"));
+	public int storedRefreshRateInSeconds() {
+		return Integer.parseInt(openRead().getString(REFRESH_RATE_SECONDS, "60"));
 	}
 
 	public int storedRefreshRateInMilliseconds() {
-		return 1000 * 60 * storedRefreshRateInMinutes();
+		return 1000 * storedRefreshRateInSeconds();
 	}
 
 	public String storedCountryCode() {

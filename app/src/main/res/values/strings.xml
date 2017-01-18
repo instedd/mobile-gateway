@@ -51,6 +51,9 @@
 	<string name="retrying">Retrying&#8230;</string>
 	<string name="are_you_sure">Are you sure?</string>
 	<string-array name="refresh_rate_entries">
+		<item>5 seconds</item>
+		<item>15 seconds</item>
+		<item>30 seconds</item>
 		<item>1 minute</item>
 		<item>5 minutes</item>
 		<item>10 minutes</item>
@@ -59,12 +62,15 @@
 		<item>1 hour</item>
 	</string-array>
 	<string-array name="refresh_rate_entry_values">
-		<item>1</item>
 		<item>5</item>
-		<item>10</item>
 		<item>15</item>
 		<item>30</item>
 		<item>60</item>
+		<item>300</item>
+		<item>600</item>
+		<item>900</item>
+		<item>1800</item>
+		<item>3600</item>
 	</string-array>
 	<string-array name="max_message_age_entries">
 		<item>1 day</item>

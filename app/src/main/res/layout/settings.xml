@@ -54,8 +54,8 @@
 		>
 		<ListPreference
 			android:title="@string/refresh_rate"
-			android:key="refreshRate"
-			android:id="@+id/refreshRate"
+			android:key="refreshRateSeconds"
+			android:id="@+id/refreshRateSeconds"
 			android:entries="@array/refresh_rate_entries"
 			android:entryValues="@array/refresh_rate_entry_values"
 			/>
