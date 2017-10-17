@@ -131,7 +131,7 @@ public class NuntiumClient {
 	public NuntiumTicket requestTicketFor(String telephoneNumber)
 			throws NuntiumClientException {
 		try {
-			HttpResponse response = restClient.post("http://" + nuntiumUrl
+			HttpResponse response = restClient.post("https://" + nuntiumUrl
 					+ "/tickets.json?", "address=" + telephoneNumber, null);
 
 			check(response);
